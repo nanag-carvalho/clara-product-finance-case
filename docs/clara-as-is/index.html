@@ -608,4 +608,41 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <p>For design craft, I established compact typography, proximity rules, a neutral palette, control sizes, radii and restrained surface elevation. I revised component examples and shared patterns against that foundation. The independent DS documentation exposes working examples, source code and a contract so the same decisions can carry from the case hub into the proposal.</p>
 <p>For implementation continuity, I built the hub in React and TypeScript, with a public component API, a token/component registry and generated manifests. Build checks cover generated artifacts, registered components, selected import boundaries and token rules. The repository includes a reproducible npm build and CI verification. These checks support consistency; they do not establish complete accessibility or product-flow validation.</p>
 <p>The trade-off is deliberate: I am using a local reusable foundation to prototype and review the experience within two days. I have not built a financial backend, connected real bank APIs, validated an initiator partnership or executed a payment. Those boundaries keep the prototype reviewable without overstating feasibility.</p>
-<p>My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.</p></main></body></html>
+<p>My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.</p>
+<h2 id="prototype-implementation-and-comparison">Prototype implementation and comparison</h2>
+<p>I built an interactive proposed workspace with its own sidebar and header, connecting Overview, Payments, Approvals, Accounts and Activity. The selected opportunity remains O1: using external funds within the payment context. The surrounding views expose the source, responsible actor and payment outcome rather than placing the feature in an isolated form.</p>
+<p>Path A pays the supplier directly from the external account. Path B first funds Clara and then releases a supplier payment. I am exploring A as the initial design direction because it removes the separate funding task in the brief; eligibility and initiator capability remain assumptions to confirm. Both paths can be exercised in the prototype before I consolidate that decision.</p>
+<p>The first connection is separate from payment authorization. A request goes through one illustrative company approval before a bank-authorized representative confirms the transaction in a simulated bank handoff. On return, the draft and approval remain available. A confirmed top-up is labeled independently from a supplier payment.</p>
+<p>The prototype includes beneficiary lookup against a fictional fixture, amount validation, review, company approval, bank authorization, processing, confirmed failure, unknown outcome and a final receipt example. Test controls select the next response. Unknown outcomes only allow querying the same payment intent; a confirmed second-leg failure on Path B preserves the completed top-up instead of repeating it.</p>
+<table>
+<thead>
+<tr>
+<th>Hypothesis</th>
+<th>Implemented surface</th>
+<th>Available evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1-H1</td>
+<td>Both money paths and their separate movement summaries</td>
+<td>Prototype task comparison; active time still requires a user test record</td>
+</tr>
+<tr>
+<td>O1-H2</td>
+<td>Review, company approval, bank handoff and next-actor copy</td>
+<td>Explain each stage and debited account during a walkthrough</td>
+</tr>
+<tr>
+<td>O1-H3</td>
+<td>Authorization cancellation, confirmed failure and unknown-outcome recovery</td>
+<td>Interaction log plus tests of state transitions and duplicate-send guards</td>
+</tr>
+<tr>
+<td>O1-H4</td>
+<td>Grouped source, recipient, amount and related action using the DS</td>
+<td>Visual and comprehension review; user observations still to collect</td>
+</tr>
+</tbody>
+</table>
+<p>The local log records prototype events and can be exported from Test controls. It is not a user-validation result. Automated tests cover review prerequisites, approval gating, cancellation recovery, direct confirmation, top-up versus supplier settlement, unknown-result guards and stale responses. Bank and payment responses are simulated; production duplicate prevention still requires a backend contract.</p></main></body></html>

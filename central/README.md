@@ -27,7 +27,7 @@ npm run preview
 - Opportunities: one selected funding opportunity, Brazil dependencies and a two-day scope.
 - Research: brief, current journey by stage, screen library, sources, gaps and product experiments.
 - Presentation: six initial walkthrough slides with notes and keyboard navigation.
-- Proposal: design and prototype scope under evaluation. The functional prototype is not implemented yet.
+- Proposal: design and prototype scope under evaluation. The interactive prototype covers connection, review, approvals, Pix and recovery on two simulated money paths.
 
 `../docs/clara-as-is/README.md` is the research source. `scripts/sync-research.mjs` builds `src/data/research.json` and copies assets to `public/research` before development and production builds. `src/data/library.ts` organizes visual references and their provenance.
 
@@ -35,7 +35,7 @@ All authored interface and documentation copy is in English. Original Clara scre
 
 ## Design system
 
-Open `/design-system.html` for the independent documentation: foundations, grouped component pages, patterns and previews. The build produces `dist/index.html` and `dist/design-system.html`.
+Open `/design-system.html` for the independent documentation: foundations, grouped component pages, patterns and previews. The build produces `dist/index.html` and `dist/design-system.html` and `dist/prototype.html`.
 
 Source of truth: `src/design-system/registry.ts`. Public TypeScript API: `@/design-system`. Manifest: `/api/design-system.json`. Contract: `DS_CONTRACT.md` and `/api/DS_CONTRACT.md`. shadcn registry: `/registry.json` and `/r/`. Generated tokens: `src/generated/ds-tokens.css`.
 
@@ -56,3 +56,9 @@ Every visual reference is labeled Demo, Official or Reconstruction. Reconstructi
 Markdown loads on demand and library images use lazy loading. Examples use fictional data. This version has no financial backend, external authentication or real payment execution.
 
 Validation includes the TypeScript production build, generated-token/registry checks, hub navigation, search, screen filtering, image dialogs, walkthrough controls and responsive previews. Contextual interaction and product-flow validation remain necessary.
+
+## Proposed workspace prototype
+
+Open `/prototype.html?path=direct` or `/prototype.html?path=topup`. Product navigation connects Overview, Payments, Approvals, Accounts and Activity. Test controls simulate success, confirmed failure and unknown outcomes, export an interaction log and restart trials.
+
+Run `npm test` for the payment-state invariants. No bank API or real payment is called. User-validation results remain to be collected.

@@ -12,7 +12,8 @@
     "prebuild": "npm run sync:research && npm run ds:generate && npm run ds:check && npm run ds:registry",
     "ds:generate": "node scripts/generate-ds.mjs",
     "ds:check": "node scripts/generate-ds.mjs --check && node scripts/check-ds.mjs",
-    "ds:registry": "npx shadcn@4.21.4 build --output public/r"
+    "ds:registry": "npx shadcn@4.21.4 build --output public/r",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",

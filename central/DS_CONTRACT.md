@@ -87,7 +87,7 @@ An isolated component preview has no external card. Containers belong to the dem
 
 Documentation follows Atlassian's separation of [examples, code and usage guidance](https://atlassian.design/components/button/examples). One sentence explains purpose; examples show behavior; code loads on demand. This case does not adopt Atlassian's identity or components. Base Web was considered as a reference, but its page did not render in this environment.
 
-The audit migrated local image, search, tile and slide controls to Pressable, and preview/Markdown tables to Table. Checks block native controls and direct imports in four main consumers, plus literal fonts, radii and colors in three authored CSS files. This alone does not validate all layouts or interaction states: page compositions and styles remain local and need review. Generating the registry does not establish full compliance.
+The audit migrated local image, search, tile and slide controls to Pressable, and preview/Markdown tables to Table. Checks block native controls and direct imports in the hub, DS documentation and prototype consumers, plus literal fonts, radii and colors in four authored CSS files. This alone does not validate all layouts or interaction states: page compositions and styles remain local and need review. Generating the registry does not establish full compliance.
 
 With Nunito Sans, control text and menu items use 14/20. Select, dropdown and combobox share this legible scale; medium triggers are 32 px and options have a 32 px minimum height. Legibility does not require enlarging every container.
 
@@ -106,3 +106,7 @@ Banner communicates context with title, description, actions and optional visual
 InputGroup integrates Input, icon and an optional action. The icon is 16 px, sits 8 px from text and has 8 px outer padding. Medium32/large40; a single outline and group focus. Screen filtering and global search consume InputGroup. Do not style inputs through local search wrappers; change the DS component/tokens instead.
 
 The hub sidebar identity is Clara Case / Product Finance. Navigation labels stay on one line with 8 px horizontal padding. Avoid redundant descriptions beside the author's role. Search checks also reject old input/icon/action overrides in `.library-search`; browser width and text wrapping still require inspection.
+
+## Proposed workspace composition
+
+Prototype and Solution consume the public DS API and share its tokens. The workspace has sidebar, header, PageHeader, working content and separate test controls. Payment review groups recipient, amount and source; company approval and bank authorization remain distinct. Prototype bank screens and receipts retain simulation labels. `npm test` verifies state-machine invariants; it does not replace contextual usability checks.

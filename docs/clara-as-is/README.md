@@ -407,3 +407,22 @@ For implementation continuity, I built the hub in React and TypeScript, with a p
 The trade-off is deliberate: I am using a local reusable foundation to prototype and review the experience within two days. I have not built a financial backend, connected real bank APIs, validated an initiator partnership or executed a payment. Those boundaries keep the prototype reviewable without overstating feasibility.
 
 My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.
+
+## Prototype implementation and comparison
+
+I built an interactive proposed workspace with its own sidebar and header, connecting Overview, Payments, Approvals, Accounts and Activity. The selected opportunity remains O1: using external funds within the payment context. The surrounding views expose the source, responsible actor and payment outcome rather than placing the feature in an isolated form.
+
+Path A pays the supplier directly from the external account. Path B first funds Clara and then releases a supplier payment. I am exploring A as the initial design direction because it removes the separate funding task in the brief; eligibility and initiator capability remain assumptions to confirm. Both paths can be exercised in the prototype before I consolidate that decision.
+
+The first connection is separate from payment authorization. A request goes through one illustrative company approval before a bank-authorized representative confirms the transaction in a simulated bank handoff. On return, the draft and approval remain available. A confirmed top-up is labeled independently from a supplier payment.
+
+The prototype includes beneficiary lookup against a fictional fixture, amount validation, review, company approval, bank authorization, processing, confirmed failure, unknown outcome and a final receipt example. Test controls select the next response. Unknown outcomes only allow querying the same payment intent; a confirmed second-leg failure on Path B preserves the completed top-up instead of repeating it.
+
+| Hypothesis | Implemented surface | Available evidence |
+| --- | --- | --- |
+| O1-H1 | Both money paths and their separate movement summaries | Prototype task comparison; active time still requires a user test record |
+| O1-H2 | Review, company approval, bank handoff and next-actor copy | Explain each stage and debited account during a walkthrough |
+| O1-H3 | Authorization cancellation, confirmed failure and unknown-outcome recovery | Interaction log plus tests of state transitions and duplicate-send guards |
+| O1-H4 | Grouped source, recipient, amount and related action using the DS | Visual and comprehension review; user observations still to collect |
+
+The local log records prototype events and can be exported from Test controls. It is not a user-validation result. Automated tests cover review prerequisites, approval gating, cancellation recovery, direct confirmation, top-up versus supplier settlement, unknown-result guards and stale responses. Bank and payment responses are simulated; production duplicate prevention still requires a backend contract.
