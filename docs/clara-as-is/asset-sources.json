@@ -1,0 +1,125 @@
+[
+  {
+    "file": "01-resumo.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "02-transacoes.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "03-tarefas.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "04-conta-digital.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "05-area-pix.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "06-pagamentos.png",
+    "origin": "Demo screenshots captured by Nágela Carvalho",
+    "captured_at": "not recorded",
+    "collected_at": "2026-10-13"
+  },
+  {
+    "file": "07-entrada-novo-pagamento.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42531424660755",
+    "bytes": 170835
+  },
+  {
+    "file": "08-formulario-pagamento.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42531447428243",
+    "bytes": 415122
+  },
+  {
+    "file": "09-demonstracao-pagamento.gif",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42532033237907",
+    "bytes": 1564995
+  },
+  {
+    "file": "10-menu-fluxos.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42156205099155",
+    "bytes": 29310
+  },
+  {
+    "file": "11-lista-fluxos.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42156151141395",
+    "bytes": 51586
+  },
+  {
+    "file": "12-condicoes-fluxo.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42156151142675",
+    "bytes": 200172
+  },
+  {
+    "file": "13-camadas-aprovacao.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42156205102227",
+    "bytes": 158956
+  },
+  {
+    "file": "14-guia-aprovacoes.pdf",
+    "url": "https://ajuda.clara.com/hc/article_attachments/42066468322579",
+    "bytes": 1634626
+  },
+  {
+    "file": "17-status-pago.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280317564947"
+  },
+  {
+    "file": "17-status-estornado.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44282654011155"
+  },
+  {
+    "file": "17-status-agendado.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280317566483"
+  },
+  {
+    "file": "17-status-pendente.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280296698003"
+  },
+  {
+    "file": "17-status-rejeitado.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280296698643"
+  },
+  {
+    "file": "17-status-cancelado.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280296699155"
+  },
+  {
+    "file": "17-status-processando.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44282662925331"
+  },
+  {
+    "file": "17-status-falhou.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/44280317570835"
+  },
+  {
+    "file": "15-detalhe-transacao.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/46019384318739"
+  },
+  {
+    "file": "16-confirmacao-codigo.png",
+    "url": "https://ajuda.clara.com/hc/article_attachments/45813180962451"
+  },
+  {
+    "file": "18-demo-processamento.png",
+    "url": "https://app.supademo.com/demo/cmm97tev664tqdtfhc3gb0vt5?step=14",
+    "origin": "Screenshot from the authorized Arc demo session",
+    "transformation": "Demo content crop; browser sidebar excluded",
+    "collected_at": "2026-10-13"
+  }
+]

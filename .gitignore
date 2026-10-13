@@ -1,0 +1,23 @@
+# Dependencies and build output
+central/node_modules/
+central/dist/
+*.tsbuildinfo
+
+# Generated public artifacts (rebuilt before dev/build)
+central/public/research/
+central/public/api/
+central/public/r/
+central/public/registry.json
+central/src/data/research.json
+central/src/generated/ds-tokens.css
+central/registry.json
+
+# Local review artifacts and environment
+output/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+.venv/
+__pycache__/

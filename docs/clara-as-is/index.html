@@ -1,0 +1,611 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Clara current flow analysis</title><style>
+body{margin:0;background:#f4f6f8;color:#202d40;font:16px/1.65 system-ui,-apple-system,sans-serif}
+main{max-width:1060px;margin:auto;padding:56px 42px;background:white}
+h1{font-size:36px;line-height:1.18;max-width:850px;margin:0 0 26px}
+h2{font-size:26px;line-height:1.3;margin-top:56px;border-top:1px solid #dce2e8;padding-top:30px}
+h3{font-size:19px;margin-top:32px}p,li{max-width:900px}a{color:#365b93}
+figure{margin:26px 0;border:1px solid #dce2e8;border-radius:8px;padding:12px;background:#fafbfd}
+img{display:block;max-width:100%;height:auto;margin:auto}
+td img{max-height:42px;width:auto}
+figcaption{font-size:13px;color:#59687a;padding:12px 4px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:1.5}
+th,td{padding:12px;text-align:left;border:1px solid #dce2e8;vertical-align:top}th{background:#edf2f8}
+code{font-size:13px;background:#edf2f8;padding:2px 5px}.meta{font-size:13px;color:#59687a;margin-bottom:22px}
+@media(max-width:700px){main{padding:30px 18px}h1{font-size:28px}table{display:block;overflow:auto}}
+@media print{main{padding:0}body{background:white}h2{break-after:avoid}figure{break-inside:avoid}a{color:inherit}}
+</style></head><body><main><div class="meta">CLARA · PRODUCT FINANCE · OCT 13, 2026</div><h1 id="clara-initial-analysis-of-the-brief-and-current-payment-flow">Clara — initial analysis of the brief and current payment flow</h1>
+<p>For this Design Engineer case in Product Finance, I started with the brief and available references to understand the operation before defining a solution. The challenge is to let a finance team pay suppliers through Clara using funds held at another bank while preserving approvals and traceability. External funding is a hypothesis to explore alongside existing payment creation, approval and tracking.</p>
+<p>Research consolidated on October 13, 2026. <strong>Demo</strong> identifies my screenshots; <strong>official documentation</strong> identifies Clara's public materials; <strong>hypothesis</strong> identifies design interpretation; <strong>reconstruction</strong> identifies diagrams of uncaptured states. Transaction dates do not establish the UI version.</p>
+<h2 id="brief-and-evaluation-criteria">Brief and evaluation criteria</h2>
+<p>The brief describes a finance manager at a Brazilian company with 200 employees, accounts at two traditional banks and dozens of supplier payments each week. The manager currently needs to open the bank, transfer money to Clara, return to Clara and only then pay.</p>
+<p>The evaluation asks for problem framing and a metric, Pix and Open Finance context, first connection and consent, a payment and at least one failure scenario in high fidelity. It also asks for explored alternatives, reused components, a design system contribution and a record of AI use, including mistakes and time spent. The presentation allows approximately 30 minutes for the walkthrough and 15 for discussion.</p>
+<p>Source: the private brief I received during the interview process. These requirements describe the evaluation; this document records my initial analysis.</p>
+<h2 id="product-value-proposition-and-opportunity">Product, value proposition and opportunity</h2>
+<p>Clara brings together corporate cards, expense management and accounts payable. Its public communication presents spending control and financial operations in one place as part of its value proposition. Accounts Payable describes a journey from invoice capture to approval, payment and reconciliation. I used these references to understand how the challenge connects to the product, without presenting commercial claims as measured results from this case.</p>
+<p>My reading is that the finance team's value lies in executing and tracking payments with company rules and supplier context in one place. The brief exposes a break in that continuity: the work is organized in Clara, but the funds remain at two banks, requiring a top-up before payment.</p>
+<p>The opportunity I want to explore is using those funds within Payments while keeping the source, approvals and outcome clear. This could reduce operational effort and make Clara more useful in everyday accounts payable, but I still need to validate whether it increases adoption and repeat use. I do not have internal abandonment, revenue or transaction-volume data to quantify the opportunity.</p>
+<table>
+<thead>
+<tr>
+<th>Business and experience hypothesis</th>
+<th>Signal I would track</th>
+<th>How I would investigate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>If a separate top-up makes payment harder, integrating an external source could improve completion</td>
+<td>Completed payments / eligible attempts; abandonment by stage</td>
+<td>Compare current and proposed task flows, then instrument a pilot</td>
+</tr>
+<tr>
+<td>If source and authorizations are clear, requesters and approvers could decide with fewer doubts</td>
+<td>Source comprehension; selection errors; help requests</td>
+<td>Test review and approval with different company roles</td>
+</tr>
+<tr>
+<td>If returning from the bank preserves context and outcome, recovery could require less rework</td>
+<td>Successful resumptions; active recovery time; duplicate attempts</td>
+<td>Simulate return, refused authorization and unknown outcomes</td>
+</tr>
+<tr>
+<td>If external funds fit the routine, Clara could concentrate more supplier operations</td>
+<td>Repeat-use companies; eligible payment frequency and volume</td>
+<td>Evaluate recurring usage in a pilot, accounting for seasonality and company profile</td>
+</tr>
+</tbody>
+</table>
+<p>My candidate primary metric is the completion rate of eligible payments funded by an external account. Active finance-team time would be complementary: I would separate interface work from waiting for approvers and the bank. Targets require a baseline first. Guardrails would cover duplicate payments, incorrect funding sources and execution without required authorizations.</p>
+<p>The brief guides the scope: first connection and consent, a Pix payment and at least one failure recovery in high fidelity. I will compare direct external-account payment with a Clara-initiated top-up before choosing a path. The presentation should make alternatives, business-account dependencies, reused components, the DS contribution and AI use visible. The initial prototype covers one payment; the persona's weekly volume remains a criterion for assessing the flow's evolution.
+Sources: <a href="https://www.clara.com/pt-br">Product overview</a>, <a href="https://www.clara.com/pt-br/produtos/contas-a-pagar">Accounts Payable</a>.</p>
+<h2 id="current-journey-and-evidence-coverage">Current journey and evidence coverage</h2>
+<p><strong>External bank → Clara top-up → Payments → New payment → beneficiary identification and entry → review and request → configured approvals → processing → tracking and receipts.</strong></p>
+<p>I separated the journey by evidence source: the top-up comes from the brief and the Payments list is what I observed in the demo. Creation, invalid-key error, email code confirmation, processing in the list and the Pix receipt have images. Review and request approval have official descriptions but no detail screenshot. Approval configuration has images and is different from approving an individual payment. Uncaptured states have separate diagrams for validation.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Available evidence</th>
+<th>Still to observe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fund the account</td>
+<td>Brief describes the problem; demo shows Top up</td>
+<td>Top-up flow and return</td>
+</tr>
+<tr>
+<td>Open Payments</td>
+<td>Full demo screenshot</td>
+<td>Per-row menu behavior</td>
+</tr>
+<tr>
+<td>Create and validate</td>
+<td>Official form, GIF and invalid-key error</td>
+<td>Valid beneficiary and transition to review</td>
+</tr>
+<tr>
+<td>Review and request</td>
+<td>Review button and official code screen; submission described</td>
+<td>Pre-submission summary and request confirmation</td>
+</tr>
+<tr>
+<td>Approve a request</td>
+<td>Written guide and visible tabs</td>
+<td>Approver detail and decision history</td>
+</tr>
+<tr>
+<td>Process and track</td>
+<td>Processing in demo; official Pix receipt panel</td>
+<td>Failure detail, receipt PDF and decision history</td>
+</tr>
+</tbody>
+</table>
+<h2 id="payments-as-the-entry-point">Payments as the entry point</h2>
+<p><strong>Demo screenshot.</strong> The screen brings together Balance, Processing and Pending approval; Overview, Pending approval and Scheduled tabs; beneficiary search, filters and receipt download. Each row shows request date, beneficiary, document, amount, method, status and attachment.</p>
+<p>The screenshot includes Pending, Paid, Reversed, Rejected and Failed. Paid and Reversed share the same green: the text distinguishes the outcome, but color does not distinguish settlement from a return. The monetary approval summary and tab count represent different measures, so the screenshot alone cannot establish an inconsistency.</p>
+<p><strong>My design hypothesis:</strong> starting the new flow from New payment could preserve accounts-payable context. The funding account would also need to appear in review and detail, so both requester and approver know where the funds will come from. The current screenshot has no bank-source column.</p>
+<figure><a href="assets/06-pagamentos.png" target="_blank"><img alt="Payments as the entry point" src="assets/06-pagamentos.png" width="1676" height="1030" loading="lazy"></a><figcaption>Payments as the entry point · Click to open image</figcaption></figure>
+<h2 id="payment-creation-and-validation">Payment creation and validation</h2>
+<p><strong>Official documentation, article dated November 14, 2025.</strong> The guide instructs users to open Accounts Payable → Payments → New payment, select Pix, enter a key or copy-and-paste code, look up the beneficiary and review the amount. Submission follows company approval rules. Documents are optional in this flow.</p>
+<p>The form separates documents and financial information into two areas, with a total and actions in the footer. It also offers TED and Boleto; my case scope remains Pix.</p>
+<h3 id="official-entry-demonstration">Official entry demonstration</h3>
+<p>The official GIF illustrates methods, identifiers, bank fields and validation. It does not establish the complete journey from review to execution.</p>
+<h3 id="observed-error-state">Observed error state</h3>
+<p>The error frame was extracted from the original GIF without redrawing: a red field border, invalid-key message and disabled Review button. It is an existing reference for an inline error. Authorization failures and an uncertain result at the external bank will require additional patterns.</p>
+<figure><a href="assets/07-entrada-novo-pagamento.png" target="_blank"><img alt="Payment creation and validation — reference 1" src="assets/07-entrada-novo-pagamento.png" width="2554" height="384" loading="lazy"></a><figcaption>Payment creation and validation — reference 1 · Click to open image</figcaption></figure>
+<figure><a href="assets/08-formulario-pagamento.png" target="_blank"><img alt="Payment creation and validation — reference 2" src="assets/08-formulario-pagamento.png" width="2248" height="1114" loading="lazy"></a><figcaption>Payment creation and validation — reference 2 · Click to open image</figcaption></figure>
+<figure><a href="assets/09-demonstracao-pagamento.gif" target="_blank"><img alt="Payment creation and validation — reference 3" src="assets/09-demonstracao-pagamento.gif" width="1152" height="648" loading="lazy"></a><figcaption>Payment creation and validation — reference 3 · Click to open image</figcaption></figure>
+<figure><a href="assets/09-frame-118.png" target="_blank"><img alt="Payment creation and validation — reference 4" src="assets/09-frame-118.png" width="1152" height="648" loading="lazy"></a><figcaption>Payment creation and validation — reference 4 · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/42531424668307-Como-fa%C3%A7o-um-pagamento-pela-Clara">New payment guide</a>.</p>
+<h2 id="email-code-confirmation">Email code confirmation</h2>
+<p><strong>Official image.</strong> The transfer guide, dated June 5, 2026, includes confirmation through a code sent by email before the approval workflow. The screenshot filename dates to October 2025.</p>
+<p>The image shows five code positions, resend with a countdown, help, Back and edit, and Confirm. This authenticates the operation within Clara; it is neither confirmation that a request was recorded nor authorization at the external bank. I still need to validate whether every role and method requires it.</p>
+<figure><a href="assets/16-confirmacao-codigo.png" target="_blank"><img alt="Email code confirmation" src="assets/16-confirmacao-codigo.png" width="1310" height="960" loading="lazy"></a><figcaption>Email code confirmation · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/27623979963027-Como-realizo-transfer%C3%AAncias-e-pagamentos-de-boletos-atrav%C3%A9s-da-Conta-Digital-da-Clara">Digital Account transfer guide</a>.</p>
+<h2 id="approving-a-request">Approving a request</h2>
+<p>The guide says that an approver opens a pending request, reviews beneficiary, amount, key, bank details and approvers, and approves or rejects it. Execution depends on the final approval. The June 2025 article points to Management → Payments; the demo and later guide use Accounts Payable → Payments. I am using the demo as the visual reference for the proposed navigation.</p>
+<p><strong>Visual gap:</strong> this collection has no approval-detail screenshot. The Tasks image shows a queue and actions, but it does not establish that Approve records a decision without an intermediate review.</p>
+<figure><a href="assets/03-tarefas.png" target="_blank"><img alt="Approving a request" src="assets/03-tarefas.png" width="1676" height="1030" loading="lazy"></a><figcaption>Approving a request · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/41962561308947-Como-aprovo-ou-reviso-pagamentos-na-Clara">Payment approval guide</a>.</p>
+<h2 id="approval-workflow-configuration">Approval workflow configuration</h2>
+<p><strong>Official documentation, article dated November 14, 2025.</strong> The Payments settings control opens Approval workflows. Images show workflow creation, conditions and actions for automatic approval, automatic rejection or adding approvers. The guide allows up to five layers. I identified this mechanism as an existing dependency for the proposal.</p>
+<p>The official supporting PDF describes the same journey and default rule. Its footer indicates 2024; the article date does not make the embedded images a 2025 or 2026 UI.</p>
+<figure><a href="assets/10-menu-fluxos.png" target="_blank"><img alt="Approval workflow configuration — reference 1" src="assets/10-menu-fluxos.png" width="698" height="112" loading="lazy"></a><figcaption>Approval workflow configuration — reference 1 · Click to open image</figcaption></figure>
+<figure><a href="assets/11-lista-fluxos.png" target="_blank"><img alt="Approval workflow configuration — reference 2" src="assets/11-lista-fluxos.png" width="1922" height="276" loading="lazy"></a><figcaption>Approval workflow configuration — reference 2 · Click to open image</figcaption></figure>
+<figure><a href="assets/12-condicoes-fluxo.png" target="_blank"><img alt="Approval workflow configuration — reference 3" src="assets/12-condicoes-fluxo.png" width="1616" height="1020" loading="lazy"></a><figcaption>Approval workflow configuration — reference 3 · Click to open image</figcaption></figure>
+<figure><a href="assets/13-camadas-aprovacao.png" target="_blank"><img alt="Approval workflow configuration — reference 4" src="assets/13-camadas-aprovacao.png" width="1660" height="756" loading="lazy"></a><figcaption>Approval workflow configuration — reference 4 · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/41962086294291-Como-crio-um-fluxo-de-aprova%C3%A7%C3%A3o-de-pagamentos-na-Clara">Approval configuration guide</a>, <a href="assets/14-guia-aprovacoes.pdf">Official supporting PDF</a>.</p>
+<h2 id="existing-execution-and-failure-states">Existing execution and failure states</h2>
+<p>The documentation describes completed payment, reversal, scheduling, pending approval, rejection, cancellation, validation and failure. Failure causes include balance, limits, beneficiary details, account restrictions and security. The current guide also instructs users to check the debit in the Clara account statement.</p>
+<p><strong>My reading for the proposal:</strong> an external-bank debit needs visible confirmation and source traceability. The Clara statement alone does not represent that debit. The list should distinguish internal approval, bank authorization, processing and final outcome.</p>
+<h3 id="processing-observed-in-the-demo">Processing observed in the demo</h3>
+<p>I captured the Arc demo session at step 14. The crop preserves navigation and the processing row while excluding the browser sidebar. The observed row is a boleto: it establishes the presentation pattern, rather than the duration or processing behavior of a Pix payment.</p>
+<h3 id="status-badges-published-by-clara">Status badges published by Clara</h3>
+<p>The source provides images for Paid, Reversed, Scheduled, Pending approval, Rejected, Canceled, Processing and Failed. These badges come from the status guide; they are not screenshots of each payment's detail view.</p>
+<figure><a href="assets/18-demo-processamento.png" target="_blank"><img alt="Existing execution and failure states — reference 1" src="assets/18-demo-processamento.png" width="1675" height="1030" loading="lazy"></a><figcaption>Existing execution and failure states — reference 1 · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-pago.png" target="_blank"><img alt="Paid" src="assets/17-status-pago.png" width="124" height="72" loading="lazy"></a><figcaption>Paid · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-estornado.png" target="_blank"><img alt="Reversed" src="assets/17-status-estornado.png" width="308" height="102" loading="lazy"></a><figcaption>Reversed · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-agendado.png" target="_blank"><img alt="Scheduled" src="assets/17-status-agendado.png" width="186" height="74" loading="lazy"></a><figcaption>Scheduled · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-pendente.png" target="_blank"><img alt="Pending approval" src="assets/17-status-pendente.png" width="294" height="76" loading="lazy"></a><figcaption>Pending approval · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-rejeitado.png" target="_blank"><img alt="Rejected" src="assets/17-status-rejeitado.png" width="188" height="72" loading="lazy"></a><figcaption>Rejected · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-cancelado.png" target="_blank"><img alt="Canceled" src="assets/17-status-cancelado.png" width="186" height="76" loading="lazy"></a><figcaption>Canceled · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-processando.png" target="_blank"><img alt="Processing" src="assets/17-status-processando.png" width="226" height="76" loading="lazy"></a><figcaption>Processing · Click to open image</figcaption></figure>
+<figure><a href="assets/17-status-falhou.png" target="_blank"><img alt="Failed" src="assets/17-status-falhou.png" width="156" height="84" loading="lazy"></a><figcaption>Failed · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/44280296702611-Quais-os-status-dos-Pagamentos-na-Clara">Payment statuses and failures</a>.</p>
+<h2 id="pix-receipt-and-transaction-traceability">Pix receipt and transaction traceability</h2>
+<p><strong>Official image, article dated October 28, 2025.</strong> The Digital Account panel allows opening a transaction and downloading its receipt. The identifier is also present in the downloaded document.</p>
+<p>The panel shows date and time, method, recipient details and a Source section with name, document, institution, branch and account. The ID and download action appear at the end. Clara's original image already masks the data. It covers the receipt panel; I did not obtain the final PDF.</p>
+<p>The functionality guide, updated in June 2026, confirms downloadable Pix and boleto receipts. An ID identifies the transaction, but does not by itself establish a decision history with authors and timestamps.</p>
+<figure><a href="assets/15-detalhe-transacao.png" target="_blank"><img alt="Pix receipt and transaction traceability" src="assets/15-detalhe-transacao.png" width="824" height="1388" loading="lazy"></a><figcaption>Pix receipt and transaction traceability · Click to open image</figcaption></figure>
+<p>Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/46019394818195-Onde-encontro-o-ID-da-transa%C3%A7%C3%A3o-transfer%C3%AAncia-na-Clara">Transaction ID guide</a>, <a href="https://ajuda.clara.com/hc/pt-br/articles/33945288232979-Quais-as-funcionalidades-e-comprovantes-da-Conta-Digital-da-Clara">Digital Account features and receipts</a>.</p>
+<h2 id="suppliers-in-the-2026-documentation">Suppliers in the 2026 documentation</h2>
+<p>The June 1, 2026 guide describes a Suppliers module in Accounts Payable. Payment uses Pix transfer, supplier selection, automatically populated details, amount, immediate or scheduled submission and Send for payment. Supplier detail includes a history of paid transactions.</p>
+<p>The article documents this journey in text without images. Suppliers does not appear in the demo navigation I consulted. I consider it a variant to investigate; I will not replace the captured form as if both belonged to the same version. Supplier payment history and a request's approval history are different evidence.
+Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/52075103095827-Como-cadastrar-e-pagar-seus-Fornecedores-atrav%C3%A9s-da-Clara">Suppliers guide</a>.</p>
+<h2 id="operational-volume-and-batch-pix">Operational volume and batch Pix</h2>
+<p>The documentation allows CSV/XLSX upload with up to 250 payments, key validation, an approval workflow and individual outcome reporting. Users can save and review later.</p>
+<p><strong>My initial scope:</strong> starting with one payment lets me investigate flow dependencies before adding complexity. The persona still requires a discussion of how source, consent and failure behave at volume. Existing batch Pix in Clara does not establish equivalent batch support through Open Finance.
+Sources: <a href="https://ajuda.clara.com/hc/pt-br/articles/45470603860371-Como-realizo-pagamentos-via-Pix-em-lote-na-Clara">Batch Pix guide</a>.</p>
+<h2 id="other-demo-screens">Other demo screens</h2>
+<h3 id="account-overview">Account overview</h3>
+<p>Credit, transaction balance, flexible limit and activity provide references for hierarchy and resource distinction. This screen does not show available money at external banks.</p>
+<h3 id="card-transactions">Card transactions</h3>
+<p>The structure focuses on cardholders, cards, evidence and expense review. It is a table and status reference; the supplier journey belongs in Payments.</p>
+<h3 id="digital-account">Digital Account</h3>
+<p>The page offers financial actions and a statement. Transaction balance and flexible limit are distinct. Connecting an external bank account should not combine its funds with the Clara balance without explaining the source.</p>
+<h3 id="pix-area">Pix area</h3>
+<p>This screen organizes keys and Pix actions. It can provide interaction patterns, while supplier payments also involve requests, approvals and tracking in Accounts Payable.</p>
+<figure><a href="assets/01-resumo.png" target="_blank"><img alt="Other demo screens — reference 1" src="assets/01-resumo.png" width="1676" height="1030" loading="lazy"></a><figcaption>Other demo screens — reference 1 · Click to open image</figcaption></figure>
+<figure><a href="assets/02-transacoes.png" target="_blank"><img alt="Other demo screens — reference 2" src="assets/02-transacoes.png" width="1676" height="1030" loading="lazy"></a><figcaption>Other demo screens — reference 2 · Click to open image</figcaption></figure>
+<figure><a href="assets/04-conta-digital.png" target="_blank"><img alt="Other demo screens — reference 3" src="assets/04-conta-digital.png" width="1676" height="1030" loading="lazy"></a><figcaption>Other demo screens — reference 3 · Click to open image</figcaption></figure>
+<figure><a href="assets/05-area-pix.png" target="_blank"><img alt="Other demo screens — reference 4" src="assets/05-area-pix.png" width="1676" height="1030" loading="lazy"></a><figcaption>Other demo screens — reference 4 · Click to open image</figcaption></figure>
+<h2 id="reference-recency">Reference recency</h2>
+<p>The public releases I consulted during the initial research list Accounts Payable and batch Pix in March 2026, and accounting fields in August. I treated these as evidence of features and public communication, without assuming they visually replace the demo screens.</p>
+<p>The Brazilian public tour linked from Clara's official site uses the same navigation structure on the opening screen I consulted. Its full journey requires registration. Help Center images complement the demo, but I did not classify them as visually newer than it.
+Sources: <a href="https://www.clara.com/pt-br/recursos/lancamentos">Public releases</a>, <a href="https://app.supademo.com/demo/cmm97tev664tqdtfhc3gb0vt5">Public demo</a>.</p>
+<h2 id="hypotheses-for-the-next-stage">Hypotheses for the next stage</h2>
+<ol>
+<li>Keep Payments as the entry point and explore funding-account selection in creation and review.</li>
+<li>Reuse fields, tables, filters, buttons, badges and the existing approval mechanism.</li>
+<li>Compare direct external-account payment with a Clara-initiated top-up, making each alternative's money movements explicit.</li>
+<li>Separate company approval, bank authorization and execution confirmation. A connection must not imply unrestricted authorization.</li>
+<li>Preserve context on return and handle an uncertain outcome without encouraging duplicate payment.</li>
+</ol>
+<p>Before consolidating high fidelity, I need to confirm the business-account journey and the approval rules of the selected banks. The Central Bank describes consent, authentication at the account-holding institution and return to the initiator. Regulation also covers journeys without redirection, but does not establish availability for this combination of business account, bank and device.
+Sources: <a href="https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado">Central Bank: Open Finance journey</a>, <a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&amp;tipo=Resolu%C3%A7%C3%A3o+BCB">Central Bank: Resolution 406</a>.</p>
+<h2 id="state-coverage-and-reconstructions-for-validation">State coverage and reconstructions for validation</h2>
+<table>
+<thead>
+<tr>
+<th>Requested state</th>
+<th>Real evidence</th>
+<th>Visual coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validated beneficiary</td>
+<td>Creation and Suppliers guides describe identification and entry</td>
+<td>Separate diagram; populated form not captured</td>
+</tr>
+<tr>
+<td>Review before submission</td>
+<td>Review button and written description</td>
+<td>Separate diagram; summary not captured</td>
+</tr>
+<tr>
+<td>Request confirmation</td>
+<td>Confirmation code captured, without evidence of final registration</td>
+<td>Separate diagram; code and registration are distinct states</td>
+</tr>
+<tr>
+<td>Approval detail</td>
+<td>Fields, approvers and actions described</td>
+<td>Separate diagram; detail not captured</td>
+</tr>
+<tr>
+<td>Processing payment</td>
+<td>Boleto row in demo and official badge</td>
+<td>Real list screenshot; detail not captured</td>
+</tr>
+<tr>
+<td>Failure detail</td>
+<td>Failed rows and documented causes</td>
+<td>Separate diagram; on-screen message not captured</td>
+</tr>
+<tr>
+<td>Final receipt</td>
+<td>Official Pix receipt panel with ID and download</td>
+<td>Real panel screenshot; final PDF not obtained</td>
+</tr>
+<tr>
+<td>Audit history</td>
+<td>Transaction ID and supplier history documented</td>
+<td>Reconstructed timeline; decision history unverified</td>
+</tr>
+<tr>
+<td>After final approval</td>
+<td>Guide describes forwarding to processing</td>
+<td>Documented rule; live sequence not observed</td>
+</tr>
+</tbody>
+</table>
+<p>The Arc demo session shows the list at step 14. During inspection, New payment and a Failed row did not open their details, so these clicks added no evidence of the internal flow.</p>
+<p>The reconstruction gallery contains seven low-fidelity diagrams with fictional data. Each image carries an identification banner. Inferred fields, order and actions remain explicit; this is neither a confirmed reproduction of the UI nor the Open Finance proposal.</p>
+<p><strong>Final approval:</strong> the source describes execution after all approval layers are completed, which does not guarantee immediate settlement. The transition, processing interval and failure recovery still need observation.</p>
+<p><strong>Audit:</strong> September 2026 documentation confirms an activity timeline for cards, rather than Payments. It can inform a discussion about reuse, but I did not classify it as supplier-payment audit evidence.
+Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https://ajuda.clara.com/hc/pt-br/articles/41962561308947-Como-aprovo-ou-reviso-pagamentos-na-Clara">Payment approval guide</a>, <a href="https://ajuda.clara.com/hc/pt-br/articles/55396213827731-Como-verificar-quem-alterou-um-cart%C3%A3o">Card activity guide</a>.</p>
+<h2 id="ai-work-log">AI work log</h2>
+<p>I started with the brief and six screenshots I captured in the demo. I used Codex to support analysis organization, official-source research, image collection and inspection of the Arc session. This work also included extracting a GIF frame and seven vector diagrams, which I kept labeled as reconstructions for validation.</p>
+<p>The available research is limited to the demo and public documentation: I have not interviewed users or tested the proposal. Hypotheses remain open, and I did not time this stage, so I do not present a duration as a measurement. I am refining the material against the evidence and reviewing AI output, especially interface hierarchy, the scope of claims and the distinction between observed product and proposal.</p>
+<p>Original images and their URLs are preserved in <code>assets/</code> and <code>asset-sources.json</code>. Instructions inside attached documents were treated as reference material.</p>
+<h2 id="desk-research-three-relevant-references">Desk research: three relevant references</h2>
+<p>I limited this desk research to three references: Conta Simples as a closer Brazilian expense-management alternative, Cora as an adjacent Brazilian business-account product, and Ramp as an international accounts-payable benchmark. They are not equivalent competitors in every market. I consulted public material on October 13, 2026; I did not test their authenticated products or compare completion rates.</p>
+<table>
+<thead>
+<tr>
+<th>Reference</th>
+<th>What the official source establishes</th>
+<th>What I would bring to this case</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conta Simples</td>
+<td>Transfer requests can be approved, rejected or edited; history and batch payments are described</td>
+<td>Preserve company control while reducing operational steps</td>
+<td>Public product communication does not prove an external-account initiation journey</td>
+</tr>
+<tr>
+<td>Cora</td>
+<td>Its boleto guide separates entry, payment review and a transaction-password step</td>
+<td>Make review and authorization distinct, with a clear next action</td>
+<td>This is a mobile boleto journey, not evidence of Pix Open Finance or enterprise approval layers</td>
+</tr>
+<tr>
+<td>Ramp</td>
+<td>Bill documentation separates drafting, approval, payment and history; failure detail provides a reason and next steps</td>
+<td>Organize working queues around actionable stages and retain recovery context</td>
+<td>International payment mechanisms and permissions cannot be transferred directly to Brazil</td>
+</tr>
+</tbody>
+</table>
+<p>My takeaway is that centralization alone is not the differentiator I should design for. The brief's stronger opportunity is continuity between the work organized in Clara and funds held elsewhere. Approval and recovery patterns can support that continuity, but they do not establish Brazilian bank eligibility or user demand.</p>
+<p>Sources: <a href="https://contasimples.com/servicos-bancarios">Conta Simples banking services</a>, <a href="https://www.cora.com.br/ajuda/artigo/como-realizar-um-pagamento-no-aplicativo-da-cora/">Cora payment guide</a>, <a href="https://support.ramp.com/bill-lifecycle/">Ramp bill lifecycle</a>, <a href="https://support.ramp.com/bill-pay-approvals/">Ramp approvals</a>.</p>
+<h2 id="ui-references-and-design-criteria">UI references and design criteria</h2>
+<p>I inspected the publicly documented Ramp approval-list image below. Its restrained surfaces, line tabs, aligned amount column and visible next approver make it a useful working-interface reference. That is my visual judgment, not a measured usability result. The row includes a 2024 date; the image does not establish the newest authenticated UI.</p>
+<figure><a href="https://assets.ramp.com/help-center/bill-lifecycle/attachments/31223416533523.png" target="_blank"><img alt="Ramp official reference — approval queue, not Clara evidence" src="https://assets.ramp.com/help-center/bill-lifecycle/attachments/31223416533523.png" loading="lazy"></a><figcaption>Ramp official reference — approval queue, not Clara evidence · Click to open image</figcaption></figure>
+<p>The same guide publishes a draft-detail reference. I would use these screens to compare list/detail organization and action placement, while preserving Clara's navigation and the case DS.</p>
+<figure><a href="https://assets.ramp.com/help-center/bill-lifecycle/attachments/31223370842899.png" target="_blank"><img alt="Ramp official reference — bill draft detail, not Clara evidence" src="https://assets.ramp.com/help-center/bill-lifecycle/attachments/31223370842899.png" loading="lazy"></a><figcaption>Ramp official reference — bill draft detail, not Clara evidence · Click to open image</figcaption></figure>
+<p>My interface criteria are compact productive typography, a neutral Slate palette, visible funding source, one primary action per stage and separation between approval and payment outcome. Modern appearance should support comprehension and trust. I will reuse the existing DS rather than introduce another visual language.</p>
+<p>Source: <a href="https://support.ramp.com/bill-lifecycle/">Ramp bill lifecycle and original images</a>. These are external visual references, not additions to the observed Clara journey.</p>
+<h2 id="opportunity-evaluation-and-selected-focus">Opportunity evaluation and selected focus</h2>
+<p>I organized four candidate opportunities around completing eligible supplier payments with less active effort and intact controls. The tree is a synthesis of the brief, desk research and my interpretation; its branches are not interview findings.</p>
+<table>
+<thead>
+<tr>
+<th>Opportunity</th>
+<th>Evidence and brief fit</th>
+<th>Learning value within two days</th>
+<th>Main dependency</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Use external funds without a separate top-up task</td>
+<td>Directly addresses the problem in the brief</td>
+<td>Compare two concrete funding paths</td>
+<td>Eligible PJ bank journey and initiator capability</td>
+<td>Selected for the prototype</td>
+</tr>
+<tr>
+<td>Understand who must authorize and what happens next</td>
+<td>Supported by existing approval rules and the new bank dependency</td>
+<td>Test review comprehension</td>
+<td>Bank signatories and company permissions</td>
+<td>Required within the selected flow</td>
+</tr>
+<tr>
+<td>Recover without re-entering details or duplicating payment</td>
+<td>Failure is explicitly required by the brief</td>
+<td>Test one recovery branch</td>
+<td>Reliable payment status and duplicate prevention</td>
+<td>Required within the selected flow</td>
+</tr>
+<tr>
+<td>Handle many supplier payments at once</td>
+<td>Weekly volume in the brief; Clara documents batch Pix</td>
+<td>Valuable but adds consent and partial-result complexity</td>
+<td>Batch support and authorization limits</td>
+<td>Defer</td>
+</tr>
+</tbody>
+</table>
+<p>I selected external funding in the payment context because it directly addresses the stated friction and gives me a focused way to investigate first connection, review, authorization and recovery. I am prioritizing learning against the brief, not claiming that the business opportunity has been quantified.</p>
+<p>The solution alternatives are direct payment from an external account and a Clara-initiated top-up followed by payment. I will compare both before consolidating the design. Direct payment is a candidate, not a confirmed capability of Clara. If feasibility blocks it, the top-up alternative still needs transparent movement tracking and recovery.</p>
+<h2 id="experiment-plan-for-the-selected-opportunity">Experiment plan for the selected opportunity</h2>
+<p>These experiments are planned, not completed. In two days I can build the prototype and run lightweight checks if participants are available. Any session results, participant count and limitations will be recorded separately; a small usability check cannot establish commercial impact.</p>
+<p>For each trial I will record whether the participant completes without prompting, identifies the source correctly, names the next actor and understands the final state; active time excludes simulated bank waiting. Critical issues are a wrong source, confusing approval with settlement, losing the draft or attempting a duplicate while the outcome is unknown. Any critical issue blocks consolidating the proposed flow until I revise and recheck it. This is a formative decision rule, not a statistical claim of improvement.</p>
+<p>The first prototype will show one happy path and a bank-authorization interruption with a preserved draft. I will also show processing and an unknown-outcome state so recovery does not imply a second payment. A confirmed payment only appears after a simulated final response. Backend duplicate prevention is a technical dependency; disabling a button alone is insufficient.</p>
+<p>If user sessions are unavailable, I will perform a heuristic walkthrough and label it as such. Business validation would later compare eligible completion and repeat use against a baseline, with duplicate-payment and source-selection guardrails.</p>
+<h2 id="brazil-constraints-and-feasible-scope">Brazil constraints and feasible scope</h2>
+<p>I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I will use a bank-redirection journey as the conservative prototype assumption, and keep company approvals separate from bank authorization. <a href="https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado">Central Bank: Open Finance customer journey</a>, <a href="https://www.bcb.gov.br/detalhenoticia/568/noticia">Central Bank: payment initiation</a>.</p>
+<p>Before a production implementation, the authorized initiator or partner, participating banks, PJ account eligibility, authorized representatives, bank approval layers, limits and current journey specifications would need confirmation. I document these as implementation dependencies. Bank selection should reflect verified eligibility, not imply that every bank or business account is supported. I have not established Clara's authorization or partner setup for this feature. The normative pages for Resolution 406 and Instruction 760 did not expose their full text in the research tool; their current applicability remains a verification task rather than a settled design claim.</p>
+<p>For privacy, the LGPD's purpose, necessity, transparency and security principles inform minimizing data in the interface and prototype. Open Finance payment consent and the legal basis for other personal-data processing are separate considerations. Personal data can appear even in a business-account journey; a legal review must define lawful basis, retention, roles and notices before production. This case uses fictional data and stores no real credentials. <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm">LGPD, especially Articles 6, 7 and 46</a>.</p>
+<p>For accessibility I will check keyboard access, visible focus, labels, textual errors and status messages. A 32 px visual control can remain compact while respecting applicable target-size and spacing requirements; dense icon actions need particular review. I am using WCAG 2.2 as a checking reference, not claiming certified conformance. <a href="https://www.w3.org/WAI/WCAG22/quickref/">WCAG 2.2 quick reference</a>.</p>
+<p><strong>In scope:</strong> one supplier, BRL, one Pix payment, one illustrated external business account, first connection, payment-specific authorization, existing company approvals, result tracking and one main recovery scenario. The illustrated bank is a placeholder, not an eligibility claim.</p>
+<p><strong>Out of scope:</strong> batch execution, recurring or automatic Pix, FX, a full bank-management module, no-redirection promises, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.</p>
+<h2 id="two-day-delivery-plan">Two-day delivery plan</h2>
+<table>
+<thead>
+<tr>
+<th>Window</th>
+<th>Work</th>
+<th>Reviewable output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Day 1 — frame and decide</td>
+<td>Finish this bounded desk research; compare the two money paths; identify PJ dependencies; choose the prototype assumption</td>
+<td>Opportunity tree, rationale, journey and state map</td>
+</tr>
+<tr>
+<td>Day 1 — build</td>
+<td>Reuse the DS for first connection, payment entry and review</td>
+<td>A compact high-fidelity happy path</td>
+</tr>
+<tr>
+<td>Day 2 — recovery and checks</td>
+<td>Add authorization interruption, processing and unknown outcome; run available usability or heuristic checks</td>
+<td>Clickable prototype, issues and explicit limitations</td>
+</tr>
+<tr>
+<td>Day 2 — prepare the walkthrough</td>
+<td>Refine hierarchy and copy; document alternatives, DS contribution and AI use; rehearse</td>
+<td>A 30-minute walkthrough with 15 minutes for discussion</td>
+</tr>
+</tbody>
+</table>
+<p>Friday's presentation should make my judgment visible: what I observed, why I selected this opportunity, how the flow protects approvals and authorization, what I learned from checks and what still depends on implementation validation. I will prioritize one coherent experience over an expanded feature set.</p>
+<h2 id="discovery-empathy-map-and-user-voice">Discovery: empathy map and user voice</h2>
+<p>I am using an empathy map to organize what I need to understand about the finance manager beyond the brief's company profile. This is a provisional map, not interview evidence. The user voice is represented by the scenario in the brief and questions to investigate; I have not collected verbatim quotes.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Working interpretation</th>
+<th>Evidence level</th>
+<th>What I need to hear or observe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Does</td>
+<td>Moves funds from a bank to Clara before paying suppliers</td>
+<td>Explicitly described in the brief</td>
+<td>Walk me through the most recent payment: where did you leave Clara and why?</td>
+</tr>
+<tr>
+<td>Thinks</td>
+<td>Needs to know which balance funds the payment and whether approvals are complete</td>
+<td>Design inference</td>
+<td>What do you check before submitting, approving and considering a payment finished?</td>
+</tr>
+<tr>
+<td>Feels</td>
+<td>May be uncertain after leaving Clara or when a payment has no clear outcome</td>
+<td>Unvalidated assumption</td>
+<td>At what point do you become unsure, and what do you do next?</td>
+</tr>
+<tr>
+<td>Says</td>
+<td>No direct quotes collected</td>
+<td>Research gap</td>
+<td>How would you describe the hardest part of paying suppliers in your own words?</td>
+</tr>
+<tr>
+<td>Pain</td>
+<td>Separate funding step; possible repeated entry or status checking</td>
+<td>Funding step from brief; other pains unvalidated</td>
+<td>What takes active work, what is waiting, and which workarounds do you use?</td>
+</tr>
+<tr>
+<td>Gain</td>
+<td>Pay the intended supplier from the intended account with clear control and outcome</td>
+<td>Proposed need to validate</td>
+<td>What would make you trust this flow enough to use it again?</td>
+</tr>
+</tbody>
+</table>
+<p>I will keep a short evidence log: role, task context, observation or exact quote if collected, source, date and the design decision it affects. If no user sessions fit the two-day window, these questions and gaps remain visible; a heuristic review does not become a user interview.</p>
+<p>To bring the business perspective into my decisions, I use the brief and Clara's public value proposition to connect design decisions to candidate outcomes: eligible payment completion, adoption and repeat use. Approval and exception needs come from documented behavior; bank eligibility and authorization remain implementation dependencies. These are candidate business outcomes to validate.</p>
+<h2 id="jobs-to-be-done-and-decision-traceability">Jobs to be done and decision traceability</h2>
+<p><strong>Primary job, inferred from the brief:</strong> When I need to pay a supplier and the money is held at another bank, I need to use the intended funds within my payment workflow and preserve required approvals, so I can pay the correct recipient and understand the outcome without managing a separate funding task.</p>
+<p>The emotional dimension I would validate is confidence about source and outcome. The organizational dimension is accountability: requester, company approver and bank-authorized representative may be different people. I should not design those roles as interchangeable.</p>
+<p><strong>Candidate business job:</strong> When a customer already organizes supplier payments in Clara but funds them elsewhere, help that customer complete eligible operations through Clara with intact controls, so Accounts Payable becomes useful more consistently. This is a business hypothesis, not a confirmed internal objective.</p>
+<table>
+<thead>
+<tr>
+<th>Opportunity or requirement</th>
+<th>Job fragment</th>
+<th>Hypothesis</th>
+<th>Experiment</th>
+<th>Decision criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selected opportunity: external funding in context</td>
+<td>Use the intended funds without a separate funding task</td>
+<td>O1-H1: source selection in the payment flow reduces avoidable switching</td>
+<td>Compare direct external payment and initiated top-up</td>
+<td>Correct source comprehension and successful completion without critical errors</td>
+</tr>
+<tr>
+<td>Requirement: clear authority and next step</td>
+<td>Preserve approvals and know who must act</td>
+<td>O1-H2: explicit actors and stages reduce confusion</td>
+<td>Requester/approver explain review and next authorization</td>
+<td>Distinguish company approval, bank authorization and settlement</td>
+</tr>
+<tr>
+<td>Requirement: safe recovery</td>
+<td>Know the outcome before trying again</td>
+<td>O1-H3: retained context and specific states support safe resumption</td>
+<td>Interrupted authorization, confirmed failure and unknown outcome</td>
+<td>Resume without re-entry or duplicate-payment intent</td>
+</tr>
+<tr>
+<td>Deferred opportunity: supplier volume</td>
+<td>Repeat the job across many suppliers</td>
+<td>Future hypothesis: batching reduces repetitive work</td>
+<td>Deferred until individual flow and bank support are understood</td>
+<td>Outside the two-day prototype</td>
+</tr>
+</tbody>
+</table>
+<p>These criteria are diagnostic for design iteration. I have no baseline or completed experiment from which to claim reduced time, higher adoption or commercial impact. I will revise the job and opportunity tree if user evidence contradicts the assumptions.</p>
+<h2 id="hypothesis-portfolio-by-opportunity">Hypothesis portfolio by opportunity</h2>
+<p>I am recording multiple hypotheses for each candidate opportunity, while keeping the proposal and prototype focused on <strong>O1: external funding within the payment context</strong>. O2 and O3 surface needs that O1 must respect; I am not building separate approval or recovery products. O4 remains deferred.</p>
+<table>
+<thead>
+<tr>
+<th>Candidate opportunity</th>
+<th>Hypothesis</th>
+<th>What could support or challenge it</th>
+<th>Prototype scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1 — external funding in context</td>
+<td>O1-H1: presenting the source during payment creation could remove avoidable switching compared with a separate top-up task</td>
+<td>Path comparison; completion, correct source and active effort</td>
+<td>Selected</td>
+</tr>
+<tr>
+<td>O1 — external funding in context</td>
+<td>O1-H2: separating company approval from bank authorization could make the next actor and step understandable</td>
+<td>Requester/approver explain who acts next and whether funds moved</td>
+<td>Selected</td>
+</tr>
+<tr>
+<td>O1 — external funding in context</td>
+<td>O1-H3: a preserved draft and explicit outcome could support recovery without a duplicate attempt</td>
+<td>Authorization interruption and unknown-outcome task</td>
+<td>Selected</td>
+</tr>
+<tr>
+<td>O1 — external funding in context</td>
+<td>O1-H4: grouping source, recipient and amount with the related action could reduce review omissions</td>
+<td>Locate and explain the three details; identify the next action</td>
+<td>Selected</td>
+</tr>
+<tr>
+<td>O2 — understand authority and next steps</td>
+<td>O2-H1: showing the next responsible person could reduce status-checking effort</td>
+<td>Observe how the team currently follows up on approvals</td>
+<td>Candidate; no separate prototype</td>
+</tr>
+<tr>
+<td>O2 — understand authority and next steps</td>
+<td>O2-H2: explaining each approver's scope could reduce confusion between company and bank permissions</td>
+<td>Compare comprehension across requester and signatory roles</td>
+<td>Candidate; dependency considered in O1</td>
+</tr>
+<tr>
+<td>O3 — recover with context</td>
+<td>O3-H1: retaining payment data after interruption could reduce repeated entry</td>
+<td>Observe resumption and fields re-entered</td>
+<td>Candidate; requirement considered in O1</td>
+</tr>
+<tr>
+<td>O3 — recover with context</td>
+<td>O3-H2: different actions for confirmed failure and unknown outcome could discourage unsafe retries</td>
+<td>Ask what the person would do in each state</td>
+<td>Candidate; requirement considered in O1</td>
+</tr>
+<tr>
+<td>O4 — supplier volume</td>
+<td>O4-H1: reusing a verified source across eligible batch items could reduce repetitive setup</td>
+<td>Batch task study after bank eligibility is established</td>
+<td>Deferred</td>
+</tr>
+<tr>
+<td>O4 — supplier volume</td>
+<td>O4-H2: item-level results could make partial failures easier to reconcile</td>
+<td>Partial-result comprehension and recovery task</td>
+<td>Deferred</td>
+</tr>
+</tbody>
+</table>
+<h3 id="selected-opportunity-ux-and-ui-experiments">Selected opportunity: UX and UI experiments</h3>
+<table>
+<thead>
+<tr>
+<th>Hypothesis</th>
+<th>Design variable</th>
+<th>Experiment and measure</th>
+<th>What I would change based on evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O1-H1</td>
+<td>Direct external payment versus initiated top-up</td>
+<td>Same supplier task on both paths; completion, correct source, active time and avoidable navigation</td>
+<td>Choose a feasible money path and its entry point</td>
+</tr>
+<tr>
+<td>O1-H2</td>
+<td>Review content, actor labels and authorization sequence</td>
+<td>Explain source, next actor and current state without prompting; log each correct/incorrect answer</td>
+<td>Revise review copy, role distinctions and transitions</td>
+</tr>
+<tr>
+<td>O1-H3</td>
+<td>Retained context and recovery actions</td>
+<td>Return from interrupted authorization; inspect unknown outcome; log re-entry and duplicate-payment intent</td>
+<td>Revise return state, status detail and safe next action</td>
+</tr>
+<tr>
+<td>O1-H4</td>
+<td>Proximity, hierarchy and action placement using the DS</td>
+<td>Locate source, recipient, amount and next action in review; record omissions and hesitation</td>
+<td>Adjust grouping, emphasis and related actions without changing the DS scale</td>
+</tr>
+</tbody>
+</table>
+<p>I will log observations per task and distinguish a participant's answer from my interpretation. Source mistakes, confusing approval with settlement, lost drafts and duplicate intent are critical issues. I will address them before consolidating the flow. These are formative checks, not evidence of a statistically measured uplift.</p>
+<p>The two-day delivery still covers one coherent O1 flow. Four hypotheses guide different aspects of that same experience; they do not require four features or four independent prototypes.</p>
+<h2 id="design-and-engineering-contributions">Design and engineering contributions</h2>
+<p>I organized the case around a traceable sequence: brief → product context → observed journey → provisional user understanding → desk research → opportunity → hypotheses → proposed experience. This lets me explain why a screen or interaction belongs in the flow, rather than presenting UI without its reasoning.</p>
+<p>For design craft, I established compact typography, proximity rules, a neutral palette, control sizes, radii and restrained surface elevation. I revised component examples and shared patterns against that foundation. The independent DS documentation exposes working examples, source code and a contract so the same decisions can carry from the case hub into the proposal.</p>
+<p>For implementation continuity, I built the hub in React and TypeScript, with a public component API, a token/component registry and generated manifests. Build checks cover generated artifacts, registered components, selected import boundaries and token rules. The repository includes a reproducible npm build and CI verification. These checks support consistency; they do not establish complete accessibility or product-flow validation.</p>
+<p>The trade-off is deliberate: I am using a local reusable foundation to prototype and review the experience within two days. I have not built a financial backend, connected real bank APIs, validated an initiator partnership or executed a payment. Those boundaries keep the prototype reviewable without overstating feasibility.</p>
+<p>My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.</p></main></body></html>

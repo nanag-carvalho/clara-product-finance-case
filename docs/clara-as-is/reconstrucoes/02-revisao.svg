@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="610" viewBox="0 0 1000 610">
+<rect width="1000" height="610" fill="#f5f7fa"/>
+<rect x="24" y="22" width="952" height="46" rx="6" fill="#fff4d6"/>
+<text x="44" y="51" font-family="Arial" font-size="17" fill="#78531c">RECONSTRUCTION FOR VALIDATION · Not a product screenshot · Fictional data</text>
+<rect x="24" y="90" width="952" height="432" rx="9" fill="white" stroke="#d2dce8"/>
+<text x="52" y="135" font-family="Arial" font-size="28" font-weight="bold" fill="#243249">Review before submission</text>
+<text x="52" y="170" font-family="Arial" font-size="16" fill="#526887">Review</text>
+<text x="52" y="210" font-family="Arial" font-size="15" fill="#626f81">Recipient</text>
+<text x="300" y="210" font-family="Arial" font-size="16" fill="#243249">Example Supplier Ltd.</text>
+<line x1="52" y1="226" x2="944" y2="226" stroke="#e2e7ed"/>
+<text x="52" y="258" font-family="Arial" font-size="15" fill="#626f81">Method and amount</text>
+<text x="300" y="258" font-family="Arial" font-size="16" fill="#243249">Pix · R$ 1.750,00</text>
+<line x1="52" y1="274" x2="944" y2="274" stroke="#e2e7ed"/>
+<text x="52" y="306" font-family="Arial" font-size="15" fill="#626f81">Source</text>
+<text x="300" y="306" font-family="Arial" font-size="16" fill="#243249">Clara account · identification to validate</text>
+<line x1="52" y1="322" x2="944" y2="322" stroke="#e2e7ed"/>
+<text x="52" y="354" font-family="Arial" font-size="15" fill="#626f81">Documents</text>
+<text x="300" y="354" font-family="Arial" font-size="16" fill="#243249">Request attachment · example</text>
+<line x1="52" y1="370" x2="944" y2="370" stroke="#e2e7ed"/>
+<text x="52" y="402" font-family="Arial" font-size="15" fill="#626f81">Approvals</text>
+<text x="300" y="402" font-family="Arial" font-size="16" fill="#243249">Apply company rules</text>
+<line x1="52" y1="418" x2="944" y2="418" stroke="#e2e7ed"/>
+<rect x="52" y="464" width="480" height="38" rx="5" fill="#365b93"/>
+<text x="72" y="489" font-family="Arial" font-size="16" fill="white">Submit request · illustrative action</text>
+<text x="24" y="558" font-family="Arial" font-size="15" fill="#59687a">Content, field order and submission label were not observed in this screen.</text>
+<text x="24" y="588" font-family="Arial" font-size="14" fill="#59687a">Low-fidelity journey diagram. Does not establish Clara product behavior.</text></svg>
