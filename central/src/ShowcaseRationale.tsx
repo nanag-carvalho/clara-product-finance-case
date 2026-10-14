@@ -24,19 +24,18 @@ export function BusinessRationale() {
     >
       <p className="eyebrow">02 · BUSINESS OPPORTUNITY</p>
       <div className="showcase-chapter-heading">
-        <h2>The balance is elsewhere. The payment can start here.</h2>
+        <h2>Give customers a reason to keep paying through Clara.</h2>
         <p>
-          The opportunity was already in the brief: initiate a payment through
-          Open Finance. My contribution was to work through what that means for
-          the person using Clara, especially when their money is elsewhere but
-          their payment work needs to stay organized here.
+          Open Finance was the route proposed in the brief. I focused on what
+          would make it useful in the existing operation: paying from another
+          bank while keeping the request, company review and payment history
+          together in Clara.
         </p>
       </div>
       <p className="showcase-editorial-note">
-        For the finance team, this could remove a separate preparation task. For
-        Clara, it could give customers another reason to keep payments in the
-        product. I treated that as an adoption hypothesis, while keeping company
-        approval, payment authorization and confirmation distinct.
+        Removing the top-up could reduce preparation for the finance team and
+        make Clara useful for payments that would otherwise happen elsewhere.
+        That is the adoption opportunity I would evaluate alongside task effort.
       </p>
     </section>
   )
@@ -47,20 +46,18 @@ export function ProcessRationale() {
     <section id="story-process" tabIndex={-1}>
       <p className="eyebrow">04 · MY PROCESS</p>
       <div className="showcase-chapter-heading">
-        <h2>I began with the work around the payment.</h2>
+        <h2>I used each iteration to question the next decision.</h2>
         <p>
-          I started by separating what I could see in the current product from
-          what the brief described and what still needed confirmation. Then I
-          mapped the decisions along the payment, including the moments when
-          someone leaves, returns or needs to correct something. That gave me a
-          structure to challenge as the interface took shape.
+          With the funding route defined, I mapped what the person needs to
+          decide at each step, including when they leave, return or correct a
+          request. I used that map to review the interface as it took shape:
+          could someone see what matters and understand what to do next?
         </p>
       </div>
       <p>
-        During iteration, I kept returning to the experience on screen: was the
-        next action clear, was the important information getting enough space,
-        and did this still feel like the same product? That review changed the
-        entry, the mobile queue and the correction transition.
+        Several early versions worked logically but felt crowded or abrupt. I
+        revised the composition and transitions, using proximity, progressive
+        disclosure and consistent feedback to keep those decisions in context.
       </p>
       <IterationChoices />
     </section>
@@ -74,10 +71,9 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
       <div className="showcase-chapter-heading">
         <h2>Familiar workspace. Clearer priorities.</h2>
         <p>
-          I kept the sidebar and payment queue as familiar anchors, then used
-          hierarchy and spacing to make the new decisions easier to find. The
-          neutral palette and compact typography support the operational work,
-          while blue gives actions and selection a consistent emphasis.
+          Those changes also needed to belong to Clara. I retained the sidebar
+          and payment queue as familiar anchors, then adjusted the hierarchy
+          around the funding source, status and available action.
         </p>
       </div>
       <div className="showcase-visual-comparison">
@@ -86,8 +82,8 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
             <Badge variant="outline">Observed demo</Badge>
             <h3>The starting point</h3>
             <p>
-              I kept the existing payment queue and navigation as anchors for
-              the new flow.
+              The observed screen established the structure and density I needed
+              to work with.
             </p>
           </figcaption>
           <ResearchMarkdown
@@ -110,11 +106,6 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
           />
         </figure>
       </div>
-      <p className="showcase-editorial-note">
-        Nunito Sans, neutral surfaces and blue emphasis give the proposal a
-        consistent vocabulary. I used spacing to group related details and
-        reserve stronger emphasis for the decision the person needs to make.
-      </p>
       <DesignDecisions />
       <a
         className="showcase-detail-link"
@@ -318,71 +309,48 @@ export function SharedSystemProof() {
 export function EvaluationGuide() {
   return (
     <div className="showcase-evaluation">
-      <div className="showcase-coverage-panel showcase-panel showcase-panel-soft">
+      <div className="showcase-coverage-panel showcase-panel showcase-panel-dark">
         <div className="showcase-coverage-heading">
           <span>{scenarioOptions.length}</span>
           <div>
-            <h4>Situations around one supplier payment</h4>
-            <p>
-              From preparing the request to knowing what happened to the money.
-            </p>
+            <p className="eyebrow">SCENARIOS TO EXPLORE</p>
+            <h3>One payment. Different ways forward.</h3>
           </div>
-        </div>
-        <div className="showcase-coverage-path" aria-hidden="true">
-          <span>Prepare</span>
-          <ArrowRight size={16} />
-          <span>Decide</span>
-          <ArrowRight size={16} />
-          <span>Confirm</span>
         </div>
         <div className="showcase-scenario-branches">
           <div>
-            <h4>
-              The expected flow <Badge variant="outline">5 scenarios</Badge>
-            </h4>
+            <div className="showcase-branch-heading">
+              <span>5</span>
+              <h4>From preparation to payment</h4>
+            </div>
             <p>
-              Establish the source, get the decision and confirm the outcome.
+              First connection · Connected account · Company approval ·
+              Authorization · Completed payment
             </p>
-            <ul>
-              <li>First bank connection</li>
-              <li>Payment from a connected account</li>
-              <li>Company approval pending</li>
-              <li>Payment authorization</li>
-              <li>Payment completed</li>
-            </ul>
           </div>
           <div>
-            <h4>
-              When the flow breaks <Badge variant="outline">7 scenarios</Badge>
-            </h4>
-            <p>Explain what happened and preserve a clear way to continue.</p>
-            <ul>
-              <li>Request rejected</li>
-              <li>Device confirmation canceled</li>
-              <li>Bank connection expired</li>
-              <li>Insufficient funds</li>
-              <li>Bank limit exceeded</li>
-              <li>Confirmed service failure</li>
-              <li>Payment result unknown</li>
-            </ul>
+            <div className="showcase-branch-heading">
+              <span>7</span>
+              <h4>When something needs attention</h4>
+            </div>
+            <p>
+              Rejected request · Canceled confirmation · Expired connection ·
+              Insufficient funds · Bank limit · Service failure · Unknown result
+            </p>
           </div>
         </div>
         <aside
           className="showcase-explore-instructions"
           aria-label="How to explore the prototype"
         >
-          <h4>Try a situation</h4>
-          <ol>
-            <li>
-              Open the <strong>Scenarios</strong> explorer.
-            </li>
-            <li>Choose a situation to load its saved state.</li>
-            <li>
-              Follow the next action. Use the floating{' '}
-              <strong>Scenarios</strong> button to switch.
-            </li>
-          </ol>
-          <Button asChild>
+          <div>
+            <h4>Choose a situation. Follow the next action.</h4>
+            <p>
+              Each scenario opens a saved state. Use the floating{' '}
+              <strong>Scenarios</strong> button to try another.
+            </p>
+          </div>
+          <Button variant="outline" asChild>
             <a
               href="/prototype.html?explore=scenarios"
               target="clara-case-prototype"
@@ -393,7 +361,10 @@ export function EvaluationGuide() {
         </aside>
       </div>
       <div className="showcase-check-summary">
-        <h4>What I checked in code</h4>
+        <h4>
+          I checked behavior in code; the next step is evaluating it with
+          people.
+        </h4>
         <p>
           <strong>39 domain and registry tests</strong> check rules and
           contracts. <strong>14 browser test cases</strong> exercise the
@@ -401,15 +372,16 @@ export function EvaluationGuide() {
           authorization and recovery.
         </p>
         <p className="story-caption">
-          27 applicable runs; one mobile-only case skipped on desktop. User
-          comprehension and effort still need participant evaluation.
+          27 desktop/mobile runs passed; one mobile-only case is skipped on
+          desktop. These checks cover implementation behavior.
         </p>
       </div>
       <p>
-        I would then observe whether people choose the right source (H1),
-        identify the next actor (H2), recover without duplicates (H3) and review
-        the right details (H4). Active handling time connects these observations
-        to the original effort-reduction goal.
+        In participant sessions, I would observe whether people choose the right
+        source (H1), identify the next actor (H2), recover without duplicates
+        (H3) and review the right details (H4). I would measure active handling
+        time for a correctly completed payment, recording passive waiting
+        separately, to assess whether the new route actually reduces effort.
       </p>
       <a
         className="showcase-detail-link"

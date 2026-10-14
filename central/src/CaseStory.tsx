@@ -241,10 +241,10 @@ export default function CaseStory({
                   </div>
                 </div>
                 <p>
-                  First use connects the bank account and device. A valid
-                  connection can be reused. I kept company approval separate
-                  from authorization so reducing preparation effort does not
-                  hide who can release the payment.
+                  This removes the separate top-up, but retains two distinct
+                  decisions: the company approves the request, then an
+                  authorized person releases the payment. First use also needs
+                  an account connection, which I explore below.
                 </p>
               </section>
             </div>
@@ -267,10 +267,10 @@ export default function CaseStory({
                 <div className="showcase-chapter-heading">
                   <h2>Four questions kept the decisions connected.</h2>
                   <p>
-                    From there, I turned the main decisions into four questions
-                    I could return to while designing. They helped me connect
-                    each interface choice to something I would want to observe
-                    in a user evaluation.
+                    To give those iterations a consistent reference, I framed
+                    four questions about the user’s task. Each became a
+                    hypothesis linked to situations in the prototype and an
+                    observation for a future evaluation.
                   </p>
                 </div>
                 <p className="showcase-editorial-note">
@@ -304,11 +304,11 @@ export default function CaseStory({
                 <div className="showcase-chapter-heading">
                   <h2>One payment, from preparation to a known outcome.</h2>
                   <p>
-                    Once the person starts a payment, I wanted the interface to
-                    help them move forward without asking them to classify
-                    information the system can recognize. That led to a unified
-                    Pix field, explicit recipient lookup and a review that
-                    brings recipient, amount and source together.
+                    With that visual language in place, I worked through the
+                    payment itself. A unified Pix field accepts the recipient
+                    information without asking the person to classify it first;
+                    lookup then brings the recipient into a review alongside the
+                    amount and funding source.
                   </p>
                 </div>
                 <JourneyEntry />
@@ -376,13 +376,13 @@ export default function CaseStory({
               <section id="story-foundation" tabIndex={-1}>
                 <p className="eyebrow">08 · DESIGN INTO CODE</p>
                 <div className="showcase-chapter-heading">
-                  <h2>Make the design decisions reusable, including for AI.</h2>
+                  <h2>Carry the decisions into shared components.</h2>
                   <p>
-                    As I refined the screens, the same decisions kept appearing:
-                    what deserves emphasis, how a field behaves on mobile and
-                    how a state explains the next action. I brought those
-                    decisions into the DS so they could be reused consistently,
-                    including during AI-assisted implementation.
+                    The same interaction choices appeared across several
+                    screens, so I moved them into shared tokens and component
+                    patterns. The hub, prototype and this showcase consume the
+                    same DS; its public API also gives AI-assisted
+                    implementation an explicit contract to follow.
                   </p>
                 </div>
 
