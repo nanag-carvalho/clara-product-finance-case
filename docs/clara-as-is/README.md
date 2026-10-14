@@ -526,7 +526,7 @@ The brief asks me to initiate a Pix from Clara using the balance held at another
 
 ## Proposed flow
 
-I start with recipient and amount, then reveal source preparation when needed. The existing wireflow starts with connection; this map defines the next iteration to compare. An eligible, already prepared account skips setup. Bank authorization remains provider-controlled.
+The wireflow starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Bank authorization remains provider-controlled.
 
 **Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Open each diagram at full size to inspect its branches. Each stage also has a concise text description.
 
@@ -569,7 +569,7 @@ I will compare interaction variants with the same recipient, amount, debit accou
 
 **Later business check:** in a pilot, track unique eligible payment intents reaching confirmed settlement divided by eligible intents started, within a defined window. Retries remain the same intent; segment first and repeat use. A baseline is needed before setting an uplift target.
 
-The next step is the clickable wireflow: compare source-first and payment-first entry, then explore review and recovery. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
+The clickable wireflow now implements payment-first entry. I will test source comprehension, review and recovery before consolidating the interaction. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
 
 
 
@@ -709,21 +709,13 @@ My work is visible in the framing, scope decisions, research synthesis, interfac
 
 ## Low-fidelity wireflow and motion exploration
 
-I added a clickable wireflow before refining the high-fidelity prototype. Its neutral surfaces and dashed boundaries keep the discussion on sequence, information, commitments and recovery. The surrounding Payments workspace remains visible; bank panels represent an external service boundary, with explicit exploration controls rather than invented bank screens.
+The task starts with recipient and amount, followed by account choice, preparation when needed, review, company approval and bank authorization. I removed repeated summaries and explanatory panels so the participant can act on the information relevant to each decision.
 
-The flow covers source selection, first connection, recipient lookup, amount, review, company approval, bank handoff and outcome. I can close and reopen the same request in the current session, return before authorization, and choose confirmed success, confirmed failure or an unknown result. The active wireflow uses direct external payment. An unknown result exposes status checking instead of a new submission.
+**Session controls** contain the facilitator setup: first or repeat connection, confirmed success, insufficient funds and unknown outcome. Keep the panel closed during the task. For H4, set a mismatched amount before asking the participant to review it against the task brief.
 
-| Interaction | Purpose | Exploration check |
-| --- | --- | --- |
-| Account selection feedback | Make the chosen source visible before connection. | H1: identify the bank and distinguish the route. |
-| Lookup loading and recipient confirmation | Show that validation is happening and when data becomes available. | H4: check the returned identity before review. |
-| 160 ms phase transition and heading focus | Preserve orientation between task views. | Keyboard focus reaches the new heading; movement can be disabled and respects reduced motion. |
-| Approval and bank-return feedback | Distinguish the recorded company decision from money movement. | H2: explain what has happened and what the next action permits. |
-| Processing and same-request status check | Make waiting visible without inviting a duplicate. | H3: recover using the existing request. |
+The wireflow preserves details when closed and reopened in the same session. An interrupted authorization retains the request; an unknown result offers a status check of that same payment. A confirmed failure returns to review and requires fresh approval. Restart clears the task; reloading clears session progress.
 
-The 500 ms lookup and 1 second service response are illustrative interaction timings, not estimates of a real bank API. Design notes are outside the payment task. Restart resets the exploration; reloading also clears form data. Approval outcomes and bank returns are controlled walkthrough actions, not real role-based operations. The existing high-fidelity prototype remains available separately.
-
-I will use this wireflow to identify unnecessary steps, missing information and confusing actions before committing to the final container, motion and visual treatment. The shared DS checks now include the wireflow consumer and its token usage.
+Bank panels represent the external service boundary, and the approval step identifies the approver role. Lookup and result delays are illustrative. Shared DS controls provide loading feedback, heading focus and reduced-motion support. Usability findings remain to be recorded.
 
 ## Prototype implementation and comparison
 
