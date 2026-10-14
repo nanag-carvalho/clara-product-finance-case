@@ -1,3 +1,9 @@
+import {
+  defaultBankSupport,
+  authorizationRoute,
+  type BankSupport,
+  type AuthorizationRoute,
+} from './bank-capabilities.ts'
 /** Interaction model for payment details, source preparation and request context. This layer translates design requirements into state transitions without coupling them to JSX. */
 import { recognizePix } from './pix-input.ts'
 import {
@@ -12,6 +18,7 @@ export { money, demoKey, amountCents } from './model.ts'
 export type { Outcome, MoneyPath, Stage } from './model.ts'
 export type State = PaymentState & {
   accounts: string[]
+  bankSupport: BankSupport
   description: string
   attachment: string
   recipientDocument: string
@@ -22,6 +29,7 @@ export type State = PaymentState & {
 }
 export type Action = (
   | PaymentAction
+  | { type: 'BANK_SUPPORT'; bank: string; route: AuthorizationRoute }
   | { type: 'REGISTER_ACCOUNT'; bank: string; at?: string }
   | {
       type: 'CONTEXT'
@@ -31,7 +39,7 @@ export type Action = (
     }
   | { type: 'REJECT'; value: string; at?: string }
   | { type: 'EXPIRE_ACCOUNT'; bank: string; at?: string }
-) & { actor?: 'requester' | 'approver' }
+) & { actor?: 'requester' | 'approver'; at?: string }
 export const recipientFixtures: Record<string, string> = {
   [demoKey]: 'Example Supplier Ltd.',
   'billing@atlas.test': 'Atlas Supplies',
@@ -53,6 +61,7 @@ export function initialState(
     ...paymentInitialState('direct', intent),
     connected: prepared,
     accounts: prepared ? ['Example Bank A'] : [],
+    bankSupport: { ...defaultBankSupport },
     description: '',
     attachment: '',
     recipientDocument: '',
@@ -63,6 +72,24 @@ export function initialState(
   }
 }
 export function reducer(s: State, a: Action): State {
+  if (a.type === 'BANK_SUPPORT')
+    return { ...s, bankSupport: { ...s.bankSupport, [a.bank]: a.route } }
+  const route = authorizationRoute(s.bankSupport, s.bank)
+  if (
+    ['CONNECT', 'CONNECTED', 'REQUEST', 'AUTHORIZE', 'SEND'].includes(a.type) &&
+    route === 'unavailable'
+  )
+    return {
+      ...s,
+      error:
+        'This account cannot initiate this payment. Choose another available account; your details are saved.',
+    }
+  if (
+    a.type === 'REGISTER_ACCOUNT' &&
+    authorizationRoute(s.bankSupport, a.bank) === 'unavailable'
+  )
+    return s
+
   if ((a.type === 'APPROVE' || a.type === 'REJECT') && a.actor !== 'approver')
     return s
   if (a.type === 'CONTEXT')
@@ -196,13 +223,18 @@ export function reducer(s: State, a: Action): State {
       ...updated,
       accounts: s.accounts,
       notice:
-        'Device confirmation was canceled. Your payment and company approval are saved.',
+        route === 'bank'
+          ? 'Bank authorization was canceled. Your payment and company approval are saved.'
+          : 'Device confirmation was canceled. Your payment and company approval are saved.',
       events: updated.events.map((event, i) =>
         i === updated.events.length - 1
           ? {
               ...event,
               title: 'Payment authorization interrupted',
-              description: 'Device confirmation canceled before submission.',
+              description:
+                route === 'bank'
+                  ? 'Bank authorization canceled before submission.'
+                  : 'Device confirmation canceled before submission.',
             }
           : event,
       ),

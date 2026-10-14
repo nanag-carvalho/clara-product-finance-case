@@ -10,7 +10,7 @@ export const paymentStatusLabels: Record<Stage, string> = {
   review: 'Ready for review',
   approval: 'Pending company approval',
   authorize: 'Payment authorization required',
-  bank: 'Device authorization',
+  bank: 'Payment confirmation',
   processing: 'Processing',
   funded: 'Top-up confirmed',
   failed: 'Failed',

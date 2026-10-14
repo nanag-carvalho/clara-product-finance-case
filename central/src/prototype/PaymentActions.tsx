@@ -1,9 +1,11 @@
+import type { AuthorizationRoute } from './bank-capabilities'
 import { ArrowClockwise, ArrowRight } from '@phosphor-icons/react'
 import { Button } from '@/design-system'
 import type { Stage } from './flow-model'
 
 type Props = {
   stage: Stage
+  authorizationRoute: AuthorizationRoute
   transition: string | null
   connected: boolean
   deviceLinked: boolean
@@ -42,7 +44,10 @@ export function PaymentActions(props: Props) {
       )
     case 'connect':
       return (
-        <Button disabled={busy} onClick={props.onConnect}>
+        <Button
+          disabled={busy || props.authorizationRoute === 'unavailable'}
+          onClick={props.onConnect}
+        >
           {props.connected ? 'Review payment' : 'Connect ' + props.bank}
         </Button>
       )
@@ -120,13 +125,20 @@ export function PaymentActions(props: Props) {
         </>
       )
     case 'authorize':
+      if (!props.approvalReceipt && props.authorizationRoute === 'unavailable')
+        return <Button onClick={props.onEdit}>Change funding account</Button>
       return props.approvalReceipt ? (
         <Button variant="outline" onClick={props.onClose}>
           Back to payments
         </Button>
       ) : (
-        <Button disabled={busy} onClick={props.onAuthorize}>
-          Authorize payment
+        <Button
+          disabled={busy || props.authorizationRoute === 'unavailable'}
+          onClick={props.onAuthorize}
+        >
+          {props.authorizationRoute === 'bank'
+            ? 'Continue to bank'
+            : 'Authorize payment'}
         </Button>
       )
     case 'bank':
@@ -136,7 +148,9 @@ export function PaymentActions(props: Props) {
           loadingLabel="Authorizing"
           onClick={props.onConfirmPayment}
         >
-          Confirm with device
+          {props.authorizationRoute === 'bank'
+            ? 'Continue after bank authorization'
+            : 'Confirm with device'}
         </Button>
       )
     case 'funded':

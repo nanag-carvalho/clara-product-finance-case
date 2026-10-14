@@ -1,3 +1,4 @@
+import type { AuthorizationRoute } from './bank-capabilities'
 import {
   Badge,
   Button,
@@ -25,6 +26,8 @@ type Props = {
   onWorkspace: (data: 'empty' | 'populated') => void
   onScenario: (option: (typeof scenarioOptions)[number]) => void
   onPixExample: () => void
+  bankBRoute: AuthorizationRoute
+  onBankBRouteChange: (route: AuthorizationRoute) => void
   outcome: Outcome
   onOutcomeChange: (outcome: Outcome) => void
 }
@@ -35,6 +38,8 @@ export function ScenarioExplorer({
   onWorkspace,
   onScenario,
   onPixExample,
+  bankBRoute,
+  onBankBRouteChange,
   outcome,
   onOutcomeChange,
 }: Props) {
@@ -141,6 +146,35 @@ export function ScenarioExplorer({
             <details className="proto-simulation-settings">
               <summary>Simulation settings</summary>
               <Stack gap={8}>
+                <Label htmlFor="scenario-bank-support">
+                  Example Bank B · account support
+                </Label>
+                <p className="type-caption">
+                  Fictional capability response. Bank A keeps linked-device
+                  authorization. Open a payment and select Bank B to inspect the
+                  other route.
+                </p>
+                <Select
+                  value={bankBRoute}
+                  onValueChange={(v) =>
+                    onBankBRouteChange(v as AuthorizationRoute)
+                  }
+                >
+                  <SelectTrigger id="scenario-bank-support">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bank">
+                      Authorization at the bank
+                    </SelectItem>
+                    <SelectItem value="unavailable">
+                      Account unavailable
+                    </SelectItem>
+                    <SelectItem value="device">
+                      Linked-device authorization
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 <Label htmlFor="scenario-outcome">Next service response</Label>
                 <p className="type-caption">
                   Applies after authorization or a status check. It does not

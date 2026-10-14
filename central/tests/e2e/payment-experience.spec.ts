@@ -319,3 +319,127 @@ test('mobile filters and selection remain usable without horizontal overflow', a
     ),
   ).toBe(true)
 })
+
+test('bank authorization returns to the same approved request before settlement', async ({
+  page,
+}) => {
+  await page.goto('/prototype.html?scenario=first')
+  await page
+    .getByRole('button', { name: 'Find recipient', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Identified Pix recipient' }),
+  ).toBeVisible()
+  await continueDetails(page)
+  await page.getByRole('radio', { name: /Example Bank B/ }).check()
+  await expect(
+    page.getByText('Confirm each payment at your bank, then return to Clara', {
+      exact: true,
+    }),
+  ).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Connect Example Bank B', exact: true })
+    .click()
+  await page
+    .getByRole('button', {
+      name: 'Continue after bank confirmation',
+      exact: true,
+    })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Review the payment', exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'Confirm with device', exact: true }),
+  ).toHaveCount(0)
+  await page
+    .getByRole('button', { name: 'Request approval', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Back to payments', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Review request', exact: true })
+    .first()
+    .click()
+  await page
+    .getByRole('button', { name: 'Approve request', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: 'Back to payments', exact: true })
+    .click()
+  await page.getByRole('button', { name: /Ready to authorize/ }).click()
+  await page
+    .getByRole('button', { name: 'View payment', exact: true })
+    .first()
+    .click()
+  await page
+    .getByRole('button', { name: 'Continue to bank', exact: true })
+    .click()
+  await expect(
+    page.getByRole('heading', {
+      name: 'Authorize at Example Bank B',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await expect(
+    page.getByText(/The supplier has not been paid yet/),
+  ).toBeVisible()
+  await page.getByRole('button', { name: 'Back', exact: true }).click()
+  await expect(page.getByText(/Bank authorization was canceled/)).toBeVisible()
+  await page
+    .getByRole('button', { name: 'Continue to bank', exact: true })
+    .click()
+  await page
+    .getByRole('button', {
+      name: 'Continue after bank authorization',
+      exact: true,
+    })
+    .click()
+  await expect(
+    page.getByRole('heading', { name: 'Paid', exact: true }),
+  ).toBeVisible()
+  await expect(
+    page.getByText('Example Supplier Ltd.', { exact: true }).first(),
+  ).toBeVisible()
+})
+
+test('an unavailable business account cannot be selected as the payment source', async ({
+  page,
+}) => {
+  await page.goto('/prototype.html')
+  await page
+    .getByRole('button', { name: 'Explore prototype scenarios', exact: true })
+    .click()
+  await page.getByText('Simulation settings', { exact: true }).click()
+  await page
+    .getByRole('combobox', {
+      name: 'Example Bank B · account support',
+      exact: true,
+    })
+    .click()
+  await page
+    .getByRole('option', { name: 'Account unavailable', exact: true })
+    .click()
+  await page
+    .getByRole('button', { name: /First payment · connect a bank/ })
+    .click()
+  await page
+    .getByRole('button', { name: 'Find recipient', exact: true })
+    .click()
+  await expect(
+    page.getByRole('status', { name: 'Identified Pix recipient' }),
+  ).toBeVisible()
+  await continueDetails(page)
+  await expect(
+    page.getByRole('radio', { name: /Example Bank B/ }),
+  ).toBeDisabled()
+  await expect(
+    page.getByText('Payment initiation is unavailable for this account', {
+      exact: true,
+    }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('radio', { name: /Example Bank A/ }),
+  ).toBeChecked()
+})

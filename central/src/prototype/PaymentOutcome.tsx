@@ -1,3 +1,4 @@
+import { authorizationRoute } from './bank-capabilities'
 import type { PaymentReviewFields } from './payment-review'
 import { CheckCircle, Clock, Info } from '@phosphor-icons/react'
 import {
@@ -23,6 +24,10 @@ export function PaymentOutcome({
   reviewAsApprover,
   approvalReceipt,
 }: Props) {
+  const unavailable =
+    authorizationRoute(state.bankSupport, state.bank) === 'unavailable'
+  const bankHandoff =
+    authorizationRoute(state.bankSupport, state.bank) === 'bank'
   const amount = money(state.amount)
   const paid = state.stage === 'paid'
   return (
@@ -67,6 +72,16 @@ export function PaymentOutcome({
       )}
       {state.stage === 'authorize' && (
         <>
+          {unavailable && !approvalReceipt && (
+            <Alert variant="destructive">
+              <AlertTitle>Funding account unavailable</AlertTitle>
+              <AlertDescription>
+                This account cannot initiate the payment. Choose another funding
+                account, then request a new company review. Your recipient and
+                amount are saved.
+              </AlertDescription>
+            </Alert>
+          )}
           {approvalReceipt ? (
             <>
               <Completion
@@ -79,7 +94,11 @@ export function PaymentOutcome({
               compact
               kind="ready"
               title="Company approval complete"
-              description="Review the approved details before secure confirmation."
+              description={
+                bankHandoff
+                  ? 'Review the details, then authorize at your bank. You’ll return to the same payment.'
+                  : 'Review the approved details before secure confirmation.'
+              }
               owner="Authorized representative"
             />
           )}
@@ -99,8 +118,16 @@ export function PaymentOutcome({
         <>
           <FlowState
             kind="security"
-            title="Confirm with your device"
-            description="Use your device’s security method to authorize this Pix."
+            title={
+              bankHandoff
+                ? 'Authorize at ' + state.bank
+                : 'Confirm with your device'
+            }
+            description={
+              bankHandoff
+                ? 'Your bank must confirm this Pix before it is submitted. On return, Clara will track this same request. The supplier has not been paid yet.'
+                : 'Use your device’s security method to authorize this Pix.'
+            }
             owner="Authorized representative"
           />
           <ReviewSummary

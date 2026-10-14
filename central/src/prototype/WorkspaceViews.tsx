@@ -1,3 +1,8 @@
+import {
+  authorizationRoute,
+  routeDescription,
+  type BankSupport,
+} from './bank-capabilities'
 import type { ReactNode } from 'react'
 import { ArrowRight, Bank, CreditCard } from '@phosphor-icons/react'
 import {
@@ -21,6 +26,7 @@ import { FundingMenu } from './FundingMenu'
 export type PaymentQueueScope = 'all' | 'approval' | 'authorize' | 'processing'
 type Props = {
   view: WorkspaceView
+  bankSupport: BankSupport
   accounts: readonly string[]
   allPayments: readonly State[]
   paymentFilter: PaymentQueueScope
@@ -41,6 +47,7 @@ type Props = {
  * Navigation and financial commands stay with the controller. */
 export function WorkspaceViews({
   view,
+  bankSupport,
   accounts,
   allPayments,
   paymentFilter,
@@ -156,9 +163,17 @@ export function WorkspaceViews({
                       Business account · ••{' '}
                       {bank.endsWith('A') ? '4321' : '8765'}
                     </p>
-                    <Badge variant="outline">Connected on this device</Badge>
+                    <Badge variant="outline">
+                      {routeDescription[authorizationRoute(bankSupport, bank)]}
+                    </Badge>
                   </div>
-                  <Button variant="outline" onClick={() => onPayFrom(bank)}>
+                  <Button
+                    variant="outline"
+                    disabled={
+                      authorizationRoute(bankSupport, bank) === 'unavailable'
+                    }
+                    onClick={() => onPayFrom(bank)}
+                  >
                     Pay from this account
                   </Button>
                 </CardContent>
@@ -168,7 +183,7 @@ export function WorkspaceViews({
             <FlowState
               kind="setup"
               title="No bank accounts connected"
-              description="Connect an existing business account to pay suppliers through Clara. Confirm it at your bank, then enable secure payments on this device."
+              description="Connect an existing business account to pay suppliers through Clara. Confirm the account at your bank. The confirmation method for each payment depends on the account’s supported route."
               action={
                 <Button onClick={() => onConnect()}>
                   Connect bank account
@@ -241,7 +256,7 @@ export function WorkspaceViews({
                         paymentFilter === 'approval'
                           ? 'Review the saved requests before payment authorization.'
                           : paymentFilter === 'authorize'
-                            ? 'Open a payment to authorize it with the linked device.'
+                            ? 'Open an approved payment to review its details and confirmation method.'
                             : 'Waiting for a confirmed result. Check uncertain payments using the same request.'
                       }
                       owner={

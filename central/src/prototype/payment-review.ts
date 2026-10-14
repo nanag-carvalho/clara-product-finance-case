@@ -1,3 +1,4 @@
+import { authorizationRoute } from './bank-capabilities'
 import type { ReviewField } from '@/design-system'
 import { money, type State } from './flow-model'
 import { recognizePix } from './pix-input'
@@ -36,6 +37,15 @@ export function getPaymentReviewFields(
     {
       label: 'Funding account',
       value: `${state.bank} · •• ${state.bank.endsWith('A') ? '4321' : '8765'}`,
+    },
+    {
+      label: 'Payment confirmation',
+      value:
+        authorizationRoute(state.bankSupport, state.bank) === 'unavailable'
+          ? 'Unavailable for this account'
+          : authorizationRoute(state.bankSupport, state.bank) === 'bank'
+            ? 'At ' + state.bank
+            : 'On the linked device',
     },
     {
       label: 'Money path',

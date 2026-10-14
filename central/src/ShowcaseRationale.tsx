@@ -375,13 +375,13 @@ export function EvaluationGuide() {
           people.
         </h4>
         <p>
-          <strong>39 domain and registry tests</strong> check rules and
-          contracts. <strong>14 browser test cases</strong> exercise the
+          <strong>40 domain and registry tests</strong> check rules and
+          contracts. <strong>16 browser test cases</strong> exercise the
           interface on desktop and mobile, including entry, approval,
           authorization and recovery.
         </p>
         <p className="story-caption">
-          27 desktop/mobile runs passed; one mobile-only case is skipped on
+          31 desktop/mobile runs passed; one mobile-only case is skipped on
           desktop. These checks cover implementation behavior.
         </p>
       </div>
@@ -445,11 +445,21 @@ export function JourneyEntry() {
           Try first connection <ArrowUpRight size={16} />
         </a>
       </Button>
+      <Button variant="link" asChild>
+        <a
+          href="/prototype.html?scenario=first&step=connection&bank=Example%20Bank%20B"
+          target="clara-case-prototype"
+        >
+          Try bank authorization <ArrowUpRight size={16} />
+        </a>
+      </Button>
       <p className="story-caption">
         The official JSR 2.2.0 pilot includes PJ and desktop. I would enable
         this route only for verified provider/bank combinations; otherwise, a
         supported bank-authorization handoff would return to the same saved
-        payment. The prototype demonstrates the JSR route.
+        payment. Try Bank A for device confirmation or Bank B for bank
+        authorization and return. Account-unavailable controls are in the
+        scenario explorer.
       </p>
     </div>
   )

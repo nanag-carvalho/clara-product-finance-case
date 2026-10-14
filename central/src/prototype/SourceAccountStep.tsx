@@ -1,3 +1,8 @@
+import {
+  authorizationRoute,
+  routeDescription,
+  type BankSupport,
+} from './bank-capabilities'
 import { Bank, Info } from '@phosphor-icons/react'
 import {
   Alert,
@@ -16,6 +21,7 @@ type Props = {
   bank: string
   connected: boolean
   accounts: readonly string[]
+  bankSupport: BankSupport
   deviceLinked: boolean
   receiving: boolean
   onBankChange: (bank: string) => void
@@ -26,10 +32,12 @@ export function SourceAccountStep({
   bank: selectedBank,
   connected,
   accounts,
+  bankSupport,
   deviceLinked,
   receiving,
   onBankChange,
 }: Props) {
+  const route = authorizationRoute(bankSupport, selectedBank)
   return (
     <>
       {phase === 'connect' && (
@@ -55,19 +63,29 @@ export function SourceAccountStep({
                       : 'Select your business account during connection'}
                   </span>
                   <span className="type-caption">
-                    {accounts.includes(bank)
-                      ? 'Ready to use'
-                      : 'Not connected yet'}
+                    {routeDescription[authorizationRoute(bankSupport, bank)]}
                   </span>
                 </span>
-                <RadioGroupItem id={`proto-source-${i}`} value={bank} />
+                <RadioGroupItem
+                  id={`proto-source-${i}`}
+                  value={bank}
+                  disabled={
+                    authorizationRoute(bankSupport, bank) === 'unavailable'
+                  }
+                />
               </Label>
             ))}
           </RadioGroup>
           <p className="type-ui">
-            {connected
-              ? 'This account is ready. Next, review the details and request company approval.'
-              : 'Connect the selected bank first. You’ll confirm the account at your bank and secure this device on return. Your payment details stay saved.'}
+            {route === 'unavailable'
+              ? 'This account is unavailable for payment initiation. Select another account; your recipient and amount are saved.'
+              : connected
+                ? route === 'bank'
+                  ? 'This account is ready. After company approval, you’ll confirm the payment at your bank and return to this request.'
+                  : 'This account is ready. Next, review the details and request company approval.'
+                : route === 'bank'
+                  ? 'Confirm this account at your bank. Each payment will also need bank authorization; your details stay saved in Clara.'
+                  : 'Connect the selected bank first. You’ll confirm the account at your bank and secure this device on return. Your payment details stay saved.'}
           </p>
         </>
       )}

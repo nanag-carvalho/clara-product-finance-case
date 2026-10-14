@@ -170,3 +170,58 @@ test('expired account cannot authorize or send; reconnection keeps the payment a
   assert.equal(s.approved, false)
   assert.ok(s.recipient)
 })
+
+test('account capability gates connection and authorization without losing payment context', () => {
+  let s = run(
+    initialState(),
+    { type: 'START' },
+    { type: 'LOOKUP' },
+    { type: 'REVIEW' },
+    { type: 'BANK', bank: 'Example Bank B' },
+  )
+  const intent = s.intent
+  const recipient = s.recipient
+  s = run(
+    s,
+    { type: 'BANK_SUPPORT', bank: s.bank, route: 'unavailable' },
+    { type: 'CONNECT' },
+  )
+  assert.equal(s.stage, 'connect')
+  assert.match(s.error, /cannot initiate/)
+  assert.equal(s.intent, intent)
+  assert.equal(s.recipient, recipient)
+  s = run(
+    s,
+    { type: 'BANK_SUPPORT', bank: s.bank, route: 'bank' },
+    { type: 'CONNECT' },
+    { type: 'CONNECTED' },
+    { type: 'REQUEST' },
+    { type: 'APPROVE', actor: 'approver' },
+  )
+  assert.equal(s.stage, 'authorize')
+  const blocked = run(
+    s,
+    { type: 'BANK_SUPPORT', bank: s.bank, route: 'unavailable' },
+    { type: 'AUTHORIZE' },
+    { type: 'SEND' },
+  )
+  assert.equal(blocked.stage, 'authorize')
+  assert.equal(blocked.attempt, 0)
+  const confirmed = run(
+    s,
+    { type: 'AUTHORIZE' },
+    { type: 'CANCEL_AUTH' },
+    { type: 'AUTHORIZE' },
+    { type: 'SEND' },
+  )
+  assert.equal(confirmed.stage, 'processing')
+  assert.equal(confirmed.intent, intent)
+  assert.equal(confirmed.recipient, recipient)
+  assert.equal(confirmed.approved, true)
+  assert.match(
+    confirmed.events.find(
+      (e) => e.title === 'Payment authorization interrupted',
+    )!.description!,
+    /Bank authorization/,
+  )
+})

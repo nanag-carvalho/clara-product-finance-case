@@ -18,3 +18,7 @@ This is an interview prototype with an executable design system. Its purpose is 
 Bank identity, provider authorization, persistence, idempotency across sessions and actual Pix execution require production services. The local actor context is a demonstration control, not authentication. QR capture and payment responses are simulated. The existing Clara-balance route is acknowledged but not implemented here.
 
 The controller still composes several task concerns. Further growth should split account preparation and payment-task controllers by responsibility, rather than extracting arbitrary blocks only to reduce file length. Automated Chromium desktop/mobile regression checks cover the critical interface journeys. Real-device keyboard, screen-reader and participant-comprehension checks remain release work for a real product.
+
+## Account capability determines authorization
+
+The case fixture returns an authorization route per fictional account: linked device, bank handoff, or unavailable. `bank-capabilities.ts` describes the provider response; the payment flow enforces availability at connection, request and submission boundaries. Presentation reads the same route to explain source selection, review and confirmation. A bank return reuses the payment identity and recorded company approval; cancellation does not submit a transfer. Scenario settings can vary Bank B's capability without adding another financial scenario. Production must replace the fixture with verified provider/account capabilities and enforce the same rules in the backend.

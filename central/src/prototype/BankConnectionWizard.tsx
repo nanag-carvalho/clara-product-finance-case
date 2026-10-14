@@ -1,3 +1,8 @@
+import {
+  authorizationRoute,
+  routeDescription,
+  type BankSupport,
+} from './bank-capabilities'
 import { Info, Bank } from '@phosphor-icons/react'
 import {
   Alert,
@@ -20,6 +25,7 @@ import { Completion } from './PaymentFeedback'
 export type BankSetupPhase =
   'list' | 'choose' | 'permission' | 'bank' | 'device' | 'done'
 type Props = {
+  bankSupport: BankSupport
   setup: BankSetupPhase
   setSetup: (phase: BankSetupPhase) => void
   setupBank: string
@@ -30,6 +36,7 @@ type Props = {
 }
 /** Account setup has its own task boundary: consent, bank return and device confirmation. */
 export function BankConnectionWizard({
+  bankSupport,
   setup,
   setSetup,
   setupBank,
@@ -38,6 +45,7 @@ export function BankConnectionWizard({
   transition,
   advanceSetup,
 }: Props) {
+  const route = authorizationRoute(bankSupport, setupBank)
   return (
     <Wizard
       titleLeading={<BrandMark />}
@@ -61,7 +69,11 @@ export function BankConnectionWizard({
                 ? 'Enable secure payments'
                 : 'Bank account connected'
       }
-      steps={['Bank', 'Permission', 'Bank confirmation', 'Device']}
+      steps={
+        route === 'device'
+          ? ['Bank', 'Permission', 'Bank confirmation', 'Device']
+          : ['Bank', 'Permission', 'Bank confirmation']
+      }
       current={Math.max(
         0,
         ['choose', 'permission', 'bank', 'device'].indexOf(setup),
@@ -80,6 +92,7 @@ export function BankConnectionWizard({
       }
       actions={
         <Button
+          disabled={route === 'unavailable' && setup !== 'done'}
           loading={!!transition}
           loadingLabel={
             setup === 'bank' ? 'Receiving bank confirmation' : 'Securing device'
@@ -124,9 +137,17 @@ export function BankConnectionWizard({
                 <Bank size={20} />
                 <span>
                   <strong>{bank}</strong>
-                  <span>Select the account at your bank</span>
+                  <span>
+                    {routeDescription[authorizationRoute(bankSupport, bank)]}
+                  </span>
                 </span>
-                <RadioGroupItem id={`proto-link-${i}`} value={bank} />
+                <RadioGroupItem
+                  id={`proto-link-${i}`}
+                  value={bank}
+                  disabled={
+                    authorizationRoute(bankSupport, bank) === 'unavailable'
+                  }
+                />
               </Label>
             ))}
           </RadioGroup>
@@ -139,17 +160,25 @@ export function BankConnectionWizard({
             />
             <p className="type-ui">
               Allow Clara to initiate payments from this business account.
-              Review and authorize each payment on the linked device.
+              {route === 'bank'
+                ? 'Authorize each payment at your bank and return to the saved request in Clara.'
+                : 'Review and authorize each payment on the linked device.'}
             </p>
             <p className="type-ui">
-              Confirm the account at your bank, then secure the link on this
-              device.
+              {route === 'bank'
+                ? 'Confirm the account at your bank. This connection does not authorize a payment.'
+                : 'Confirm the account at your bank, then secure the link on this device.'}
             </p>
           </>
         ) : setup === 'done' ? (
           <Completion
             title="Bank account connected"
-            description={setupBank + ' is ready for payments on this device.'}
+            description={
+              setupBank +
+              (route === 'bank'
+                ? ' is ready. Payments require bank authorization.'
+                : ' is ready for payments on this device.')
+            }
           />
         ) : (
           <FlowState

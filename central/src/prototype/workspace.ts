@@ -68,7 +68,22 @@ export function workspaceReducer(s: Workspace, a: WorkspaceAction): Workspace {
       ),
     }
   }
-  if (a.type === 'LOAD_SCENARIO') return scenarioWorkspace(a.value, a.at)
+  if (a.type === 'BANK_SUPPORT')
+    return {
+      ...reducer(s, a),
+      payments: s.payments.map((p) => reducer(p, a)),
+    }
+  if (a.type === 'LOAD_SCENARIO') {
+    const loaded = scenarioWorkspace(a.value, a.at)
+    return {
+      ...loaded,
+      bankSupport: s.bankSupport,
+      payments: loaded.payments.map((p) => ({
+        ...p,
+        bankSupport: s.bankSupport,
+      })),
+    }
+  }
   if (a.type === 'LOAD_DATA')
     return a.value === 'populated'
       ? populatedWorkspace()
@@ -88,6 +103,7 @@ export function workspaceReducer(s: Workspace, a: WorkspaceAction): Workspace {
         {
           ...draft,
           accounts: s.accounts,
+          bankSupport: s.bankSupport,
           connected: s.accounts.includes(draft.bank),
         },
         { type: 'START' },
@@ -104,6 +120,7 @@ export function workspaceReducer(s: Workspace, a: WorkspaceAction): Workspace {
     return {
       ...chosen,
       accounts: s.accounts,
+      bankSupport: s.bankSupport,
       connected: s.accounts.includes(chosen.bank),
       payments: [
         ...s.payments.filter((p) => p.intent !== a.intent),

@@ -114,7 +114,7 @@ npm run test:e2e
 npm run verify:full
 ```
 
-`tests/e2e/payment-experience.spec.ts` exercises the full payment journey through the rendered interface, individual/bulk approval, secure confirmation, correction, uncertain-result recovery and mobile controls. Desktop and mobile emulation run independently against a production build on port 4174. Runtime browser errors fail the tests; failure traces/screenshots are retained. These checks are configured in the CI workflow alongside the 39 domain/registry tests. Emulation does not replace real-device or assistive-technology testing.
+`tests/e2e/payment-experience.spec.ts` exercises the full payment journey through the rendered interface, individual/bulk approval, secure confirmation, correction, uncertain-result recovery and mobile controls. Desktop and mobile emulation run independently against a production build on port 4174. Runtime browser errors fail the tests; failure traces/screenshots are retained. These checks are configured in the CI workflow alongside the 40 domain/registry tests. Emulation does not replace real-device or assistive-technology testing.
 
 ## Showcase architecture
 
@@ -123,3 +123,7 @@ npm run verify:full
 The showcase summarizes the story; the hub carries the detailed decision trace and AI work log. Named same-origin targets keep the presentation open while reusing hub, prototype and catalog tabs. Browser checks cover chapter navigation, image inspection, live component behavior and tab reuse on desktop and mobile.
 
 Local release copies and visual QA captures are ignored by Git. Set `DS_REGISTRY_ORIGIN=https://clara-finance-case.vercel.app` when running `npm run verify:full`, then publish that verified build; production is a simulated case, not a banking integration.
+
+### Account capability variations
+
+The fictional capability fixture in `src/prototype/bank-capabilities.ts` gives Bank A linked-device authorization and Bank B bank authorization. The flow model blocks unsupported sources at connection, request and authorization boundaries. Scenarios → Simulation settings changes Bank B account support; disabled source selection and the reducer guard both enforce that response. The redirected return preserves the approved request, while cancellation returns to authorization without submission. These variations reuse the 12 existing scenarios.

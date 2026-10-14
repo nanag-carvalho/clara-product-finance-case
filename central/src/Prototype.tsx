@@ -1,3 +1,4 @@
+import { authorizationRoute } from './prototype/bank-capabilities'
 import {
   WorkspaceViews,
   type PaymentQueueScope,
@@ -242,6 +243,11 @@ export default function Prototype({
         if (connectionResult === 'refused') {
           send({ type: 'CANCEL_CONNECTION', value: 'refused' })
           setDeviceLink(false)
+        } else if (
+          authorizationRoute(state.bankSupport, state.bank) === 'bank'
+        ) {
+          send({ type: 'CONNECTED' })
+          setDeviceLink(false)
         } else setDeviceLink(true)
       },
       900,
@@ -274,7 +280,10 @@ export default function Prototype({
             setSetup('permission')
           } else {
             setSetupError('')
-            setSetup('device')
+            if (authorizationRoute(state.bankSupport, setupBank) === 'bank') {
+              send({ type: 'REGISTER_ACCOUNT', bank: setupBank })
+              setSetup('done')
+            } else setSetup('device')
           }
         } else {
           send({ type: 'REGISTER_ACCOUNT', bank: setupBank })
@@ -369,6 +378,11 @@ export default function Prototype({
       ) {
         send({ type: 'LOOKUP' })
         send({ type: 'REVIEW' })
+        if (
+          new URLSearchParams(window.location.search).get('bank') ===
+          'Example Bank B'
+        )
+          send({ type: 'BANK', bank: 'Example Bank B' })
       }
     } else if (
       new URLSearchParams(window.location.search).get('explore') === 'scenarios'
@@ -512,6 +526,7 @@ export default function Prototype({
   const paymentActions = (
     <PaymentActions
       stage={state.stage}
+      authorizationRoute={authorizationRoute(state.bankSupport, state.bank)}
       transition={transition}
       connected={state.connected}
       deviceLinked={deviceLink}
@@ -912,6 +927,7 @@ export default function Prototype({
 
                 <div key={view} className="proto-page-enter">
                   <WorkspaceViews
+                    bankSupport={state.bankSupport}
                     view={view}
                     accounts={state.accounts}
                     allPayments={allPayments}
@@ -1074,6 +1090,7 @@ export default function Prototype({
                 bank={state.bank}
                 connected={state.connected}
                 accounts={state.accounts}
+                bankSupport={state.bankSupport}
                 deviceLinked={deviceLink}
                 receiving={transition === 'connection'}
                 onBankChange={(bank) => send({ type: 'BANK', bank })}
@@ -1138,6 +1155,7 @@ export default function Prototype({
         </Wizard>
 
         <BankConnectionWizard
+          bankSupport={state.bankSupport}
           setup={setup}
           setSetup={setSetup}
           setupBank={setupBank}
@@ -1186,6 +1204,10 @@ export default function Prototype({
           onOpenChange={setControls}
           outcome={scenario}
           onOutcomeChange={setScenario}
+          bankBRoute={authorizationRoute(state.bankSupport, 'Example Bank B')}
+          onBankBRouteChange={(route) =>
+            send({ type: 'BANK_SUPPORT', bank: 'Example Bank B', route })
+          }
           onScenario={launchScenario}
           onWorkspace={(value) => {
             loadData(value)
