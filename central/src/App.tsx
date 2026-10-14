@@ -4,7 +4,6 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import * as React from 'react'
 import type { ComponentType } from 'react'
 import {
-  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
@@ -16,7 +15,6 @@ import {
   House,
   Stack,
   List,
-  MonitorPlay,
   Sidebar,
   MagnifyingGlass,
   X,
@@ -64,7 +62,6 @@ type Route =
   | 'as-is'
   | 'screens'
   | 'sources'
-  | 'presentation'
   | 'solution'
   | 'system'
 type Icon = ComponentType<{ size?: number; className?: string }>
@@ -99,7 +96,6 @@ const groups: {
   {
     label: 'SUPPORTING EVIDENCE',
     items: [
-      { id: 'presentation', label: 'Case walkthrough', icon: MonitorPlay },
       { id: 'screens', label: 'Screen library', icon: Images },
       { id: 'sources', label: 'Sources and gaps', icon: FolderOpen },
     ],
@@ -114,7 +110,7 @@ const nextSteps: Partial<Record<Route, { route: Route; label: string }>> = {
   approach: { route: 'system', label: 'Inspect the shared design foundation' },
   solution: { route: 'system', label: 'Inspect the shared design foundation' },
   system: { route: 'process', label: 'Review process and contributions' },
-  process: { route: 'presentation', label: 'Open the case walkthrough' },
+  process: { route: 'sources', label: 'Review evidence and remaining gaps' },
 }
 const navItems = groups.flatMap((g) => g.items)
 const section = (title: string) => research.find((s) => s.title === title)!
@@ -142,86 +138,6 @@ const initialRoute = (): Route => {
   )
   return navItems.some((n) => n.id === value) ? (value as Route) : 'overview'
 }
-const slides = [
-  {
-    eyebrow: '01 / CONTEXT',
-    title: 'The funds are held at a bank.\nThe work happens in Clara.',
-    description:
-      'The finance manager needs to pay suppliers without treating the top-up as a separate task.',
-    bullets: [
-      'Brazilian company with 200 employees',
-      'Accounts at two traditional banks',
-      'Dozens of suppliers per week',
-    ],
-    notes: 'Context from the brief, rather than interview findings.',
-  },
-  {
-    eyebrow: '02 / CURRENT JOURNEY',
-    title: 'A payment starts\nwith a transfer.',
-    description:
-      'External bank → Clara top-up → creation → approvals → execution.',
-    bullets: [
-      'Top-up described in the brief',
-      'Documented creation and statuses',
-      'Review details not yet captured',
-    ],
-    image: 'assets/06-pagamentos.png',
-    notes:
-      'I separated the problem in the brief from what I observed in the demo and found in the documentation.',
-  },
-  {
-    eyebrow: '03 / EVIDENCE',
-    title: 'The operation already has\na control framework.',
-    description: 'The proposal can build on existing mechanisms.',
-    bullets: [
-      'Configurable approval workflows',
-      'Batch Pix and individual results',
-      'Receipt with source, destination and identifier',
-    ],
-    image: 'assets/12-condicoes-fluxo.png',
-    notes:
-      'I found approval rules and receipts in official documentation; a decision history within Payments remains unverified.',
-  },
-  {
-    eyebrow: '04 / HYPOTHESIS',
-    title: 'Choose the funding source\nwithin the payment flow.',
-    description:
-      'Explore using an external account within Payments while preserving review and approvals.',
-    bullets: [
-      'Pay directly using the external-bank balance',
-      'Separate internal approval from bank authorization',
-      'Handle return, failure and uncertain outcomes',
-    ],
-    notes:
-      'The prototype brings source choice into payment creation and keeps company approval separate from payment authorization.',
-  },
-  {
-    eyebrow: '05 / SOLUTION',
-    title: 'The prototype scope',
-    description:
-      'My two-day scope includes the first connection, one Pix payment and authorization recovery.',
-    bullets: [
-      'High-fidelity primary flow',
-      'Alternatives and justified decisions',
-      'Prototype with system states',
-    ],
-    notes:
-      'The external-payment prototype is available. User validation is still planned.',
-  },
-  {
-    eyebrow: '06 / PROCESS',
-    title: 'My process and use of AI',
-    description:
-      'I used AI to support research and build this foundation, reviewing references and design throughout the work.',
-    bullets: [
-      'Brief and demo screenshots as the starting point',
-      'Research and organization supported by Codex',
-      'Typed flow model, responsive review and DS checks',
-    ],
-    notes:
-      'This walkthrough presents the proposed experience; user validation and business results remain unmeasured. The brief allows 30 minutes for the walkthrough and 15 for discussion.',
-  },
-]
 
 function Tag({ kind }: { kind: Evidence }) {
   return <EvidenceBadge kind={kind} />
@@ -251,10 +167,8 @@ export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [selected, setSelected] = useState<Screen | null>(null)
   const [filter, setFilter] = useState('All')
-  const [slide, setSlide] = useState(0)
   const [docTab, setDocTab] = useState('journey')
   const [sourceTab, setSourceTab] = useState('coverage')
-  const [showNotes, setShowNotes] = useState(true)
   const mainRef = useRef<HTMLElement>(null)
   useEffect(() => {
     const handler = () => {
@@ -275,19 +189,6 @@ export default function App() {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         setSearchOpen((v) => !v)
-      }
-      const editing = ['INPUT', 'TEXTAREA'].includes(
-        (e.target as HTMLElement).tagName,
-      )
-      if (route === 'presentation' && !searchOpen && !selected && !editing) {
-        if (e.key === 'ArrowRight') {
-          e.preventDefault()
-          setSlide((s) => Math.min(slides.length - 1, s + 1))
-        }
-        if (e.key === 'ArrowLeft') {
-          e.preventDefault()
-          setSlide((s) => Math.max(0, s - 1))
-        }
       }
     }
     window.addEventListener('keydown', handler)
@@ -589,7 +490,7 @@ export default function App() {
               id="main"
               ref={mainRef}
               tabIndex={-1}
-              className={`main-content ${route === 'presentation' ? 'presentation-main' : ''}`}
+              className="main-content"
             >
               {route === 'overview' && (
                 <>
@@ -685,11 +586,11 @@ export default function App() {
                       },
                       {
                         n: '02',
-                        title: 'Presentation',
+                        title: 'Design decisions',
                         desc: 'My reasoning about the problem, alternatives and decisions.',
-                        icon: MonitorPlay,
-                        to: 'presentation',
-                        status: 'Case walkthrough',
+                        icon: FileText,
+                        to: 'process',
+                        status: 'Design and engineering contribution',
                       },
                       {
                         n: '03',
@@ -1075,96 +976,6 @@ export default function App() {
                   />
                 </>
               )}
-              {route === 'presentation' && (
-                <>
-                  <PageHeading
-                    eyebrow="PRESENTATION / CASE WALKTHROUGH"
-                    title="The case walkthrough"
-                    description="The problem, supporting evidence, proposed experience and implementation decisions."
-                  >
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowNotes((n) => !n)}
-                    >
-                      {showNotes ? 'Hide' : 'Show'} notes
-                    </Button>
-                  </PageHeading>
-                  <div className="slide-shell">
-                    <div className="slide-copy">
-                      <p className="eyebrow">{slides[slide].eyebrow}</p>
-                      <h2>
-                        {slides[slide].title.split('\n').map((t, i) => (
-                          <span key={i}>
-                            {t}
-                            <br />
-                          </span>
-                        ))}
-                      </h2>
-                      <p>{slides[slide].description}</p>
-                      <ul>
-                        {slides[slide].bullets.map((b) => (
-                          <li key={b}>
-                            <span />
-                            {b}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    {slides[slide].image && (
-                      <div className="slide-image">
-                        <img
-                          src={`/research/${slides[slide].image}`}
-                          alt="Visual reference for the current flow"
-                        />
-                      </div>
-                    )}
-                    <span className="slide-footer">
-                      NÁGELA CARVALHO · CLARA / PRODUCT FINANCE
-                    </span>
-                  </div>
-                  <div className="slide-controls">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      aria-label="Previous slide"
-                      disabled={slide === 0}
-                      onClick={() => setSlide((s) => s - 1)}
-                    >
-                      <ArrowLeft size={17} />
-                    </Button>
-                    <div className="slide-dots">
-                      {slides.map((_, i) => (
-                        <Pressable
-                          key={i}
-                          className={i === slide ? 'current' : ''}
-                          aria-label={`Go to slide ${i + 1}`}
-                          aria-current={i === slide ? 'step' : undefined}
-                          onClick={() => setSlide(i)}
-                        />
-                      ))}
-                    </div>
-                    <span>
-                      {slide + 1} / {slides.length}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      aria-label="Next slide"
-                      disabled={slide === slides.length - 1}
-                      onClick={() => setSlide((s) => s + 1)}
-                    >
-                      <ArrowRight size={17} />
-                    </Button>
-                  </div>
-                  {showNotes && (
-                    <div className="speaker-notes">
-                      <p className="eyebrow">WALKTHROUGH NOTES</p>
-                      <p>{slides[slide].notes}</p>
-                      <span>Use ← and → to navigate between slides.</span>
-                    </div>
-                  )}
-                </>
-              )}
               {route === 'approach' && (
                 <>
                   <PageHeading
@@ -1293,7 +1104,7 @@ export default function App() {
           <SheetContent side="left" className="mobile-sidebar">
             <SheetTitle className="sr-only">Hub navigation</SheetTitle>
             <SheetDescription className="sr-only">
-              Documentation, presentation and proposed solution
+              Research, design decisions and proposed solution
             </SheetDescription>
             {sidebar}
           </SheetContent>

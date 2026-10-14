@@ -1,6 +1,6 @@
 # Clara Product Finance case
 
-An individual interview case by **Nágela Carvalho**, covering research, product reasoning, presentation and a proposed payment experience.
+An individual interview case by **Nágela Carvalho**, covering research, product reasoning, a visual showcase and a proposed payment experience.
 
 This case explores paying suppliers through Clara using funds held at another bank, while preserving company approvals, bank authorization and traceability.
 
@@ -24,7 +24,7 @@ npm run dev
 
 | Location | Purpose |
 | --- | --- |
-| `central/` | React application, walkthrough, shared components and independent DS documentation |
+| `central/` | React application, visual showcase, shared components and independent DS documentation |
 | `docs/clara-as-is/` | Research source, original evidence, source register and labeled reconstructions |
 | `central/DS_CONTRACT.md` | Interface rules, public API expectations and validation boundaries |
 | `central/src/design-system/registry.ts` | Token and component source of truth |

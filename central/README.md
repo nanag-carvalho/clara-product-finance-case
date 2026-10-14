@@ -1,6 +1,6 @@
 # Clara Case hub
 
-My local research, walkthrough and proposed solution for the Clara Product Finance interview case.
+My research hub, visual showcase and proposed solution for the Clara Product Finance interview case.
 
 ## Run locally
 
@@ -26,7 +26,7 @@ npm run preview
 - Desk research: Conta Simples, Cora and Ramp, with source boundaries and visual references.
 - Opportunities: one selected funding opportunity, Brazil dependencies and a two-day scope.
 - Research: brief, current journey by stage, screen library, sources, gaps and product experiments.
-- Presentation: six initial walkthrough slides with notes and keyboard navigation.
+- Showcase: the independent visual narrative at `/showcase.html`. Presenter scripts and rehearsal controls are kept separately from this public application.
 - Proposal: design and prototype scope under evaluation. The interactive prototype covers connection, review, approvals, Pix and recovery with simulated external-bank funding. The existing Clara-balance route is acknowledged at entry, outside the interactive scope.
 
 `../docs/clara-as-is/README.md` is the research source. `scripts/sync-research.mjs` builds `src/data/research.json` and copies assets to `public/research` before development and production builds. `src/data/library.ts` organizes visual references and their provenance.
@@ -55,7 +55,7 @@ Every visual reference is labeled Demo, Official or Reconstruction. Reconstructi
 
 Markdown loads on demand and library images use lazy loading. Examples use fictional data. This version has no financial backend, external authentication or real payment execution.
 
-Validation includes the TypeScript production build, generated-token/registry checks, hub navigation, search, screen filtering, image dialogs, walkthrough controls and responsive previews. Contextual interaction and product-flow validation remain necessary.
+Validation includes the TypeScript production build, generated-token/registry checks, hub navigation, search, screen filtering, image dialogs, showcase navigation and responsive previews. Contextual interaction and product-flow validation remain necessary.
 
 ## Proposed workspace prototype
 

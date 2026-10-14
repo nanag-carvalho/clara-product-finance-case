@@ -88,8 +88,7 @@ body {
   letter-spacing: 0.1em;
   color: var(--slate-500);
 }
-.hero-copy h2,
-.slide-copy h2 {
+.hero-copy h2 {
   font-family: var(--font-sans);
   font-size: var(--text-display);
   line-height: var(--leading-display);
@@ -101,13 +100,11 @@ body {
   font-style: normal;
   color: var(--primary);
 }
-.overview-hero,
-.slide-shell {
+.overview-hero {
   background: var(--muted);
   border-color: var(--slate-200);
 }
-.hero-copy .eyebrow,
-.slide-copy > .eyebrow {
+.hero-copy .eyebrow {
   color: var(--slate-500);
 }
 .hero-copy > p:not(.eyebrow) {
@@ -294,23 +291,6 @@ body {
   font-size: var(--text-ui);
   font-weight: 600;
 }
-.slide-copy > p:not(.eyebrow),
-.slide-copy li {
-  font-size: var(--text-body);
-  line-height: var(--leading-body);
-  color: var(--muted-foreground);
-}
-.slide-shell {
-  min-height: 510px;
-}
-.slide-copy h2 {
-  font-size: var(--text-display);
-  line-height: var(--leading-display);
-}
-.speaker-notes > p:not(.eyebrow) {
-  font-size: var(--text-h3);
-  color: var(--muted-foreground);
-}
 .page-footer {
   font-size: var(--text-caption);
   color: var(--slate-500);
@@ -353,8 +333,7 @@ body {
   }
 }
 @media (max-width: 620px) {
-  .hero-copy h2,
-  .slide-copy h2 {
+  .hero-copy h2 {
     font-size: var(--text-display);
     line-height: var(--leading-display);
   }
@@ -389,8 +368,7 @@ body {
 [data-slot='card'],
 [data-slot='dialog-content'],
 .area-card,
-.overview-hero,
-.slide-shell {
+.overview-hero {
   border-radius: var(--radius-panel);
 }
 [data-slot='button'],
@@ -540,16 +518,6 @@ body {
 .solution-links {
   gap: var(--space-8);
 }
-.slide-shell {
-  padding: var(--space-24);
-  min-height: 440px;
-}
-.slide-copy h2 {
-  margin: var(--space-16) 0;
-}
-.speaker-notes {
-  margin-top: var(--space-16);
-}
 .area-card,
 .hero-screenshot,
 .screen-card,
@@ -588,9 +556,6 @@ body {
   }
   .page-heading {
     margin-bottom: var(--space-16);
-  }
-  .slide-shell {
-    padding: var(--space-24) var(--space-16) var(--space-24);
   }
   .solution-intro,
   .decision-lead,
