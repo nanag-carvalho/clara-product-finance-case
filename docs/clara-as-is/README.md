@@ -511,6 +511,12 @@ In two days H1 tests the funding decision, H2 the meaning of commitment and H4 r
 
 Sources: [Mercury payment-link guide](https://support.mercury.com/hc/en-us/articles/44220096132116-How-to-create-and-send-a-payment-link-in-Mercury), [Nubank Pix guidance](https://blog.nubank.com.br/pix-tudo-sobre/), [Wise sending guide](https://wise.com/help/articles/2977959/how-do-i-send-money-with-wise), [Wise tracker](https://wise.com/help/articles/2452305/how-do-i-check-my-transfers-status), [Wise Platform status semantics](https://docs.wise.com/guides/product/send-money/tracking/transfer-statuses).
 
+### Apple Wallet: prepare an instrument, then use it
+
+Apple’s setup guide separates adding a supported debit or credit card, verification with the issuer where required, and subsequent use. I use that interaction model to explore two connected tasks: prepare an account in Accounts, then select it for a supplier payment. The visual cues I adapt are a recognizable account tile, masked identifier, explicit readiness and one setup decision at a time.
+
+For Clara, the proposed account tile represents an external business account. Connecting it preserves a selectable source; payment review and authorization remain separate decisions. Source: [Apple: Set up Apple Pay](https://support.apple.com/en-us/108398), reviewed October 14, 2026.
+
 ## My direction
 
 The brief asks me to initiate a Pix from Clara using the balance held at another bank. I propose one continuous payment task: **external bank → supplier**, with the payment context preserved through preparation, approval and return.
@@ -656,6 +662,12 @@ For accessibility I will check keyboard access, visible focus, labels, textual e
 
 **Out of scope:** batch execution, recurring or automatic Pix, FX, a full bank-management module, no-redirection promises, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.
 
+### Account preparation and payment initiation
+
+Open Finance has journeys with bank redirection and a separate framework for payment initiation without redirection. The latter separates account linking from transactions; the initial linking confirmation takes place at the account-holding institution. Relevant sources are [BCB Resolution 406](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&tipo=Resolu%C3%A7%C3%A3o+BCB) and [BCB Instruction 760](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=760&tipo=Instru%C3%A7%C3%A3o+Normativa+BCB). Their indexed summaries support this distinction; the full normative text, current applicability and PJ integration remain verification tasks.
+
+The wireflow explores account preparation as its own task and as an in-payment step. It currently retains bank authorization for payments. Offering subsequent payments without redirection would require confirming provider support, device binding, authentication, consent controls and business signatory requirements. Saving a source alone does not establish those capabilities.
+
 ## Two-day delivery plan
 
 | Window | Work | Reviewable output |
@@ -710,6 +722,8 @@ My work is visible in the framing, scope decisions, research synthesis, interfac
 ## Low-fidelity wireflow and motion exploration
 
 The task starts with recipient and amount, followed by account choice, preparation when needed, review, company approval and bank authorization. I removed repeated summaries and explanatory panels so the participant can act on the information relevant to each decision.
+
+**Accounts** provides a separate setup journey: select bank → review purpose → confirm at bank → account ready. Payments reuses those accounts; connecting during a payment also makes the account available in Accounts. This state lasts for the browser session.
 
 **Session controls** contain the facilitator setup: first or repeat connection, confirmed success, insufficient funds and unknown outcome. Keep the panel closed during the task. For H4, set a mismatched amount before asking the participant to review it against the task brief.
 

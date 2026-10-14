@@ -28,3 +28,10 @@ test('unknown outcome keeps same intent and prevents another submission',()=>{
  s=run(s,{type:'SEND'},{type:'RETRY'},{type:'EDIT'});assert.equal(s.stage,'unknown');assert.equal(s.attempt,attempt)
  s=reducer(s,{type:'CHECK',outcome:'success',value:s.intent});assert.equal(s.stage,'paid');assert.equal(s.intent,'WIRE-001')
 })
+
+test('independent account setup preserves draft and prepared accounts across source changes',()=>{
+ let s=run(initialState(),{type:'REGISTER_ACCOUNT',bank:'Example Bank A'},{type:'REGISTER_ACCOUNT',bank:'Example Bank B'},{type:'START'},{type:'LOOKUP'},{type:'REVIEW'});
+ s=reducer(s,{type:'BANK',bank:'Example Bank B'});assert.equal(s.connected,true)
+ s=reducer(s,{type:'BANK',bank:'Example Bank A'});assert.equal(s.connected,true)
+ assert.equal(reducer(s,{type:'CONNECT'}).stage,'review');assert.equal(s.amount,'1750.00');assert.equal(s.accounts.length,2)
+})

@@ -43,3 +43,14 @@
 .wf-notes [data-slot=select-trigger]{width:200px}
 .wf-sidebar .clara-brand-asset{max-width:120px}
 .wf-bank-boundary{padding:var(--space-16)}
+.wf-workspace{grid-template-columns:200px minmax(0,1fr)}
+.wf-sidebar{justify-content:flex-start;align-items:stretch;overflow:visible}
+.wf-sidebar .wf-brand{padding:var(--space-8);flex:none}
+.wf-sidebar .clara-brand-wordmark{width:123px;max-width:none;height:24px;margin:0;padding:0}
+.wf-sidebar nav{display:flex;flex-direction:column;gap:var(--space-4)}
+.wf-sidebar nav [data-slot=button]{width:100%;justify-content:flex-start}
+.wf-sidebar nav [data-slot=button] .button-content{justify-content:flex-start;width:100%}
+.wf-sidebar nav [aria-current=page]{background:var(--slate-200)}
+.wf-account-card{display:flex;align-items:center;gap:var(--space-16);padding:var(--space-16)}
+.wf-account-card>div{flex:1}
+@media(max-width:700px){.wf-workspace{grid-template-columns:1fr}.wf-sidebar{display:flex;flex-direction:row;align-items:center;padding:var(--space-8);gap:var(--space-8);border-bottom:1px solid var(--border)}.wf-sidebar nav{flex-direction:row}.wf-sidebar>.type-caption{display:none}}
