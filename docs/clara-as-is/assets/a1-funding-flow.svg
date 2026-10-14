@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="204" viewBox="0 0 960 204" role="img" aria-labelledby="title desc">
+<title id="title">Before paying, the account needs to be funded</title>
+<desc id="desc">Flow reconstructed from the brief: external bank, transfer to Clara, funds available in Clara, pay supplier. Funds available is a necessary condition, not an observed confirmation screen.</desc>
+<rect width="960" height="204" fill="#ffffff"/>
+<g font-family="Nunito Sans, Arial, sans-serif" fill="#334155">
+<text x="20" y="30" font-size="14" font-weight="700">FROM THE BRIEF · FUNDING DEPENDENCY</text>
+<g fill="#f8fafc" stroke="#e2e8f0">
+<rect x="20" y="52" width="206" height="92" rx="10"/>
+<rect x="258" y="52" width="206" height="92" rx="10"/>
+<rect x="496" y="52" width="206" height="92" rx="10"/>
+<rect x="734" y="52" width="206" height="92" rx="10"/>
+</g>
+<g font-size="13" fill="#64748b"><text x="36" y="77">01 · SOURCE</text><text x="274" y="77">02 · PREPARATION</text><text x="512" y="77">03 · CONDITION</text><text x="750" y="77">04 · PAYMENT</text></g>
+<g font-size="17" font-weight="700"><text x="36" y="108">External bank</text><text x="274" y="108">Transfer to Clara</text><text x="512" y="103">Funds available</text><text x="512" y="125">in Clara</text><text x="750" y="108">Pay the supplier</text></g>
+<g stroke="#64748b" stroke-width="1.5" fill="none"><path d="M232 98h18m-5-5 5 5-5 5"/><path d="M470 98h18m-5-5 5 5-5 5"/><path d="M708 98h18m-5-5 5 5-5 5"/></g>
+<text x="20" y="177" font-size="14" fill="#64748b">Reconstructed sequence · Bank screens, timing and confirmation behavior have not been observed.</text>
+</g></svg>

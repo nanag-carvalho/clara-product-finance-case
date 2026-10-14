@@ -62,17 +62,21 @@ I separated the journey by evidence source: the top-up comes from the brief and 
 
 I reviewed the supplied demo screens and the official flow references in this document. This is a heuristic audit, not an observed usability study. I distinguish a problem stated in the brief, a risk visible in the interface and a state I have not captured. Priority here means relevance to the brief and possible consequence, not measured frequency or a numerical severity score. Each crop isolates the area I am discussing; select it to inspect the original full screenshot.
 
-### A1 · Funding interrupts the payment task
+### A1 · Before paying, the account needs to be funded
 
-**Evidence — brief:** the manager transfers funds from another bank to Clara before paying. The demo shows account and payment surfaces, but does not show this whole round trip.
+**From the brief:** the company holds funds at two traditional banks. To pay suppliers through Clara, the manager first transfers funds into the Clara account.
 
-![A1 · Summary: Digital Account balance and Deposit entry. The cross-bank journey comes from the brief; this crop only shows the Clara entry point.](assets/01-resumo.png#crop=908,266,736,163&size=1676,1030)
+![A1 · Flow reconstructed from the brief: external bank → transfer to Clara → funds available in Clara → pay the supplier. “Funds available” represents a necessary condition, not an observed confirmation screen.](assets/a1-funding-flow.svg)
 
-**My assessment:** the preparation crosses environments and asks the person to resume a task. That creates a plausible memory and coordination cost; I have not measured lost data, time or abandonment. This is the strongest problem evidence because it is explicit in the brief.
+The diagram makes the dependency described in the brief visible. It does not document the external bank's screens, transfer time or the way the manager confirms that the funds arrived.
 
-**Benchmark cross-check:** Mercury keeps account identity in its request/review screens; Wise documents funding and transfer tracking separately. They help examine continuity and source clarity, but neither proves Clara can initiate a Brazilian external-bank payment.
+> **My reading · A1:** paying a supplier includes preparatory work before the payment itself. I want to understand how the manager coordinates that preparation and keeps track of the intended payment when moving between the bank and Clara. The extra step is explicit in the brief; its impact on effort, errors or abandonment still needs investigation.
 
-> **Hypothesis to test · A1:** keeping the intended source recognizable across preparation and review may reduce reorientation. I would compare correct completion and active handling time, including preparatory funding. This feeds O1; service eligibility remains a separate question.
+**Question to investigate:** how much work does funding add, and what information does the manager need to resume the payment confidently once the money is available?
+
+**Benchmark cross-check:** Mercury makes account identity visible in request and review; Wise distinguishes funding from transfer progress. These references help me investigate source clarity and continuity. They do not establish which external-bank capabilities Clara can offer.
+
+> **Hypothesis to test · A1:** keeping the payment context and funding state understandable throughout preparation may help the manager resume the task with less reorientation. I would compare correct completion and active handling time, including funding preparation. This informs O1; it does not yet select a payment route or assume that Clara can remove bank authorization.
 
 ### A2 · Outcome labels carry more meaning than their shared color
 

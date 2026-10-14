@@ -13,7 +13,7 @@ export default function ResearchMarkdown({body,onImage}:{body:string;onImage:(fi
       const crop = params.get('crop')?.split(',').map(Number)
       const size = params.get('size')?.split(',').map(Number)
       const hasCrop = crop?.length===4 && size?.length===2 && [...crop,...size].every(Number.isFinite) && crop[2]>0 && crop[3]>0
-      return <Pressable className="doc-image" aria-label={`Open full screenshot: ${alt||"Visual reference"}`} onClick={()=>onImage(file,alt||"Visual reference")}>
+      return <Pressable className="doc-image" aria-label={`Open ${file.endsWith('.svg')?'diagram':'full screenshot'}: ${alt||"Visual reference"}`} onClick={()=>onImage(file,alt||"Visual reference")}>
         {hasCrop?<svg className="doc-evidence-crop" viewBox={crop.join(' ')} role="img" aria-label={alt||'Evidence crop'}><image href={url} width={size[0]} height={size[1]}/></svg>:<img src={url} alt={alt||''} loading="lazy"/>}
         <span>{alt} <ArrowUpRight size={14}/></span>
       </Pressable>
