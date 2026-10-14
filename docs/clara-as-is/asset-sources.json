@@ -177,5 +177,36 @@
     "source_url": "https://support.ramp.com/managing-bills-and-payments-on-bill-pay/",
     "collected_at": "2026-10-14",
     "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/cora-review.png",
+    "origin": "Still extracted from official Cora help animation; historical UI with 2020 sample dates",
+    "source_url": "https://corastatic.com/boto/0902.09-SsKnR.gif",
+    "frame_index": 0,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External historical reference; not current authenticated UI"
+  },
+  {
+    "file": "benchmark/cora-authorization.png",
+    "origin": "Still extracted from official Cora help animation; historical UI with 2020 sample dates",
+    "source_url": "https://corastatic.com/boto/0902.09-SsKnR.gif",
+    "frame_index": 24,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External historical reference; not current authenticated UI"
+  },
+  {
+    "file": "benchmark/cora-result.png",
+    "origin": "Still extracted from official Cora help animation; historical UI with 2020 sample dates",
+    "source_url": "https://corastatic.com/boto/0902.09-SsKnR.gif",
+    "frame_index": 40,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External historical reference; not current authenticated UI"
+  },
+  {
+    "file": "benchmark/conta-simples-approval.jpg",
+    "origin": "Screenshot of official commercial animation; separate example amounts",
+    "source_url": "https://contasimples.com/servicos-bancarios",
+    "collected_at": "2026-10-14",
+    "evidence_type": "Commercial illustration, not authenticated product capture"
   }
 ]
