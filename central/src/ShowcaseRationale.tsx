@@ -36,6 +36,9 @@ export function BusinessRationale() {
         Removing the top-up could reduce preparation for the finance team and
         make Clara useful for payments that would otherwise happen elsewhere.
         That is the adoption opportunity I would evaluate alongside task effort.
+        I kept the scope to one supplier Pix; the exception scenarios explore
+        that same job. Bulk creation and real bank integration remain outside
+        this prototype.
       </p>
     </section>
   )
@@ -301,6 +304,12 @@ export function SharedSystemProof() {
             <p>Recipient and amount emphasis, with room for long Pix keys.</p>
           </div>
         </div>
+        <p>
+          To contribute these patterns across markets, I would keep sequence,
+          field actions and review hierarchy shared, while leaving Pix formats
+          and bank rules in the Brazilian payment layer. The next step would be
+          a DS review with localized examples and interaction checks.
+        </p>
       </div>
     </div>
   )

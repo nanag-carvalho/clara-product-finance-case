@@ -194,8 +194,9 @@ export default function CaseStory({
                 />
                 <p className="story-caption">
                   Starting point · captured demo interface. The top-up
-                  requirement comes from the brief; user needs are provisional
-                  interpretations, not interview findings.
+                  requirement comes from the brief. I used public Radix
+                  primitives and a case-specific DS, with fictional data;
+                  Clara’s internal data and library were not available.
                 </p>
                 <Button variant="link" asChild>
                   <a href="/#/as-is" target="clara-case-hub">
@@ -366,10 +367,10 @@ export default function CaseStory({
               <span>04 / MAKING IT WORK</span>
               <p>Shared patterns, implementation and evaluation</p>
               <AIProcessNote>
-                I directed the shared visual language, component composition and
-                Phosphor migration, then requested end-to-end checks. AI
-                assisted with implementation; I reviewed both behavior and
-                craft.
+                Codex helped implement my direction; the DS contract and
+                regression checks made parts of it repeatable. I caught visual
+                and mobile problems after tests passed. The hub records the
+                prompts, review and retrospective time windows.
               </AIProcessNote>
             </div>
             <div className="showcase-act-content">

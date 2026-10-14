@@ -8,9 +8,23 @@ Research consolidated on October 13, 2026. **Demo** identifies my screenshots; *
 
 The brief describes a finance manager at a Brazilian company with 200 employees, accounts at two traditional banks and dozens of supplier payments each week. The manager currently needs to open the bank, transfer money to Clara, return to Clara and only then pay.
 
-The evaluation asks for problem framing and a metric, Pix and Open Finance context, first connection and consent, a payment and at least one failure scenario in high fidelity. It also asks for explored alternatives, reused components, a design system contribution and a record of AI use, including mistakes and time spent. The presentation allows approximately 30 minutes for the walkthrough and 15 for discussion.
+The evaluation covers product framing and scope, a success metric, the Brazilian payment context, a high-fidelity connection/payment/failure flow, explored alternatives, reusable system contributions across markets, and transparent AI use with a time estimate and its basis. The walkthrough has approximately 30 minutes, followed by 15 minutes of discussion.
 
-Source: the private brief I received during the interview process. These requirements guide the case. The showcase presents the narrative; this hub holds the evidence, alternatives, implementation details and limits behind it.
+I used the brief's preference for a smaller, well-resolved scope to focus on **one supplier Pix**. The twelve scenarios are states and exceptions of that job, not twelve product features. Batch execution, recurring payments, real bank integration and a full approval-policy engine remain outside the implementation.
+
+### Where to inspect the requested evidence
+
+| Brief criterion | My response | Evidence to inspect |
+| --- | --- | --- |
+| Product thinking and metric | Reduce funding preparation while preserving authority and traceability; measure active handling time for correctly completed tasks | My direction; Hypotheses and validation |
+| Brazilian context | Separate Pix from payment initiation, explain consent and bank return, distinguish limits, funds and uncertain outcomes | Brazil constraints and feasible scope; prototype connection and recovery scenarios |
+| High fidelity and alternatives | Connect a bank, prepare/review a payment, obtain approval and authorization, then recover; explain the rejected interaction alternatives | Proposed flow; Design and engineering contributions; interactive prototype |
+| System thinking across markets | Reuse public primitives, contribute task patterns with a documented API, keep Pix-specific rules outside shared components | A design system that AI can use; live catalog; DS contract |
+| AI and speed | Identify tools, concrete instructions, constraints, errors and human review; reconstruct phase windows with their limits | AI work log; repository history |
+
+I had no internal Clara data or design system. The implementation uses public Radix primitives and a local case-specific foundation, with fictional data and explicit service assumptions. My contribution is the framing, design direction, rendered review and decisions carried into assisted implementation. No independent manual authorship of all code or production integration is claimed.
+
+Source: the private brief supplied during the interview process. This table summarizes its criteria; the showcase tells the story and the hub holds the supporting detail.
 
 ## Product context and the brief
 
@@ -380,9 +394,31 @@ I provided my Mercado Livre case as a reference for storytelling and presentatio
 
 Those corrections shaped both the page and the way this work is presented. AI produced implementations; I assessed whether they communicated the intended story and asked for revisions when they did not.
 
+### Tools, instructions and implementation constraints
+
+Codex assisted with research organization, implementation, refactoring and verification. An Astra review challenged the opportunity framing, recorded in commit `ab4a7dc0`. My instructions, in the conversation and browser comments, repeatedly redirected the result: move source choice beside New payment; preserve mobile queue behavior while changing composition; use a shared DS API; and test entry, approval, authorization and recovery end to end. These are summaries of the instructions, not fabricated verbatim prompts.
+
+[`DS_CONTRACT.md`](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/DS_CONTRACT.md) records hierarchy, spacing, component states, accessibility behavior and reuse constraints. The registry and `ds:check` make parts of that contract executable. There is no project `CLAUDE.md` or `AGENTS.md` in the reviewed repository; the recorded conversation, contract and checks are the relevant evidence. A personal voice skill was used for presentation editing, not as a source of financial requirements.
+
+My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.
+
+### Retrospective time estimate and its basis
+
+The work spans October 13–14, 2026. These are approximate **elapsed phase windows** reconstructed from commit milestones and the conversation, not tracked active hours. Research, design, coding and review overlap; a batch commit does not reveal how much time each activity took.
+
+| Recorded phase | Approximate window | Basis and limitation |
+| --- | --- | --- |
+| Initial foundation | October 13 evening; duration unknown | First commit at 20:38 (`3eca7ad3`) already contains the hub and DS; preparation predates it. |
+| Research, framing and flow refinement | About 2 hours on October 14 | 09:38–11:47, `f9246f27` to `b1922326`; includes design iteration. |
+| Prototype, DS and story iteration | About 6 hours | 11:47–18:06, ending at `ad4b171c`; mixed work recorded in a batch delivery, not six isolated hours of coding. |
+| Final review, fixes and release | About 40 minutes | 18:06–18:43, through `9d3325eb`; verification also occurred earlier. |
+| Presentation and subsequent refinements | Continued afterward | Separate ongoing work; excluded from the windows above. |
+
+Commit times use São Paulo time (UTC−03:00). The overnight gap is not counted as continuous work. These windows do not establish total active effort or time saved by AI.
+
 ### Evidence and limits
 
-The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. I did not track time consistently, so I cannot report measured time spent or savings. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
+The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The retrospective windows above provide a qualified estimate; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
 
 ## Desk research: three relevant references
 
@@ -659,6 +695,14 @@ The hub, prototype, showcase and component catalog import the same local source 
 
 To inspect reuse, open the catalog's Button examples, compare its variants with the live showcase example, then inspect the code and contract. For behavior, explore the prototype scenarios. Automated checks cover specified rules and interactions; visual review still determines whether the composition communicates the right hierarchy.
 
+### Contributing patterns across markets
+
+This is a proposed contribution to a shared system, not a claim that Clara adopted the case library. I would bring Wizard, InputGroup and ReviewSummary to the DS team with the task, alternatives, reusable API, interaction states, keyboard behavior and mobile examples that motivated each pattern.
+
+The shared layer should handle sequence, field-action composition and review hierarchy. Pix keys, CPF/CNPJ formatting, BRL amounts, local account eligibility and authorization policy belong in the Brazilian domain layer. Labels, values and formatted amounts should be supplied by the consumer instead of hardcoded into a supposedly global component.
+
+Before adoption, I would compare the proposal with existing patterns in other markets, test longer translated labels and local formats, and agree on variants and ownership with the DS team. I would contribute documentation and regression checks alongside the component, then pilot it in a second flow before expanding its use. The current case demonstrates local reuse across three surfaces; cross-market validation remains next work.
+
 ## Brazil constraints and feasible scope
 
 I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I propose payment initiation without redirection after account and device linking. First use confirms the link at the bank; subsequent eligible payments are authorized in Clara with the device security mechanism. Company approval remains a separate decision. [Central Bank: Open Finance customer journey](https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado), [Central Bank: payment initiation](https://www.bcb.gov.br/detalhenoticia/568/noticia).
@@ -831,7 +875,7 @@ The proposed Overview and Payments sit under Accounts payable. Connected banks s
 | Supplier payment | Recipient fixture, amount, source, review, company decision and device confirmation | No real Pix execution; dynamic charge resolution remains |
 | Failure and recovery | Rejection/correction, canceled confirmation, expired link, balance/limit/service failure and unknown result | Responses are simulated |
 | Reused components and DS contribution | Shared UI API, Wizard, flow states, Brand loading and compact upload | Accessibility conformance is not established |
-| AI use | Work log records assistance and corrections | Time was not measured |
+| AI use | Tools, instructions, corrections and retrospective phase windows are recorded | Active effort and AI time savings were not measured |
 
 ### How to explore
 

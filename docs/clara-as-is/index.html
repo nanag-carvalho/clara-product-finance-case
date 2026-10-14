@@ -18,8 +18,47 @@ code{font-size:13px;background:#edf2f8;padding:2px 5px}.meta{font-size:13px;colo
 <p>Research consolidated on October 13, 2026. <strong>Demo</strong> identifies my screenshots; <strong>official documentation</strong> identifies Clara's public materials; <strong>hypothesis</strong> identifies design interpretation; <strong>reconstruction</strong> identifies diagrams of uncaptured states. Transaction dates do not establish the UI version.</p>
 <h2 id="brief-and-evaluation-criteria">Brief and evaluation criteria</h2>
 <p>The brief describes a finance manager at a Brazilian company with 200 employees, accounts at two traditional banks and dozens of supplier payments each week. The manager currently needs to open the bank, transfer money to Clara, return to Clara and only then pay.</p>
-<p>The evaluation asks for problem framing and a metric, Pix and Open Finance context, first connection and consent, a payment and at least one failure scenario in high fidelity. It also asks for explored alternatives, reused components, a design system contribution and a record of AI use, including mistakes and time spent. The presentation allows approximately 30 minutes for the walkthrough and 15 for discussion.</p>
-<p>Source: the private brief I received during the interview process. These requirements guide the case. The showcase presents the narrative; this hub holds the evidence, alternatives, implementation details and limits behind it.</p>
+<p>The evaluation covers product framing and scope, a success metric, the Brazilian payment context, a high-fidelity connection/payment/failure flow, explored alternatives, reusable system contributions across markets, and transparent AI use with a time estimate and its basis. The walkthrough has approximately 30 minutes, followed by 15 minutes of discussion.</p>
+<p>I used the brief&#x27;s preference for a smaller, well-resolved scope to focus on <strong>one supplier Pix</strong>. The twelve scenarios are states and exceptions of that job, not twelve product features. Batch execution, recurring payments, real bank integration and a full approval-policy engine remain outside the implementation.</p>
+<h3>Where to inspect the requested evidence</h3>
+<table>
+<thead>
+<tr>
+<th>Brief criterion</th>
+<th>My response</th>
+<th>Evidence to inspect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product thinking and metric</td>
+<td>Reduce funding preparation while preserving authority and traceability; measure active handling time for correctly completed tasks</td>
+<td>My direction; Hypotheses and validation</td>
+</tr>
+<tr>
+<td>Brazilian context</td>
+<td>Separate Pix from payment initiation, explain consent and bank return, distinguish limits, funds and uncertain outcomes</td>
+<td>Brazil constraints and feasible scope; prototype connection and recovery scenarios</td>
+</tr>
+<tr>
+<td>High fidelity and alternatives</td>
+<td>Connect a bank, prepare/review a payment, obtain approval and authorization, then recover; explain the rejected interaction alternatives</td>
+<td>Proposed flow; Design and engineering contributions; interactive prototype</td>
+</tr>
+<tr>
+<td>System thinking across markets</td>
+<td>Reuse public primitives, contribute task patterns with a documented API, keep Pix-specific rules outside shared components</td>
+<td>A design system that AI can use; live catalog; DS contract</td>
+</tr>
+<tr>
+<td>AI and speed</td>
+<td>Identify tools, concrete instructions, constraints, errors and human review; reconstruct phase windows with their limits</td>
+<td>AI work log; repository history</td>
+</tr>
+</tbody>
+</table>
+<p>I had no internal Clara data or design system. The implementation uses public Radix primitives and a local case-specific foundation, with fictional data and explicit service assumptions. My contribution is the framing, design direction, rendered review and decisions carried into assisted implementation. No independent manual authorship of all code or production integration is claimed.</p>
+<p>Source: the private brief supplied during the interview process. This table summarizes its criteria; the showcase tells the story and the hub holds the supporting detail.</p>
 <h2 id="product-context-and-the-brief">Product context and the brief</h2>
 <h3 id="what-clara-brings-together">What Clara brings together</h3>
 <p>Clara positions its platform around company spending: corporate cards, expense control, supplier payments and a digital account. The value proposition connects transactions with the information and controls needed to manage them. Its Brazilian product pages also promote payment automation, ERP integration and cash-management options. These statements describe Clara’s public positioning. Sources reviewed October 14, 2026: <a href="https://www.clara.com/pt-br">Clara product overview</a> and <a href="https://www.clara.com/pt-br/produtos/contas-a-pagar">Accounts Payable</a>.</p>
@@ -376,25 +415,71 @@ Sources: <a href="https://www.clara.com/pt-br/recursos/lancamentos">Public relea
 Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https://ajuda.clara.com/hc/pt-br/articles/41962561308947-Como-aprovo-ou-reviso-pagamentos-na-Clara">Payment approval guide</a>, <a href="https://ajuda.clara.com/hc/pt-br/articles/55396213827731-Como-verificar-quem-alterou-um-cart%C3%A3o">Card activity guide</a>.</p>
 <h2 id="ai-work-log">AI work log</h2>
 <p>I used Codex as a working partner across research organization, interface exploration, implementation and verification. My role was to set the direction, review what appeared on screen and decide what needed to change. This log records concrete iterations from the case; it does not imply that I manually wrote every line of assisted code.</p>
-<h3 id="start-from-the-assigned-problem">Start from the assigned problem</h3>
+<h3>Start from the assigned problem</h3>
 <p>I supplied the brief and screenshots from the Clara demo. AI helped organize observations, consult official sources and prepare reference material. When the opportunity framing expanded beyond the assignment, I brought it back: paying suppliers with funds at another bank was already defined in the brief. The design work was to make that service understandable within Clara’s existing operation.</p>
 <p>An additional AI review challenged the opportunity tree and recovery claims. I used that critique to refine the framing, then corrected it again against the brief. The resulting H1–H4 remain hypotheses, not findings from user interviews. Captured screens and reconstructed diagrams are identified separately in the evidence.</p>
-<h3 id="keep-the-existing-product-in-view">Keep the existing product in view</h3>
+<h3>Keep the existing product in view</h3>
 <p>I asked for a new-payment entry that acknowledged both Clara balance and the proposed external account. AI implemented iterations; I rejected the separate choice modal and oversized options, then directed a compact popover anchored to New payment. I also asked for Pix key recognition, an explicit paste action and QR scanning as a simulation, without opening a real camera.</p>
 <p>The same review applied to navigation: I asked to preserve the existing product structure, expose only implemented destinations and make approval actions reachable after removing the separate pending page. These were behavior decisions to verify in the prototype, not just changes to labels.</p>
-<h3 id="judge-the-interaction-not-only-the-implementation">Judge the interaction, not only the implementation</h3>
+<h3>Judge the interaction, not only the implementation</h3>
 <p>The mobile table was technically present but difficult to use. I called out the density and controls and asked for a composition suited to mobile. AI assisted with the implementation of readable payment rows and the accompanying controls.</p>
 <p>I also directed the branded loading: a brief transition with the page visible through transparency and blur. My intention was perceived care and continuity before entering important financial details. AI initially focused too heavily on technical caveats; I redirected the explanation toward that human intention. Placement, duration and repeated loading required further visual review.</p>
 <p>The decision trace in <strong>Design and engineering contributions</strong> connects these interventions to hierarchy, progressive disclosure, user control and emotional design. This log records how AI participated in that work.</p>
-<h3 id="turn-corrections-into-reusable-implementation">Turn corrections into reusable implementation</h3>
+<h3>Turn corrections into reusable implementation</h3>
 <p>I approached the foundation through composition: tokens and basic controls establish the vocabulary; combined fields, review summaries and wizard patterns carry it into the task. That is the atomic-design reasoning behind my insistence on shared styles and behaviors, rather than a separate visual solution for every screen.</p>
 <p>I asked for clean English code, stronger use of the shared DS API and automated interaction coverage. AI assisted with component work, the move from Lucide to Phosphor, refactoring and tests. The shared source, component catalog and executable examples let a reviewer inspect how the design is represented in code.</p>
 <p>I requested end-to-end coverage for entry, approval, authorization and mobile. Type checks, build checks and browser tests were run during development. They did not replace my visual review: I still found inconsistent spacing, broken hierarchy and unreadable contrast after automated checks passed. Passing tests establish only the behavior they cover.</p>
-<h3 id="direct-the-showcase-as-a-designed-experience">Direct the showcase as a designed experience</h3>
+<h3>Direct the showcase as a designed experience</h3>
 <p>I provided my Mercado Livre case as a reference for storytelling and presentation. Early AI versions accumulated unrelated cards, diagrams and text. I asked for a separate showcase, a clearer narrative, selective dark surfaces and larger alternating screenshots. I then reviewed specific details: shared image captions, the relationship between live components and their code, and the placement of AI notes beside each chapter.</p>
 <p>Those corrections shaped both the page and the way this work is presented. AI produced implementations; I assessed whether they communicated the intended story and asked for revisions when they did not.</p>
-<h3 id="evidence-and-limits">Evidence and limits</h3>
-<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. I did not track time consistently, so I cannot report measured time spent or savings. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
+<h3>Tools, instructions and implementation constraints</h3>
+<p>Codex assisted with research organization, implementation, refactoring and verification. An Astra review challenged the opportunity framing, recorded in commit <code>ab4a7dc0</code>. My instructions, in the conversation and browser comments, repeatedly redirected the result: move source choice beside New payment; preserve mobile queue behavior while changing composition; use a shared DS API; and test entry, approval, authorization and recovery end to end. These are summaries of the instructions, not fabricated verbatim prompts.</p>
+<p>
+<a href="https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/DS_CONTRACT.md">
+<code>DS_CONTRACT.md</code>
+</a> records hierarchy, spacing, component states, accessibility behavior and reuse constraints. The registry and <code>ds:check</code> make parts of that contract executable. There is no project <code>CLAUDE.md</code> or <code>AGENTS.md</code> in the reviewed repository; the recorded conversation, contract and checks are the relevant evidence. A personal voice skill was used for presentation editing, not as a source of financial requirements.</p>
+<p>My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.</p>
+<h3>Retrospective time estimate and its basis</h3>
+<p>The work spans October 13–14, 2026. These are approximate <strong>elapsed phase windows</strong> reconstructed from commit milestones and the conversation, not tracked active hours. Research, design, coding and review overlap; a batch commit does not reveal how much time each activity took.</p>
+<table>
+<thead>
+<tr>
+<th>Recorded phase</th>
+<th>Approximate window</th>
+<th>Basis and limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial foundation</td>
+<td>October 13 evening; duration unknown</td>
+<td>First commit at 20:38 (<code>3eca7ad3</code>) already contains the hub and DS; preparation predates it.</td>
+</tr>
+<tr>
+<td>Research, framing and flow refinement</td>
+<td>About 2 hours on October 14</td>
+<td>09:38–11:47, <code>f9246f27</code> to <code>b1922326</code>; includes design iteration.</td>
+</tr>
+<tr>
+<td>Prototype, DS and story iteration</td>
+<td>About 6 hours</td>
+<td>11:47–18:06, ending at <code>ad4b171c</code>; mixed work recorded in a batch delivery, not six isolated hours of coding.</td>
+</tr>
+<tr>
+<td>Final review, fixes and release</td>
+<td>About 40 minutes</td>
+<td>18:06–18:43, through <code>9d3325eb</code>; verification also occurred earlier.</td>
+</tr>
+<tr>
+<td>Presentation and subsequent refinements</td>
+<td>Continued afterward</td>
+<td>Separate ongoing work; excluded from the windows above.</td>
+</tr>
+</tbody>
+</table>
+<p>Commit times use São Paulo time (UTC−03:00). The overnight gap is not counted as continuous work. These windows do not establish total active effort or time saved by AI.</p>
+<h3>Evidence and limits</h3>
+<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The retrospective windows above provide a qualified estimate; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
 <h2 id="desk-research-three-relevant-references">Desk research: three relevant references</h2>
 <p>I limited this desk research to three references: Conta Simples as a closer Brazilian expense-management alternative, Cora as an adjacent Brazilian business-account product, and Ramp as an international accounts-payable benchmark. They are not equivalent competitors in every market. I consulted public material on October 13, 2026; I did not test their authenticated products or compare completion rates.</p>
 <table>
@@ -746,11 +831,13 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 </thead>
 <tbody>
 <tr>
-<td>Public API · <code>@/design-system</code></td>
+<td>Public API · <code>@/design-system</code>
+</td>
 <td>One supported import path for components and patterns.</td>
 </tr>
 <tr>
-<td>Registry · <code>src/design-system/registry.ts</code></td>
+<td>Registry · <code>src/design-system/registry.ts</code>
+</td>
 <td>Tokens, component roles, variants and source locations in one maintained definition.</td>
 </tr>
 <tr>
@@ -758,7 +845,9 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <td>The same foundation available to code and tooling, without independently maintained copies.</td>
 </tr>
 <tr>
-<td><code>DS_CONTRACT.md</code></td>
+<td>
+<code>DS_CONTRACT.md</code>
+</td>
 <td>Rules for hierarchy, spacing, semantics, state feedback and composition.</td>
 </tr>
 <tr>
@@ -766,16 +855,23 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <td>Working previews, usage examples and source code for inspection before reuse.</td>
 </tr>
 <tr>
-<td><code>ds:check</code> and build</td>
+<td>
+<code>ds:check</code> and build</td>
 <td>Detect stale generated artifacts and covered import/token violations. They do not judge the entire UX.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Working rule:</strong> reuse an existing pattern; add a registered variant when needed; extend the component only when the requirement is reusable; generate and check; inspect the result. I retain responsibility for scope, hierarchy and behavior. AI use does not replace design review.</p>
-<p><strong>Case contribution:</strong> Wizard for guided tasks and progress; InputGroup for explicit field actions and mobile composition; ReviewSummary for recipient, amount and source; Brand loading and flow illustrations for state feedback. Compact upload and correction/history compositions support the same payment task. These are local case contributions, not changes to Clara's production library.</p>
-<h3 id="how-the-foundation-is-shared">How the foundation is shared</h3>
+<p>
+<strong>Working rule:</strong> reuse an existing pattern; add a registered variant when needed; extend the component only when the requirement is reusable; generate and check; inspect the result. I retain responsibility for scope, hierarchy and behavior. AI use does not replace design review.</p>
+<p>
+<strong>Case contribution:</strong> Wizard for guided tasks and progress; InputGroup for explicit field actions and mobile composition; ReviewSummary for recipient, amount and source; Brand loading and flow illustrations for state feedback. Compact upload and correction/history compositions support the same payment task. These are local case contributions, not changes to Clara&#x27;s production library.</p>
+<h3>How the foundation is shared</h3>
 <p>The hub, prototype, showcase and component catalog import the same local source through <code>@/design-system</code>. This is a shared code API, not a remotely hosted design-system service. The registry generates the artifacts used by tooling; the payment lifecycle remains domain code outside the visual components.</p>
-<p>To inspect reuse, open the catalog's Button examples, compare its variants with the live showcase example, then inspect the code and contract. For behavior, explore the prototype scenarios. Automated checks cover specified rules and interactions; visual review still determines whether the composition communicates the right hierarchy.</p>
+<p>To inspect reuse, open the catalog&#x27;s Button examples, compare its variants with the live showcase example, then inspect the code and contract. For behavior, explore the prototype scenarios. Automated checks cover specified rules and interactions; visual review still determines whether the composition communicates the right hierarchy.</p>
+<h3>Contributing patterns across markets</h3>
+<p>This is a proposed contribution to a shared system, not a claim that Clara adopted the case library. I would bring Wizard, InputGroup and ReviewSummary to the DS team with the task, alternatives, reusable API, interaction states, keyboard behavior and mobile examples that motivated each pattern.</p>
+<p>The shared layer should handle sequence, field-action composition and review hierarchy. Pix keys, CPF/CNPJ formatting, BRL amounts, local account eligibility and authorization policy belong in the Brazilian domain layer. Labels, values and formatted amounts should be supplied by the consumer instead of hardcoded into a supposedly global component.</p>
+<p>Before adoption, I would compare the proposal with existing patterns in other markets, test longer translated labels and local formats, and agree on variants and ownership with the DS team. I would contribute documentation and regression checks alongside the component, then pilot it in a second flow before expanding its use. The current case demonstrates local reuse across three surfaces; cross-market validation remains next work.</p>
 <h2 id="brazil-constraints-and-feasible-scope">Brazil constraints and feasible scope</h2>
 <p>I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I propose payment initiation without redirection after account and device linking. First use confirms the link at the bank; subsequent eligible payments are authorized in Clara with the device security mechanism. Company approval remains a separate decision. <a href="https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado">Central Bank: Open Finance customer journey</a>, <a href="https://www.bcb.gov.br/detalhenoticia/568/noticia">Central Bank: payment initiation</a>.</p>
 <p>Before a production implementation, the authorized initiator or partner, participating banks, PJ account eligibility, authorized representatives, bank approval layers, limits and current journey specifications would need confirmation. I document these as implementation dependencies. Bank selection should reflect verified eligibility, not imply that every bank or business account is supported. I have not established Clara's authorization or partner setup for this feature. The normative pages for Resolution 406 and Instruction 760 did not expose their full text in the research tool; their current applicability remains a verification task rather than a settled design claim.</p>
@@ -1113,7 +1209,7 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <p>There are <strong>39 domain/registry tests</strong> and <strong>14 browser test cases</strong>. The browser suite executes applicable cases on desktop and mobile, totaling <strong>27 runs</strong>, with one mobile-only case skipped on desktop. It covers payment entry through approval and authorization, individual/bulk decisions, correction, unknown-result recovery, mobile filters/selection, showcase navigation, live DS controls, image inspection, destination-tab reuse and first-connection/scenario links.</p>
 <p>The 12 product scenarios are not 12 automated end-to-end tests: some are inspectable demo states, while the browser suite covers selected journeys and regressions. Automated checks verify expected transitions and interactions. Participant sessions would evaluate comprehension, effort and recovery in the finance user’s actual context. I would ask the finance manager to prepare and track a supplier payment, and the assigned approver to review the company decision, using the same tasks and success criteria across variants.</p>
 <h2 id="prototype-implementation-and-comparison">Prototype implementation and comparison</h2>
-<h3 id="what-the-prototype-demonstrates">What the prototype demonstrates</h3>
+<h3>What the prototype demonstrates</h3>
 <p>The proposed Overview and Payments sit under Accounts payable. Connected banks sits under Digital account. Existing Inbox and unrelated modules remain visible as context. Approval review is reached from payment queues; individual requests carry their progress and history.</p>
 <table>
 <thead>
@@ -1146,12 +1242,13 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 </tr>
 <tr>
 <td>AI use</td>
-<td>Work log records assistance and corrections</td>
-<td>Time was not measured</td>
+<td>Tools, instructions, corrections and retrospective phase windows are recorded</td>
+<td>Active effort and AI time savings were not measured</td>
 </tr>
 </tbody>
 </table>
-<h3 id="how-to-explore">How to explore</h3>
+<h3>How to explore</h3>
 <p>Open <strong>Scenarios</strong> in the prototype. Each example opens the relevant request and labels its category and hypothesis. Filters and selection operate on fictional records; batch approval records decisions without authorizing a batch payment. Unknown results keep the same intent available for status checking.</p>
-<h3 id="what-remains-a-hypothesis">What remains a hypothesis</h3>
-<p>H1 concerns choosing the funding source in context; active handling time is the primary experience measure across the task. H2 concerns understanding responsibility and the next decision; H3 concerns recovery; H4 concerns review clarity. No user outcomes are measured. Automatic approval and multiple approval layers are recognized policy cases but are not simulated in the current prototype. New payment preserves the existing Clara-balance route alongside the proposed external-bank source. A unified Pix field recognizes keys and static Copia e Cola; QR scanning is a labeled camera simulation with the same decoded-code validation path. Recipient resolution remains fictional. Alternatives and unmeasured effort should be explained candidly in the walkthrough.</p></main></body></html>
+<h3>What remains a hypothesis</h3>
+<p>H1 concerns choosing the funding source in context; active handling time is the primary experience measure across the task. H2 concerns understanding responsibility and the next decision; H3 concerns recovery; H4 concerns review clarity. No user outcomes are measured. Automatic approval and multiple approval layers are recognized policy cases but are not simulated in the current prototype. New payment preserves the existing Clara-balance route alongside the proposed external-bank source. A unified Pix field recognizes keys and static Copia e Cola; QR scanning is a labeled camera simulation with the same decoded-code validation path. Recipient resolution remains fictional. Alternatives and unmeasured effort should be explained candidly in the walkthrough.</p>
+</main></body></html>
