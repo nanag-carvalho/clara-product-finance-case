@@ -536,6 +536,24 @@ The trade-off is deliberate: I am using a local reusable foundation to prototype
 
 My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.
 
+## Low-fidelity wireflow and motion exploration
+
+I added a clickable wireflow before refining the high-fidelity prototype. Its neutral surfaces and dashed boundaries keep the discussion on sequence, information, commitments and recovery. The surrounding Payments workspace remains visible; bank panels represent an external service boundary, with explicit exploration controls rather than invented bank screens.
+
+The flow covers source selection, first connection, recipient lookup, amount, review, company approval, bank handoff and outcome. I can close and reopen the same request in the current session, return before authorization, and choose confirmed success, confirmed failure or an unknown result. Direct payment and linked top-up use the same service-state reducer as the earlier prototype. A top-up result remains separate from supplier settlement, and an unknown result exposes status checking instead of a new submission.
+
+| Interaction | Purpose | Exploration check |
+| --- | --- | --- |
+| Account selection feedback | Make the chosen source visible before connection. | H1: identify the bank and distinguish the route. |
+| Lookup loading and recipient confirmation | Show that validation is happening and when data becomes available. | H4: check the returned identity before review. |
+| 160 ms phase transition and heading focus | Preserve orientation between task views. | Keyboard focus reaches the new heading; movement can be disabled and respects reduced motion. |
+| Approval and bank-return feedback | Distinguish the recorded company decision from money movement. | H2: explain what has happened and what the next action permits. |
+| Processing and same-request status check | Make waiting visible without inviting a duplicate. | H3: recover using the existing request. |
+
+The 500 ms lookup and 1 second service response are illustrative interaction timings, not estimates of a real bank API. Design notes are outside the payment task. The source-path selector restarts the exploration; form data is not persisted across reloads. Approval outcomes and bank returns are controlled walkthrough actions, not real role-based operations. The existing high-fidelity prototype remains available separately.
+
+I will use this wireflow to identify unnecessary steps, missing information and confusing actions before committing to the final container, motion and visual treatment. The shared DS checks now include the wireflow consumer and its token usage.
+
 ## Prototype implementation and comparison
 
 I built an interactive proposed workspace with its own sidebar and header, connecting Overview, Payments, Approvals, Accounts and Activity. The selected opportunity is O1: use the intended bank funds within the payment task. This first iteration predates the refined test plan; it is not evidence that the hypotheses have been validated. The surrounding views expose the source, responsible actor and payment outcome rather than placing the feature in an isolated form.
