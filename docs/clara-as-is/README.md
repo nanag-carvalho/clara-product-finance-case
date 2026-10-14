@@ -630,6 +630,108 @@ Walk through first use, a repeat payment with an already prepared source, interr
 
 The wireflow tests whether people understand and can navigate the proposal. It cannot establish real bank compatibility, legal readiness, transfer timing or production settlement. Before high fidelity, resolve critical comprehension and recovery problems; before implementation, verify provider/PJ support, approval ordering, consent expiry, status reconciliation and idempotency. All sessions and outcomes are still to be recorded.
 
+## Visual and interaction direction
+
+I want the payment experience to feel contemporary, precise and approachable. Visual design is part of that work: typography, rhythm, surfaces, iconography and motion should make the task feel coherent and help people understand what they can do next. I use recognizable financial-product references, then adapt them to the finance manager's task and Clara's shared DS.
+
+### References I will use at each moment
+
+| Moment / hypothesis | Reference and evidence | My adaptation for Clara | What I will evaluate |
+| --- | --- | --- | --- |
+| Start and enter details · H1/H4 | Mercury supplied request screens: grouped fields, clear stages and contextual account identity. The task is a payment request, not an outgoing Pix. | One focused work area, persistent payment context and a clear primary action. Supporting documents stay secondary. | Visual hierarchy, completion, unnecessary navigation and omissions. |
+| Choose and prepare the source · H1/H2 | Mercury account selector and Wise's documented funding semantics. Wise is a behavior reference, not a captured current UI. | Account name and identifier together; explain the permission beside the action. Distinguish an eligible source from a connected source. | Correct debit-account identification and understanding of the handoff. |
+| Validate and review · H4 | Nubank's official tutorial frames and GOV.UK check-answers pattern. | Recipient, amount and source become the visual priority. Place Edit beside the information it changes; preserve unrelated values. | Mismatch detection, correction effort and keyboard access. |
+| Company decision · H2 | Conta Simples approval documentation and Ramp queue/filter captures. | Show the responsible actor and what is waiting. Preserve existing policy; emphasize the decision without implying that approval settles the Pix. | Correct next actor and consequence, including differing requester/approver roles. |
+| Authorization and return · H2/H3 | Historical Cora review/authentication frames and WAI multi-page-form guidance. | A clearly named bank boundary, retained request and a recognizable return state. The bank's UI is outside my visual proposal. | Orientation and retained context after interruption. |
+| Result and recovery · H3 | Nubank/Cora result frames, Wise documented status semantics and GOV.UK confirmation guidance. | A specific outcome, amount, recipient, source and next valid action. A receipt belongs to confirmed payment; pending states remain visibly pending. | Outcome comprehension and safe recovery. |
+
+Reference provenance and source links are recorded in Desk research. These are selected for relevant interaction patterns, not presented as a universal ranking of the best products. The following screenshots are observed references; the adaptations above are my design decisions.
+
+![Mercury · review emphasizes amount and account identity. Supplied Mobbin capture; payment-request flow, not Pix.](/references/mercury/review.png)
+
+![Nubank · recipient review in an official tutorial frame. Reference for decision hierarchy; not evidence of the latest logged-in interface.](assets/benchmark/nubank-review-0040.jpg)
+
+![Cora · explicit payment result in a historical official animation. Reference for outcome feedback, not current UI styling.](assets/benchmark/cora-result.png)
+
+Sources: [Mercury payment requests](https://support.mercury.com/hc/en-us/articles/44220096132116-How-to-create-and-send-a-payment-link-in-Mercury), [Nubank Pix](https://blog.nubank.com.br/pix-tudo-sobre/), [Wise tracking](https://wise.com/help/articles/2452305/how-do-i-check-my-transfers-status), [Cora payment guide](https://www.cora.com.br/ajuda/artigo/como-realizar-um-pagamento-no-aplicativo-da-cora/), [GOV.UK check answers](https://design-system.service.gov.uk/patterns/check-answers/), [GOV.UK confirmation pages](https://design-system.service.gov.uk/patterns/confirmation-pages/).
+
+### Aesthetic decisions with a UX purpose
+
+| My visual decision | UX / psychology rationale | DS application and validation |
+| --- | --- | --- |
+| Stronger headings, calm body text and prominent payment values | Visual hierarchy helps establish reading order and what deserves attention at the decision. | Nunito Sans with distinct semantic weights; neutral Slate text. Check scanning, legibility and 200% zoom. |
+| Compact spacing within a decision, more separation between decisions | Gestalt proximity makes related items read as a group. | 2/4/8 within labels, feedback and controls; 16/24 between groups. Keep recipient data together and Edit beside its target. |
+| White surfaces, light borders and restrained elevation | Clear visual boundaries establish grouping; restrained layering separates workspace, task and temporary overlays. | Shared Card/Sheet/Wizard tokens. Avoid adding a card around every field or code block. Check whether layers clarify context. |
+| Consistent action location, shape and state | Consistency and recognition help people predict what an action will do without relearning each screen. | 32 px md / 40 px lg controls, shared radius scale and visible focus. Explicit verbs at consequential actions. |
+| Limited accent color and meaningful icons | Contrast directs attention; text and icon meaning must carry state independently of color. | Primary action gets emphasis; error, pending and paid use distinct words. Verify contrast and accessible names. |
+| Refined motion that connects states | Feedback and spatial continuity can explain what changed while maintaining a sense of control. | Reuse motion rules below; observe disorientation, distraction and skipped review. |
+
+> **My design reading:** aesthetic quality is a deliberate part of this proposal. I want it to communicate care and make the workflow feel coherent. The aesthetic–usability effect describes how attractiveness can influence perceived usability; I will therefore assess visual confidence and task performance separately. A polished screen and a successful task are both goals, and one does not establish the other.
+
+Conceptual references: [NN/g: proximity](https://www.nngroup.com/articles/gestalt-proximity/), [NN/g: visual design principles](https://www.nngroup.com/articles/principles-visual-design/), [NN/g: aesthetic–usability effect](https://www.nngroup.com/articles/aesthetic-usability-effect/). These concepts justify directions to test, not a claimed neurological result or a measured improvement in this case.
+
+### Motion and microinteractions to prototype
+
+The timings below are my proposed starting tokens, not values measured in the benchmark. Service progress always follows real state; animation never determines payment success.
+
+| Trigger | Proposed feedback | Accessibility / service rule | Hypothesis |
+| --- | --- | --- | --- |
+| Choose an account | Selected outline and checkmark update; source summary follows in place, around 120 ms. | Text and selected semantics persist with motion disabled. No automatic submission. | H1 |
+| Find recipient | Button enters loading state immediately; reserve the result area to prevent layout shift. Show verified identity or an adjacent actionable error. | Announce completion once; preserve input and prevent repeated in-flight lookup. Distinguish lookup failure from invalid input. | H4 |
+| Continue / Back | A restrained 160–200 ms transition between related panels, with stable action placement. | Move focus to the new heading; Back retains values. Reduced motion uses immediate state change. | H1/H2 |
+| Correct an error | Associate the message with its field; clear it when the value is revalidated. | No shaking, color-only messages or clearing unrelated fields. On submission, focus the first error or linked error summary. | H4 |
+| Request approval / authorize | Button spinner and explicit action label; next state identifies the responsible actor. | In-flight double activation cannot create another request. Internal approval is not a paid state. | H2/H3 |
+| Return from bank | Restore payment identity; show checking, pending or confirmed outcome. | A callback does not trigger a success animation. Unknown remains checkable on the same request. | H3 |
+| Confirm settlement | A short checkmark transition, then stable amount, recipient and receipt actions. | No sound required, no flashing; reduced-motion view has the same content. | H2/H3 |
+
+Accessibility baseline: [WAI multi-page forms](https://www.w3.org/WAI/tutorials/forms/multi-page/), [GOV.UK error messages](https://design-system.service.gov.uk/components/error-message/), [W3C animation from interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html). I will test keyboard order, focus return, labels, errors, live announcements, zoom and reduced motion. The animation criterion is AAA; using it here is a design choice, not an overall conformance claim.
+
+### Progress and completion as light gamification
+
+I would use visible milestones and a modest completion acknowledgement to support orientation and a sense of progress: Details checked → Source ready → Reviewed → Required decisions → Outcome. Completing preparation is clearly different from paying the supplier. This is a restrained gamification-inspired mechanism to test, not an incentive to transfer more money.
+
+On repeat use, recognize a source that is still eligible and prepared; do not ask for already valid setup again. Keep permission expiry and payment-specific authorization explicit. Avoid points, streaks, countdown pressure or confetti before settlement. Unknown-duration bank processing gets a factual state, not an invented percentage.
+
+**Test:** can the person say what is complete, what remains and whether funds moved? If the milestone makes them skip review or mistake approval for settlement, revise it. [WAI progress guidance](https://www.w3.org/WAI/tutorials/forms/multi-page/) and [GOV.UK task status](https://design-system.service.gov.uk/components/task-list/) support orientation patterns; the proposed motivational treatment is my interpretation.
+
+## Userflow: actions, decisions and recovery
+
+This map describes the proposed interaction to implement and test. It follows one service: **external bank → supplier**, initiated in Clara. The bank boundary is explicit. The current clickable wireflow remains the earlier source-first iteration; this map defines the payment-intent-first revision.
+
+**Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Each diagram opens at full size; the transition table below provides a text equivalent.
+
+### 1 · Prepare the payment and source
+
+![Userflow 1 · New payment → recipient and amount → eligible source → connection if needed → review. Side branches preserve input on invalid details, unsupported source or canceled connection.](assets/userflow-prepare.svg)
+
+### 2 · Review and obtain the required decisions
+
+![Userflow 2 · Review → company approval → bank authorization → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
+
+### 3 · Confirm the outcome or recover
+
+![Userflow 3 · Query the same payment: confirmed paid opens the receipt; processing or unknown stays checkable; confirmed failure allows only a provider-valid remedy and renewed review where needed.](assets/userflow-outcome.svg)
+
+### Clicks, conditions and expected responses
+
+| ID / actor | Action or condition | Expected response / next node | Error, return or exit |
+| --- | --- | --- | --- |
+| U1 · Requester | Click New payment | Create or open a payment draft → U2. | Close before submission keeps a resumable draft in the proposal; cross-session persistence is an engineering requirement. |
+| U2 · Requester | Enter Pix key and amount; click Find recipient, then Continue | Validate details and show recipient identity → U3. | Invalid input: adjacent correction and retained fields. Lookup unavailable: retry lookup, not submit payment. |
+| U3 · Requester | Select an eligible external account; click Continue | D1 checks whether preparation is needed. | Unsupported account: explain why; choose another eligible account. Never silently switch source or offer a Clara top-up. |
+| D1 / U4 · Requester and bank | If preparation is needed, inspect purpose and click Continue to bank | Bank-controlled account/consent step; confirmed return → U5. Already prepared and eligible → U5 directly. | Denied, expired or canceled setup → U3 with the draft intact. Account preparation does not authorize payment. |
+| U5 · Requester | Review recipient, amount and source; Edit or Request approval | Revalidate current details; submit once → U6. | Edit → relevant field, then U5. Material edits invalidate prior review/decisions as required. |
+| U6 · Approver | Review and approve according to company policy | When all required company decisions are recorded → U7. | Pending: show next actor. Rejected: reason and requester follow-up; no bank submission. Any revised request needs fresh applicable approval. |
+| U7 · Authorized representative | Click Continue to bank; authorize the specific transaction | Bank-controlled authentication/authorization → U8 status reconciliation. | Returning before authorization does not prove there was no debit. Check the same intent if submission is uncertain. Resume only from a confirmed valid state. |
+| U8 · System | Correlate the bank return and query authoritative status | D2 routes to U9, U10 or U11. | Missing callback, timeout or conflicting result → U10. No receipt or new submission based only on navigation. |
+| U9 · Requester | Confirmed paid: click View receipt / Back to payments | Receipt and retained transaction detail. | Success only after authoritative settlement confirmation. |
+| U10 · Requester/system | Processing or unknown: check the same payment | Update from authoritative status → D2. | Preserve reference and explain next check/help. Never expose a second Send while unresolved. |
+| U11 · Requester | Confirmed failed: inspect reason; choose supported remedy | Correct eligible details → U5, with renewed company/bank decisions as required. | No generic blind retry; prevent a duplicate financial execution. Unsupported reason → support with payment reference. |
+
+**Happy path to test:** U1 → U2 → U3 → D1 → U4 when needed → U5 → U6 → U7 → U8 → D2 → U9. Company and bank decisions may involve different people and waiting. The exact consent timing and bank-signatory requirements remain provider dependencies.
+
+**Minimum scenarios:** first connection; repeat use; invalid recipient; source not eligible; canceled setup; mismatch corrected in review; pending/rejected company approval; interrupted authorization; definitive failure; unknown result that later resolves. Test H1/H4 before submission, H2 at commitment boundaries and H3 on return/recovery. Use the same data for visual variants and record help, errors, correct completion and active time.
+
 ## Brazil constraints and feasible scope
 
 I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I will use a bank-redirection journey as the conservative prototype assumption, and keep company approvals separate from bank authorization. [Central Bank: Open Finance customer journey](https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado), [Central Bank: payment initiation](https://www.bcb.gov.br/detalhenoticia/568/noticia).

@@ -274,3 +274,5 @@ body {font-family:var(--font-sans);font-size:var(--text-ui);font-weight:400;font
 .brand.case-brand .brand-sub{margin:0;letter-spacing:0;font-weight:400}
 
 .prose h2.research-subheading{margin-top:var(--space-24)}
+
+.doc-image>img[src$=".svg"]{width:100%;max-height:none;object-fit:contain}

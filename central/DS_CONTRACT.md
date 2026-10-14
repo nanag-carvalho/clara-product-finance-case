@@ -140,3 +140,7 @@ Contract checks prove token/API consistency, not usability. Review at the target
 ### Documentation heading hierarchy
 
 The page header owns the page title. When the opening research section repeats that subject, render its body directly with `Reader omitLeadHeading`; retain its source heading for standalone documentation and search. Promote nested headings one level in that opening section to preserve h1 → h2 → h3 semantics. Keep headings that introduce a distinct section or journey stage. Avoid introductory sentences that only restate the heading.
+
+### Proposed payment feedback and visual direction
+
+The case's Visual and interaction direction maps references and H1–H4 to proposed UI behavior. Use the shared type weights, neutral Slate surfaces, 2/4/8 proximity and 16/24 grouping. Motion starting values (selection ~120 ms; step transition 160–200 ms) are design proposals, not service timings or benchmark measurements. Preserve state and all feedback under reduced motion; focus moves to the new step heading. Lookup errors remain adjacent and associated; loading reserves space. Progress represents verified milestones, never an invented payment percentage. Approval, authorization and paid must remain distinct in text, color and motion. No settlement celebration before authoritative confirmation. Validate keyboard, focus, zoom, contrast and announcements alongside visual quality; no accessibility conformance is claimed by the build.
