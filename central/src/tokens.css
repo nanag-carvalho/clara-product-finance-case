@@ -267,3 +267,5 @@ body {font-family:var(--font-sans);font-size:var(--text-ui);font-weight:400;font
 .research-callout strong{color:var(--slate-800);font-weight:var(--weight-h3)}
 
 [data-slot=alert][role=note]{column-gap:var(--space-8)}
+
+.doc-evidence-crop{display:block;width:100%;height:auto;max-height:480px;overflow:hidden}

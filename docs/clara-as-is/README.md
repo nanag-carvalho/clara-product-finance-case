@@ -60,11 +60,13 @@ I separated the journey by evidence source: the top-up comes from the brief and 
 
 ## Critical audit of the current experience
 
-I reviewed the supplied demo screens and the official flow references in this document. This is a heuristic audit, not an observed usability study. I distinguish a problem stated in the brief, a risk visible in the interface and a state I have not captured. Priority here means relevance to the brief and possible consequence, not measured frequency or a numerical severity score.
+I reviewed the supplied demo screens and the official flow references in this document. This is a heuristic audit, not an observed usability study. I distinguish a problem stated in the brief, a risk visible in the interface and a state I have not captured. Priority here means relevance to the brief and possible consequence, not measured frequency or a numerical severity score. Each crop isolates the area I am discussing; select it to inspect the original full screenshot.
 
 ### A1 · Funding interrupts the payment task
 
 **Evidence — brief:** the manager transfers funds from another bank to Clara before paying. The demo shows account and payment surfaces, but does not show this whole round trip.
+
+![A1 · Summary: Digital Account balance and Deposit entry. The cross-bank journey comes from the brief; this crop only shows the Clara entry point.](assets/01-resumo.png#crop=908,266,736,163&size=1676,1030)
 
 **My assessment:** the preparation crosses environments and asks the person to resume a task. That creates a plausible memory and coordination cost; I have not measured lost data, time or abandonment. This is the strongest problem evidence because it is explicit in the brief.
 
@@ -76,6 +78,8 @@ I reviewed the supplied demo screens and the official flow references in this do
 
 **Evidence — Payments demo:** Paid and Reversed have green badges. Their text is different. The screen already provides statuses, search and receipt access.
 
+![A2 · Paid and Reversed use green badges in Payments. Compare the outcome words, not just their color.](assets/06-pagamentos.png#crop=820,343,440,382&size=1676,1030)
+
 **My assessment:** a quick scan by color may group a completed payment with a returned one. That is a visibility risk, not proof that people confuse them or that the screen fails accessibility. I would retain explicit labels and test how people interpret the outcomes.
 
 **Benchmark cross-check:** Nubank's tutorial and Cora's historical animation pair an explicit result with amount, recipient and receipt access. Mercury instead confirms a request was created. The contrast is useful: completing a request and completing a transfer are different outcomes.
@@ -85,6 +89,8 @@ I reviewed the supplied demo screens and the official flow references in this do
 ### A3 · A queue supports action, but decision context still needs inspection
 
 **Evidence — Tasks demo and approval guide:** the queue exposes requester, amount, waiting time and an Approve action. The guide describes reviewing payment details and configured approvers. The individual approval detail is not captured.
+
+![A3 · Tasks: waiting time, amount and Approve actions. This queue does not show what happens after opening a request.](assets/03-tarefas.png#crop=755,238,900,250&size=1676,1030)
 
 **My assessment:** the queue makes pending work visible, which I would preserve. Repeated overdue labels may offer limited prioritization, but I cannot conclude that urgency rules are missing. Nor can I infer that the visible Approve action bypasses review.
 
@@ -96,6 +102,8 @@ I reviewed the supplied demo screens and the official flow references in this do
 
 **Evidence — official entry/error frames:** the form groups financial information and supporting documents; an invalid key has adjacent error text and prevents review.
 
+![A4 · Existing validation: adjacent invalid-key feedback and a disabled Review action. Official demonstration frame.](assets/09-frame-118.png#crop=565,25,565,600&size=1152,648)
+
 **My assessment:** this already supports error prevention. The missing evidence is what happens after a valid lookup and how recipient identity, amount and source appear in review. Missing screenshots are not missing product features.
 
 **Benchmark cross-check:** Mercury groups required and optional fields and shows local upload progress. Nubank exposes interpreted recipient details before the Pix action. Cora separates review from transaction authentication, although its visual reference is historical.
@@ -106,6 +114,8 @@ I reviewed the supplied demo screens and the official flow references in this do
 
 **Evidence — Payments demo and official status documentation:** failure and processing states exist. A failure-detail screen and the uncertain-outcome recovery path have not been captured.
 
+![A5 · Failed payment in the demo list. The visible status establishes the outcome label, not the recovery behavior.](assets/06-pagamentos.png#crop=820,944,620,81&size=1676,1030)
+
 **My assessment:** I cannot claim Clara loses context or encourages duplicates. I can identify a consequential question: how does someone distinguish a definitive failure from an outcome that has not yet been confirmed?
 
 **Benchmark cross-check:** Ramp documents reasons and available actions; Wise distinguishes funding and transfer milestones. Neither provides a direct visual precedent for every Pix failure in this case.
@@ -115,6 +125,8 @@ I reviewed the supplied demo screens and the official flow references in this do
 ### A6 · Dense information needs hierarchy, not a cosmetic reset
 
 **Evidence — supplied Summary, Tasks and Payments screens:** several summaries, statuses and actions compete within broad tables; some actions are icon-only. The Summary capture also shows horizontal overflow. Capture size and demo data may affect that layout.
+
+![A6 · Summary: horizontal overflow and truncated table values in this capture. Responsive behavior still needs testing.](assets/01-resumo.png#crop=160,810,1490,215&size=1676,1030)
 
 **My assessment:** these are reasons to check scanning, responsive layout and action recognition. They do not establish insufficient contrast, absent tooltips, keyboard failure or poor real-world performance. I have not tested those behaviors in the authenticated product.
 
