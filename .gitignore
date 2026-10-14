@@ -21,3 +21,12 @@ output/
 *.log
 .venv/
 __pycache__/
+
+# Automated browser test artifacts
+central/playwright-report/
+central/test-results/
+
+# Local release workspace and visual QA captures
+/publishing/
+/*.png
+.vercel/

@@ -1,0 +1,439 @@
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Bank,
+  Storefront,
+} from '@phosphor-icons/react'
+import { Button } from '@/design-system'
+import ResearchMarkdown from './ResearchMarkdown'
+import './case-story.css'
+import {
+  BusinessRationale,
+  ProcessRationale,
+  AestheticRationale,
+  SharedSystemProof,
+  EvaluationGuide,
+  JourneyEntry,
+  ShowcaseArtifacts,
+} from './ShowcaseRationale'
+
+const decisions = [
+  {
+    image: 'overview',
+    title: 'Make the next action visible.',
+    text: 'I grouped the overview around what needs attention because a finance team has to find the next task across several requests. Company review, authorization and uncertain results each point to a different action.',
+  },
+  {
+    image: 'payments',
+    title: 'Support the work around the payment.',
+    text: 'When I looked at the queue on mobile, compressing the table made the information harder to read. I changed it into payment rows while keeping the same filters and selection rules, so the composition adapts without changing how the work behaves.',
+  },
+  {
+    image: 'request',
+    title: 'Separate approval from moving money.',
+    text: 'An approved request still needs authorization before money moves. I made that distinction visible in the progress and history, so someone returning to the request can understand what happened and who needs to act next.',
+  },
+  {
+    image: 'recovery',
+    title: 'A correction should not erase the work.',
+    text: 'I treated rejection and an unknown result differently because they ask for different decisions. A rejected request returns to editing with its details preserved; an uncertain payment stays available for a status check before another attempt.',
+  },
+]
+
+/** Contextual authorship notes stay beside the story, not in its reading flow. */
+function AIProcessNote({ children }: { children: React.ReactNode }) {
+  return (
+    <aside
+      className="showcase-evaluator-guide"
+      aria-label="My use of AI in this chapter"
+    >
+      <strong>My use of AI</strong>
+      <p>{children}</p>
+      <a href="/#/process" target="clara-case-hub">
+        Read this process in the hub <ArrowUpRight size={14} />
+      </a>
+    </aside>
+  )
+}
+
+/** Standalone editorial narrative, linked to the research hub for evidence. */
+export default function CaseStory({
+  onImage,
+}: {
+  onImage: (file: string, alt: string) => void
+}) {
+  const jumpTo = (id: string) => {
+    const section = document.getElementById(`story-${id}`)
+    section?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'instant'
+        : 'smooth',
+      block: 'start',
+    })
+    section?.focus({ preventScroll: true })
+  }
+  return (
+    <article className="case-story">
+      <header className="story-hero">
+        <div className="showcase-hero-copy">
+          <p className="eyebrow">
+            NÁGELA CARVALHO · PRODUCT FINANCE · DESIGN ENGINEERING
+          </p>
+          <h1>
+            Pay suppliers in Clara.
+            <br />
+            <em>Use funds from your bank.</em>
+          </h1>
+          <p className="story-intro">
+            The brief asked for a supplier Pix using funds at another bank. I
+            explored how to bring that payment into Clara while keeping the
+            source, company decisions and next steps clear throughout the
+            journey.
+          </p>
+          <div className="story-actions">
+            <Button asChild>
+              <a href="/prototype.html" target="clara-case-prototype">
+                Explore the prototype <ArrowUpRight size={16} />
+              </a>
+            </Button>
+            <Button variant="outline" onClick={() => jumpTo('context')}>
+              Read the case <ArrowRight size={16} />
+            </Button>
+          </div>
+        </div>
+        <div className="showcase-hero-visual">
+          <div className="showcase-preview-label">
+            <span /> THE PROPOSED WORKSPACE
+          </div>
+          <button
+            className="showcase-preview"
+            onClick={() =>
+              onImage(
+                '/proposal/overview.png',
+                'Proposed accounts payable workspace',
+              )
+            }
+            aria-label="Enlarge the proposed workspace"
+          >
+            <img
+              src="/proposal/overview.png"
+              alt="Clara accounts payable overview with actionable payment queues"
+            />
+          </button>
+          <div
+            className="showcase-money-path"
+            aria-label="Payment path: your bank, initiated in Clara, to your supplier"
+          >
+            <span>
+              <Bank size={18} aria-hidden="true" />
+              Your bank
+            </span>
+            <i aria-hidden="true" />
+            <span>Via Clara</span>
+            <i aria-hidden="true" />
+            <span>
+              <Storefront size={18} aria-hidden="true" />
+              Supplier
+            </span>
+          </div>
+        </div>
+        <dl className="story-facts">
+          <div>
+            <dt>My role</dt>
+            <dd>Product reasoning, UX/UI and implementation</dd>
+          </div>
+          <div>
+            <dt>Context</dt>
+            <dd>Supplier Pix · Brazilian business accounts</dd>
+          </div>
+          <div>
+            <dt>Deliverables</dt>
+            <dd>Responsive prototype, shared DS and automated checks</dd>
+          </div>
+        </dl>
+      </header>
+      <div className="story-layout">
+        <div className="story-chapters">
+          <div className="showcase-act">
+            <div className="showcase-act-label">
+              <span>01 / THE OPPORTUNITY</span>
+              <p>From the existing operation to the funding decision</p>
+              <AIProcessNote>
+                AI organized the brief and references. I corrected the framing
+                when it drifted beyond the assigned external-payment
+                opportunity.
+              </AIProcessNote>
+            </div>
+            <div className="showcase-act-content">
+              <section id="story-context" tabIndex={-1}>
+                <p className="eyebrow">01 · PROBLEM AND EVIDENCE</p>
+                <div className="showcase-chapter-heading">
+                  <h2>
+                    The payment started with another task: funding the account.
+                  </h2>
+                  <p>
+                    What caught my attention in the brief was the work before
+                    the payment. The finance manager had to open the bank, fund
+                    Clara and return before paying a supplier. With dozens of
+                    payments each week, that preparation became my starting
+                    point.
+                  </p>
+                </div>
+                <p>
+                  Before changing the flow, I reviewed the demo and official
+                  references to understand how payments, approvals and tracking
+                  already worked. I wanted the proposal to fit that operation,
+                  so I kept the existing controls visible as I explored the new
+                  source.
+                </p>
+                <ResearchMarkdown
+                  body="![Payments in the observed Clara demo](assets/06-pagamentos.png)"
+                  onImage={onImage}
+                />
+                <p className="story-caption">
+                  Starting point · captured demo interface. The top-up
+                  requirement comes from the brief; user needs are provisional
+                  interpretations, not interview findings.
+                </p>
+                <Button variant="link" asChild>
+                  <a href="/#/as-is" target="clara-case-hub">
+                    Inspect the current journey <ArrowRight size={16} />
+                  </a>
+                </Button>
+              </section>
+              <BusinessRationale />
+              <section id="story-direction" tabIndex={-1}>
+                <p className="eyebrow">03 · THE DESIGN DECISION</p>
+                <div className="showcase-chapter-heading">
+                  <h2>
+                    Bring the source into the payment, and keep the controls
+                    around it.
+                  </h2>
+                  <p>
+                    I brought source selection into New payment because that is
+                    where the person is already deciding how to pay. Clara
+                    balance remains available alongside the proposed external
+                    account, which makes the new route part of the existing
+                    product.
+                  </p>
+                </div>
+                <div className="story-comparison">
+                  <div>
+                    <h3>Starting point</h3>
+                    <ol className="showcase-flow">
+                      <li>Bank</li>
+                      <li className="flow-friction">Top up Clara</li>
+                      <li>Prepare</li>
+                      <li>Approve</li>
+                      <li>Pay</li>
+                    </ol>
+                  </div>
+                  <div>
+                    <h3>Proposed journey</h3>
+                    <ol className="showcase-flow">
+                      <li className="flow-focus">Pix + source</li>
+                      <li>Approve</li>
+                      <li>Authorize</li>
+                      <li>Confirm</li>
+                    </ol>
+                  </div>
+                </div>
+                <p>
+                  First use connects the bank account and device. A valid
+                  connection can be reused. I kept company approval separate
+                  from authorization so reducing preparation effort does not
+                  hide who can release the payment.
+                </p>
+              </section>
+            </div>
+          </div>
+          <div className="showcase-act">
+            <div className="showcase-act-label">
+              <span>02 / MY DESIGN REASONING</span>
+              <p>How the decisions shaped the experience</p>
+              <AIProcessNote>
+                I directed hierarchy, progressive disclosure and brand feedback.
+                AI implemented the iterations; I shaped how the interface guides
+                attention and communicates care.
+              </AIProcessNote>
+            </div>
+            <div className="showcase-act-content">
+              <ProcessRationale />
+
+              <section id="story-hypotheses" tabIndex={-1}>
+                <p className="eyebrow">05 · FROM OPPORTUNITY TO HYPOTHESIS</p>
+                <div className="showcase-chapter-heading">
+                  <h2>Four questions kept the decisions connected.</h2>
+                  <p>
+                    From there, I turned the main decisions into four questions
+                    I could return to while designing. They helped me connect
+                    each interface choice to something I would want to observe
+                    in a user evaluation.
+                  </p>
+                </div>
+                <p className="showcase-editorial-note">
+                  Can someone choose the source in context, recognize who acts
+                  next, resume without a duplicate and review the right details
+                  together? These became H1–H4 in the prototype scenarios.
+                </p>
+                <Button variant="link" asChild>
+                  <a href="/#/discovery" target="clara-case-hub">
+                    Read the needs and supporting reasoning{' '}
+                    <ArrowRight size={16} />
+                  </a>
+                </Button>
+              </section>
+              <AestheticRationale onImage={onImage} />
+            </div>
+          </div>
+          <div className="showcase-act">
+            <div className="showcase-act-label">
+              <span>03 / THE EXPERIENCE</span>
+              <p>Follow one payment through its decisions</p>
+              <AIProcessNote>
+                I replaced the separate choice modal with a popover and
+                challenged the mobile table. AI helped implement and refine
+                those changes.
+              </AIProcessNote>
+            </div>
+            <div className="showcase-act-content">
+              <section id="story-experience" tabIndex={-1}>
+                <p className="eyebrow">07 · THE PROPOSED EXPERIENCE</p>
+                <div className="showcase-chapter-heading">
+                  <h2>One payment, from preparation to a known outcome.</h2>
+                  <p>
+                    Once the person starts a payment, I wanted the interface to
+                    help them move forward without asking them to classify
+                    information the system can recognize. That led to a unified
+                    Pix field, explicit recipient lookup and a review that
+                    brings recipient, amount and source together.
+                  </p>
+                </div>
+                <JourneyEntry />
+                <div className="showcase-experience-scenes">
+                  {decisions.map((decision, index) => (
+                    <div className="story-decision" key={decision.image}>
+                      <div className="story-decision-copy">
+                        <span className="eyebrow">
+                          0{index + 1} / THE DECISION
+                        </span>
+                        <h3>{decision.title}</h3>
+                        <p>{decision.text}</p>
+                      </div>
+                      <figure className="story-decision-visual">
+                        <div
+                          className="showcase-screen-scroll"
+                          tabIndex={0}
+                          role="region"
+                          aria-label={`${decision.title} — scroll to inspect the screen`}
+                        >
+                          <img
+                            src={`/proposal/${decision.image}.png`}
+                            alt={decision.title}
+                            loading="lazy"
+                          />
+                        </div>
+                        <figcaption>
+                          <button
+                            type="button"
+                            aria-label="Enlarge screen"
+                            className="showcase-image-caption"
+                            onClick={() =>
+                              onImage(
+                                `/proposal/${decision.image}.png`,
+                                decision.title,
+                              )
+                            }
+                          >
+                            <span>{decision.title}</span>
+                            <ArrowUpRight size={14} aria-hidden="true" />
+                          </button>
+                        </figcaption>
+                      </figure>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+          </div>
+          <div className="showcase-act">
+            <div className="showcase-act-label">
+              <span>04 / MAKING IT WORK</span>
+              <p>Shared patterns, implementation and evaluation</p>
+              <AIProcessNote>
+                I directed the shared visual language, component composition and
+                Phosphor migration, then requested end-to-end checks. AI
+                assisted with implementation; I reviewed both behavior and
+                craft.
+              </AIProcessNote>
+            </div>
+            <div className="showcase-act-content">
+              <section id="story-foundation" tabIndex={-1}>
+                <p className="eyebrow">08 · DESIGN INTO CODE</p>
+                <div className="showcase-chapter-heading">
+                  <h2>Make the design decisions reusable, including for AI.</h2>
+                  <p>
+                    As I refined the screens, the same decisions kept appearing:
+                    what deserves emphasis, how a field behaves on mobile and
+                    how a state explains the next action. I brought those
+                    decisions into the DS so they could be reused consistently,
+                    including during AI-assisted implementation.
+                  </p>
+                </div>
+
+                <SharedSystemProof />
+              </section>
+              <section id="story-validation" tabIndex={-1}>
+                <p className="eyebrow">09 · VALIDATION AND NEXT STEPS</p>
+                <div className="showcase-chapter-heading">
+                  <h2>
+                    The journey is testable. Its impact still needs people.
+                  </h2>
+                  <p>
+                    Building the journey made it possible to check whether the
+                    interactions behaved as intended, including approval,
+                    recovery and mobile controls. My next step would be to watch
+                    finance users complete the same tasks and understand where
+                    the experience still asks them to stop and think.
+                  </p>
+                </div>
+
+                <p className="showcase-editorial-note">
+                  I would compare active handling time for the same correctly
+                  completed task, alongside errors and unnecessary switching.
+                  Passive waiting would be recorded separately. These outcomes
+                  have not been measured with users yet.
+                </p>
+                <EvaluationGuide />
+                <details className="story-boundaries">
+                  <summary>Scope and production dependencies</summary>
+                  <p>
+                    This prototype uses fictional data and simulated bank,
+                    device and payment responses. It illustrates one manual
+                    approval layer. Automatic approval, dynamic QR resolution
+                    and real financial integration require further work.
+                    In-Clara authorization depends on provider support, business
+                    eligibility and signatory permissions.
+                  </p>
+                </details>
+                <div className="story-actions">
+                  <Button asChild>
+                    <a href="/prototype.html" target="clara-case-prototype">
+                      Try the payment journey <ArrowUpRight size={16} />
+                    </a>
+                  </Button>
+                  <Button variant="link" asChild>
+                    <a href="/#/sources" target="clara-case-hub">
+                      Sources and remaining gaps <ArrowRight size={16} />
+                    </a>
+                  </Button>
+                </div>
+              </section>
+            </div>
+          </div>
+          <ShowcaseArtifacts />
+        </div>
+      </div>
+    </article>
+  )
+}

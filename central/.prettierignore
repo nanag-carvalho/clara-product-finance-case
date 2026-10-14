@@ -1,0 +1,7 @@
+dist
+node_modules
+src/generated
+src/data/research.json
+public
+playwright-report
+test-results

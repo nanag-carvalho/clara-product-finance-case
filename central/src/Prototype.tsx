@@ -1,66 +1,1292 @@
-import {useEffect,useReducer,useRef,useState,type ReactNode} from 'react'
-import {ArrowLeft,ArrowRight,ArrowUpRight,Building2,CheckCircle2,Clock3,CreditCard,Download,Home,Info,Landmark,ListChecks,Menu,MoreVertical,PanelLeftClose,PanelLeftOpen,Plus,RefreshCw,Search,ShieldCheck,Wallet,X} from 'lucide-react'
-import {Alert,AlertDescription,AlertTitle,AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,Badge,BrandMark,Button,Wizard,Card,CardContent,CardDescription,CardHeader,CardTitle,Checkbox,EmptyState,Input,InputGroup,Label,PageHeader,Receipt,ReviewSummary,ScrollArea,Select,SelectContent,SelectItem,SelectTrigger,SelectValue,Separator,Sheet,SheetContent,SheetDescription,SheetHeader,SheetTitle,Spinner,Stack,Table,TableBody,TableCell,TableHead,TableHeader,TableRow,Tabs,TabsContent,TabsList,TabsTrigger,Timeline,Tooltip,TooltipContent,TooltipTrigger,TooltipProvider} from '@/design-system'
-import {amountCents,demoKey,initialState,money,reducer,type Action,type MoneyPath,type Outcome,type Stage} from './prototype/model'
+import {
+  WorkspaceViews,
+  type PaymentQueueScope,
+} from './prototype/WorkspaceViews'
+import { getPaymentReviewFields } from './prototype/payment-review'
+import { PaymentActions } from './prototype/PaymentActions'
+import { useDeferredTask } from './prototype/useDeferredTask'
+import { useCompactViewport } from './prototype/useCompactViewport'
+import { PaymentFilters } from './prototype/PaymentFilters'
+import { PaymentTable } from './prototype/PaymentTable'
+import { PaymentOutcome } from './prototype/PaymentOutcome'
+import { SourceAccountStep } from './prototype/SourceAccountStep'
+import { getPaymentTaskPresentation } from './prototype/payment-task-presentation'
+import { PaymentDetailsStep } from './prototype/PaymentDetailsStep'
+import { SelectionToolbar } from './prototype/SelectionToolbar'
+import {
+  ProductNavigation,
+  type WorkspaceView,
+} from './prototype/ProductNavigation'
+import {
+  selectPaymentQueue,
+  selectPageIds,
+  displayDate,
+  type PaymentSort,
+} from './prototype/payment-queue'
+import { ScenarioExplorer } from './prototype/ScenarioExplorer'
+import { BankConnectionWizard } from './prototype/BankConnectionWizard'
+import { PaymentReview } from './prototype/PaymentFeedback'
+import {
+  paymentStatusLabels as status,
+  scenarioOptions,
+} from './prototype/scenarios'
+import { NewPaymentIllustration } from './prototype/NewPaymentIllustration'
+import { FundingMenu } from './prototype/FundingMenu'
+import { demoPixCode } from './prototype/pix-input'
+import { PixQrInput } from './prototype/PixQrInput'
+import { useEffect, useReducer, useRef, useState } from 'react'
+import {
+  ArrowRight,
+  Check,
+  Clock,
+  Info,
+  Bank,
+  ListChecks,
+  Gear,
+  List,
+  SidebarSimple,
+  Sidebar,
+} from '@phosphor-icons/react'
+import {
+  Toaster,
+  toast,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  BrandMark,
+  Button,
+  Wizard,
+  Checkbox,
+  Label,
+  PageHeader,
+  ScrollArea,
+  Separator,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  Spinner,
+  Stack,
+  Timeline,
+  TooltipProvider,
+  Banner,
+  Avatar,
+  BrandLoading,
+  Textarea,
+} from '@/design-system'
+import {
+  amountCents,
+  money,
+  type Action,
+  type Outcome,
+} from './prototype/flow-model'
+import {
+  initialWorkspace,
+  workspaceReducer,
+  type WorkspaceAction,
+  type Scenario,
+} from './prototype/workspace'
 import './prototype.css'
-const views=[{id:'overview',label:'Overview',icon:Home},{id:'payments',label:'Payments',icon:CreditCard},{id:'approvals',label:'Approvals',icon:ListChecks},{id:'accounts',label:'Accounts',icon:Wallet},{id:'activity',label:'Activity',icon:Clock3}] as const
-function paidBalance(stage:Stage){return stage==='paid'}
-const status:Record<Stage,string>={idle:'Ready to start',connect:'Connect an account','bank-connect':'Connection authorization',entry:'Draft',review:'Ready for review',approval:'Pending company approval',authorize:'Bank authorization required',bank:'Bank authorization',processing:'Processing',funded:'Top-up confirmed',failed:'Failed',unknown:'Awaiting confirmation',paid:'Paid'}
-export default function Prototype({embedded=false,initialPath='direct'}:{embedded?:boolean;initialPath?:MoneyPath}){
- const [state,dispatch]=useReducer(reducer,initialPath,p=>initialState(p,`DEMO-${crypto.randomUUID().slice(0,8)}`))
- const [view,setView]=useState<string>('payments'),[controls,setControls]=useState(false),[mobile,setMobile]=useState(false),[consent,setConsent]=useState(false),[reset,setReset]=useState<MoneyPath|null>(null),[scenario,setScenario]=useState<Outcome>('success'),[checking,setChecking]=useState(false),[query,setQuery]=useState(''),[flowOpen,setFlowOpen]=useState(false)
- const [collapsed,setCollapsed]=useState(()=>{try{return localStorage.getItem('clara-sidebar-collapsed')==='true'}catch{return false}})
- useEffect(()=>{try{localStorage.setItem('clara-sidebar-collapsed',String(collapsed))}catch{}},[collapsed])
- const heading=useRef<HTMLDivElement>(null),checkTimer=useRef<ReturnType<typeof setTimeout>|null>(null)
- const send=(action:Action)=>dispatch({...action,at:new Date().toISOString()})
- useEffect(()=>{if(state.stage!=='processing')return;const attempt=state.attempt;const timer=setTimeout(()=>dispatch({type:'RESULT',attempt,outcome:scenario,at:new Date().toISOString()}),1200);return()=>clearTimeout(timer)},[state.stage,state.attempt,scenario])
- useEffect(()=>{heading.current?.focus()},[view])
- useEffect(()=>()=>{if(checkTimer.current)clearTimeout(checkTimer.current)},[])
- const resetTo=(path:MoneyPath)=>{send({type:'RESET',path,value:`DEMO-${crypto.randomUUID().slice(0,8)}`});setChecking(false);setConsent(false);setFlowOpen(false);setView('payments');setReset(null);if(checkTimer.current)clearTimeout(checkTimer.current)}
- const check=()=>{setChecking(true);const intent=state.intent;checkTimer.current=setTimeout(()=>{dispatch({type:'CHECK',outcome:scenario,at:new Date().toISOString(),value:intent});setChecking(false)},800)}
- const start=()=>{setView('payments');setConsent(false);setFlowOpen(true);send({type:'START'})}
- const resume=()=>{setView('payments');setFlowOpen(true)}
- const navigate=(id:string)=>{setView(id);setMobile(false)}
- const claraBalance=state.funded&&!paidBalance(state.stage)?(state.leg==='supplier'&&['processing','unknown'].includes(state.stage)?'Awaiting confirmation':money(state.amount)):money('0')
- const amount=money(state.amount),pending=state.stage==='approval',paid=state.stage==='paid',active=state.stage!=='idle'
- const fields=[{label:'Recipient',value:state.recipient||'Example Supplier Ltd.'},{label:'Pix key',value:state.key},{label:'Amount',value:amount},{label:'Funding account',value:`${state.bank} · •• 4321`},{label:'Money path',value:state.path==='direct'?'Bank → supplier':'Bank → Clara → supplier'}]
- const collapseControl=<Button variant={collapsed?'outline':'ghost'} size="icon" className="proto-collapse" aria-label={collapsed?'Expand sidebar':'Collapse sidebar'} aria-expanded={!collapsed} aria-controls="proto-sidebar" onClick={()=>setCollapsed(v=>!v)}>{collapsed?<PanelLeftOpen size={16}/>:<PanelLeftClose size={16}/>}<span className="sr-only">{collapsed?'Expand sidebar':'Collapse sidebar'}</span></Button>
- const brand=<div className="proto-brand"><BrandMark wordmark={!collapsed||mobile}/>{!collapsed&&!mobile&&collapseControl}</div>
- const navigation=<Stack gap={16}>{mobile&&brand}<Separator/><nav aria-label="Product navigation"><Stack gap={4}>{views.map(item=><Tooltip key={item.id}><TooltipTrigger asChild><Button variant="ghost" aria-label={item.id==='approvals'&&pending?'Approvals, 1 pending':item.label} className={view===item.id?'proto-nav-selected':''} onClick={()=>navigate(item.id)} aria-current={view===item.id?'page':undefined}><item.icon size={16}/><span className={collapsed&&!mobile?'sr-only':''}>{item.label}</span>{item.id==='approvals'&&pending&&<Badge className={collapsed&&!mobile?'proto-pending-dot':''} variant="outline">1</Badge>}</Button></TooltipTrigger>{collapsed&&!mobile&&<TooltipContent side="right">{item.label}</TooltipContent>}</Tooltip>)}</Stack></nav></Stack>
- const log=()=>{const file=new Blob([JSON.stringify({opportunity:'O1',hypotheses:['H1','H2','H3','H4'],path:state.path,intent:state.intent,stage:state.stage,events:state.events,kind:'prototype interaction log; not a user-validation result'},null,2)],{type:'application/json'});const url=URL.createObjectURL(file);const a=document.createElement('a');a.href=url;a.download=`clara-prototype-${state.intent}.json`;a.click();URL.revokeObjectURL(url)}
- const bankScreen=state.stage==='bank'||state.stage==='bank-connect'
- const flow=active&&flowOpen
- const stepIndex=['connect','bank-connect'].includes(state.stage)?0:state.stage==='entry'?1:['review','approval'].includes(state.stage)?2:['authorize','bank'].includes(state.stage)?3:4
- const stepNames=['Account','Recipient','Review','Authorization','Result']
- const back=['review','approval','authorize'].includes(state.stage)&&!state.funded?()=>send({type:'EDIT'}):state.stage==='bank-connect'?()=>send({type:'CANCEL_CONNECTION'}):state.stage==='bank'?()=>send({type:'CANCEL_AUTH'}):undefined
- const wizardActions:Partial<Record<Stage,ReactNode>>={'connect':<Button disabled={!consent} onClick={()=>send({type:'CONNECT'})}>Continue to bank<ArrowUpRight size={16}/></Button>,'bank-connect':<Button onClick={()=>send({type:'CONNECTED'})}>Confirm connection</Button>,'entry':<Button onClick={()=>send({type:'REVIEW'})}>Review payment<ArrowRight size={16}/></Button>,'review':<Button onClick={()=>send({type:'REQUEST'})}>Request company approval</Button>,'approval':<Button onClick={()=>send({type:'APPROVE'})}>Approve request</Button>,'authorize':<Button onClick={()=>send({type:'AUTHORIZE'})}>Continue to bank<ArrowUpRight size={16}/></Button>,'bank':<Button onClick={()=>send({type:'SEND'})}>Authorize Pix</Button>,'funded':<Button onClick={()=>send({type:'PAY_FUNDED'})}>Pay supplier from Clara<ArrowRight size={16}/></Button>,'failed':<Button onClick={()=>send({type:'RETRY'})}>Review retry<RefreshCw size={16}/></Button>,'unknown':<Button variant="outline" loading={checking} loadingLabel="Checking this request" onClick={check}>Check payment status</Button>,'paid':<Button variant="outline" onClick={()=>{setFlowOpen(false);navigate('activity')}}>View payment activity<ArrowRight size={16}/></Button>}
- const paymentTable=<Table aria-label="Supplier payments"><TableHeader><TableRow><TableHead>Recipient</TableHead><TableHead>Amount</TableHead><TableHead>Source</TableHead><TableHead>Status</TableHead><TableHead>Action</TableHead></TableRow></TableHeader><TableBody>{active&&(!query||'example supplier'.includes(query.toLowerCase()))&&<TableRow><TableCell>Example Supplier Ltd.</TableCell><TableCell className="numeric">{amount}</TableCell><TableCell>{state.bank}</TableCell><TableCell><Badge variant={state.stage==='failed'?'destructive':'outline'}>{status[state.stage]}</Badge></TableCell><TableCell><Button variant="link" onClick={resume}>View payment</Button></TableCell></TableRow>}</TableBody></Table>
- return <TooltipProvider><div className={`proto-root ${embedded?'proto-embedded':''}`}>
- <a className="skip-link" href="#proto-main">Skip to workspace</a><div className={`proto-shell ${collapsed?'proto-shell-collapsed':''}`}><aside id="proto-sidebar" className="proto-sidebar">{brand}<ScrollArea className="proto-navigation-scroll">{navigation}</ScrollArea>{collapsed&&collapseControl}<div className="proto-user"><Badge variant="secondary">NC</Badge>{!collapsed&&<span className="type-ui">Nágela · Finance</span>}</div></aside><div className="proto-main-shell">
- <ScrollArea className="proto-content-scroll"><main id="proto-main" tabIndex={-1} className="proto-content"><div ref={heading} tabIndex={-1} className="proto-heading"><PageHeader title={views.find(v=>v.id===view)?.label??'Payments'} titleLevel={embedded?2:1} leading={<Button variant="ghost" size="icon" className="proto-mobile-menu" aria-label="Open product navigation" onClick={()=>setMobile(true)}><Menu size={16}/></Button>} overflowActions={[{label:'Test controls',onClick:()=>setControls(true)}]} description={view==='payments'?'Create, approve and track supplier payments.':undefined} primaryAction={view==='payments'?{label:active?'Resume payment':'New payment',onClick:active?resume:start}:undefined}/></div><Separator/>
- {view==='overview'&&<Stack gap={16}><div className="proto-stat-grid">{[['Clara available balance',claraBalance],['Pending approval',pending?'1':'0'],['Supplier payments completed',paid?'1':'0']].map(([label,value])=><Card key={label}><CardHeader><CardDescription>{label}</CardDescription><CardTitle>{value}</CardTitle></CardHeader></Card>)}</div><Card><CardHeader><CardTitle>Pay from the account that holds your funds</CardTitle><CardDescription>Keep the source, company approval and bank authorization in the payment context.</CardDescription></CardHeader><CardContent><Button onClick={()=>{if(active)resume();else start()}}>{active?'Resume payment':'Create a Pix payment'}<ArrowRight size={16}/></Button></CardContent></Card><Card><CardHeader><CardTitle>Recent supplier payment</CardTitle></CardHeader><CardContent>{active?paymentTable:<EmptyState variant="plain" title="No payment yet" description="Start a supplier payment to explore the proposed flow."/>}</CardContent></Card></Stack>}
- {view==='accounts'&&<Stack gap={16}><Card><CardHeader><CardTitle>Clara Digital Account</CardTitle><CardDescription>Available balance</CardDescription></CardHeader><CardContent><strong className="type-h1">{claraBalance}</strong></CardContent></Card><Card><CardHeader><CardTitle>External funding account</CardTitle><CardDescription>{state.connected?`${state.bank} · business account •• 4321`:'Connect an account as part of your first payment.'}</CardDescription></CardHeader><CardContent><Stack gap={8}><Badge variant="outline">{state.connected?'Connected':'Not connected'}</Badge><p className="type-ui">Payment authorization happens at the bank for each transaction. External balances are not combined with the Clara balance.</p><Button variant="outline" onClick={()=>{if(active)resume();else start()}}>{active?'Continue payment':'Connect and create payment'}</Button></Stack></CardContent></Card></Stack>}
- {view==='approvals'&&<Card><CardHeader><CardTitle>Company approvals</CardTitle><CardDescription>Company approval is separate from bank authorization.</CardDescription></CardHeader><CardContent>{pending?<Stack gap={16}><ReviewSummary fields={fields} title="Awaiting Carlos · company approver"/><Button onClick={resume}>Review pending request</Button></Stack>:<EmptyState variant="plain" title={state.approved?'Company approval recorded':'No pending requests'} description={state.approved?'Bank authorization and payment result remain tracked separately.':'Submit a payment request to explore the approval step.'} action={active?<Button variant="outline" onClick={resume}>View payment</Button>:undefined}/>}</CardContent></Card>}
- {view==='activity'&&<Card><CardHeader><CardTitle>Payment activity</CardTitle><CardDescription>Payment decisions and money movements.</CardDescription></CardHeader><CardContent>{state.events.length?<Timeline events={state.events.map(e=>({...e,date:new Date(e.dateTime).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}))}/>:<EmptyState variant="plain" title="No activity yet" description="Connection, approval and payment events will appear here."/>}</CardContent></Card>}
- {view==='payments'&&<Stack gap={16}><div className="proto-stat-grid">{[['Clara available balance',claraBalance],['Processing',state.stage==='processing'?'1':'0'],['Pending approval',pending?'1':'0']].map(([label,value])=><Card key={label}><CardHeader><CardDescription>{label}</CardDescription><CardTitle>{value}</CardTitle></CardHeader></Card>)}</div><InputGroup leadingIcon={<Search size={16}/>} placeholder="Search recipient" aria-label="Search recipient" value={query} onChange={e=>setQuery(e.target.value)}/>{active?<Card><CardContent>{paymentTable}</CardContent></Card>:<EmptyState title="Your supplier payments start here" description="Choose the account that holds your money, review the Pix and follow every approval." icon={<CreditCard size={24}/>} action={<Button onClick={start}><Plus size={16}/>New payment</Button>}/>}</Stack>}
- </main></ScrollArea></div></div>
- <Wizard open={flow} onOpenChange={setFlowOpen} title={bankScreen?'Confirm at your bank':state.stage==='approval'?'Company approval':state.stage==='authorize'?'Authorize the payment':stepIndex===4?status[state.stage]:stepIndex===0?'Connect your account':stepIndex===1?'Who are you paying?':'Review the payment'} steps={stepNames} current={stepIndex} description={bankScreen?'Authorized representative · '+state.bank:undefined} eyebrow={<><BrandMark/><span>{bankScreen?state.bank:'Supplier Pix'}</span></>} context={<div className="proto-route"><Landmark size={16}/><span>{state.bank}</span><ArrowRight size={16}/>{state.path==='topup'&&<><span>Clara account</span><ArrowRight size={16}/></>}<span>{state.recipient||'Supplier'}</span><strong>{amount}</strong></div>} actions={wizardActions[state.stage]} onBack={back} footerNote={state.stage==='paid'?'Payment confirmed':state.stage==='processing'||state.stage==='unknown'?'Tracking this request':'Progress kept in this session'} closeLabel={state.stage==='paid'?'Done':'Save and close'}><Stack gap={16}>
- {state.notice&&state.stage==='authorize'&&<Alert><AlertTitle>Returned from bank</AlertTitle><AlertDescription>{state.notice}</AlertDescription></Alert>}{state.error&&<Alert variant="destructive"><AlertTitle>Check this step</AlertTitle><AlertDescription>{state.error}</AlertDescription></Alert>}
- {state.stage==='connect'&&<><Stack gap={4}><p className="type-ui">Choose a business account where you can authorize payments.</p></Stack><Stack gap={4}><Label htmlFor="proto-bank">Bank</Label><Select value={state.bank} onValueChange={bank=>send({type:'BANK',bank})}><SelectTrigger id="proto-bank"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="Example Bank A">Example Bank A</SelectItem><SelectItem value="Example Bank B">Example Bank B</SelectItem></SelectContent></Select></Stack><Alert><ShieldCheck size={16}/><AlertTitle>You control each payment</AlertTitle><AlertDescription>Connecting identifies the funding account. You will still review and authorize the Pix at your bank.</AlertDescription></Alert><div className="proto-check-row"><Checkbox id="proto-consent" checked={consent} onCheckedChange={v=>setConsent(v===true)}/><Label htmlFor="proto-consent">Continue to my bank to confirm this account connection.</Label></div></>}
- {state.stage==='bank-connect'&&<><h3 className="type-h2">Confirm account connection</h3><ReviewSummary fields={[{label:'Business account',value:'Example Company · •• 4321'},{label:'Requested by',value:'Clara'},{label:'Purpose',value:'Identify an account for payment initiation'}]}/><p className="type-ui">This connection does not authorize a supplier payment or expose your balance in Clara.</p></>}
- {state.stage==='entry'&&<><Stack gap={4}><p className="type-ui">Enter the recipient and amount, then review before requesting approval.</p></Stack><Stack gap={4}><Label htmlFor="proto-key">Recipient Pix key</Label><InputGroup id="proto-key" value={state.key} aria-invalid={Boolean(state.error&&!state.recipient)} onChange={e=>send({type:'FIELD',field:'key',value:e.target.value})} aria-describedby="proto-key-help" trailing={<Button variant="ghost" size="sm" onClick={()=>send({type:'LOOKUP'})}>Find recipient</Button>}/><p className="type-caption" id="proto-key-help">{state.error&&!state.recipient?'Check the recipient Pix key. ':''}Pix key: {demoKey}</p></Stack>{state.recipient&&<Alert><CheckCircle2 size={16}/><AlertTitle>{state.recipient}</AlertTitle><AlertDescription>Recipient details confirmed.</AlertDescription></Alert>}<Stack gap={4}><Label htmlFor="proto-amount">Amount in BRL</Label><Input id="proto-amount" aria-invalid={Boolean(state.error&&!amountCents(state.amount))} inputMode="decimal" value={state.amount} onChange={e=>send({type:'FIELD',field:'amount',value:e.target.value})} aria-describedby="proto-amount-help"/><p className="type-caption" id="proto-amount-help">{state.error&&!amountCents(state.amount)?'Enter a positive amount with up to two decimal places.':'Use a decimal point, e.g. 1750.00.'}</p></Stack><ReviewSummary title="Funding source" fields={[{label:'Account',value:`${state.bank} · •• 4321`},{label:'Route',value:state.path==='direct'?'Direct to supplier':'Top up Clara, then pay supplier'}]}/></>}
- {state.stage==='review'&&<><ReviewSummary title="Review your request" fields={fields}/><Alert><Info size={16}/><AlertTitle>Approval comes before bank authorization</AlertTitle><AlertDescription>Carlos will review the request. An authorized bank representative must then authorize {state.path==='direct'?'the supplier Pix':'the top-up'}. No money moves when you submit this request.</AlertDescription></Alert></>}
- {state.stage==='approval'&&<><Badge variant="outline">Carlos · Company approver</Badge><ReviewSummary title="Review company approval" fields={fields}/><Alert><AlertTitle>Approve this request</AlertTitle><AlertDescription>This records the company decision. It does not authorize your bank or confirm payment.</AlertDescription></Alert></>}
- {state.stage==='authorize'&&<><h3 className="type-h2">Company approval complete</h3><ReviewSummary fields={fields}/><Alert><ShieldCheck size={16}/><AlertTitle>Next: authorize at {state.bank}</AlertTitle><AlertDescription>An authorized representative must confirm the {state.path==='direct'?'Pix to the supplier':'top-up to the Clara account'}. Your draft is kept if you return without authorizing.</AlertDescription></Alert></>}
- {state.stage==='bank'&&<><h3 className="type-h2">Authorize this Pix</h3><ReviewSummary fields={[{label:'From',value:`${state.bank} · •• 4321`},{label:'To',value:state.path==='direct'?state.recipient:'Example Company · Clara account'},{label:'Amount',value:amount},{label:'Purpose',value:state.path==='direct'?'Supplier payment':'Top-up for a supplier payment'}]}/><p className="type-ui">Confirm only this transaction as the bank-authorized representative.</p></>}
- {state.stage==='processing'&&<div role="status"><Stack gap={8}><Spinner/><h3 className="type-h2">{state.leg==='funding'?'Top-up processing':'Supplier payment processing'}</h3><p className="type-ui">The transaction was submitted. Keep this request open while the result is confirmed.</p><Badge variant="outline">{state.intent} · attempt {state.attempt}</Badge></Stack></div>}
- {state.stage==='funded'&&<><Alert><CheckCircle2 size={16}/><AlertTitle>Top-up confirmed</AlertTitle><AlertDescription>{amount} reached the Clara account. The supplier has not been paid.</AlertDescription></Alert><ReviewSummary fields={[{label:'From',value:'Clara account'},{label:'Recipient',value:state.recipient},{label:'Amount',value:amount},{label:'Company approval',value:'Recorded'}]}/></>}
- {state.stage==='failed'&&<><Alert variant="destructive"><AlertTitle>{state.leg==='funding'?'Top-up failed':'Supplier payment failed'}</AlertTitle><AlertDescription>{state.funded?'The payment service confirmed a temporary execution failure.':'The payment service confirmed insufficient funds.'} {state.funded?'Your completed top-up remains in Clara. It will not be repeated.':'No transfer was completed.'}</AlertDescription></Alert><ReviewSummary fields={fields}/><p className="type-ui">{state.funded?'Try again when the payment service is available.':'Resolve the balance issue before trying again.'} Payment details and company approval remain saved.</p></>}
- {state.stage==='unknown'&&<><Alert><Clock3 size={16}/><AlertTitle>We are checking the result</AlertTitle><AlertDescription>The request was submitted, but the final response is unavailable. Keep the same request while checking its status.</AlertDescription></Alert><ReviewSummary fields={[{label:'Reference',value:state.intent},{label:'Movement',value:state.leg==='funding'?'Bank → Clara':'Supplier payment'},{label:'Amount',value:amount}]}/><p className="type-caption">A new payment is unavailable while this result is unresolved.</p></>}
- {paid&&<><Alert><CheckCircle2 size={16}/><AlertTitle>Supplier payment confirmed</AlertTitle><AlertDescription>{amount} was paid to {state.recipient}.</AlertDescription></Alert><Receipt recipient={state.recipient} amount={amount} reference={state.intent} date={new Date().toLocaleDateString('en-US')}/><ReviewSummary title="Source" fields={[{label:'Debited account',value:state.path==='direct'?state.bank:'Clara account'},{label:'Original funding',value:state.bank}]}/></>}
- </Stack></Wizard>
- <Sheet open={mobile} onOpenChange={setMobile}><SheetContent side="left"><SheetTitle className="sr-only">Product navigation</SheetTitle><SheetDescription className="sr-only">Finance workspace sections</SheetDescription>{navigation}</SheetContent></Sheet>
- <Sheet open={controls} onOpenChange={setControls}><SheetContent><SheetHeader><SheetTitle>Prototype test controls</SheetTitle><SheetDescription>Inspect the payment outcome and recovery. Controls simulate responses; the product interface stays separate.</SheetDescription></SheetHeader><ScrollArea className="proto-test-scroll"><Stack gap={16}><Stack gap={4}><Label htmlFor="proto-result">Next simulated result</Label><Select value={scenario} onValueChange={v=>setScenario(v as Outcome)}><SelectTrigger id="proto-result"><SelectValue/></SelectTrigger><SelectContent><SelectItem value="success">Confirmed success</SelectItem><SelectItem value="failed">Confirmed failure · contextual cause</SelectItem><SelectItem value="unknown">Unknown outcome</SelectItem></SelectContent></Select><p className="type-caption">Set before authorization, supplier release or checking status. Each movement receives its own result.</p></Stack><Separator/><h3 className="type-h3">Four experience hypotheses</h3>{[['H1','Identify the source and debited account; retain the payment context.'],['H2','Explain what each action commits to: approval, bank authorization or settlement.'],['H3','Resume after cancellation; avoid a second submission on unknown outcome.'],['H4','Catch an incorrect recipient or amount before requesting approval.']].map(([id,text])=><Stack gap={4} key={id}><Badge variant="outline">{id}</Badge><p className="type-ui">{text}</p></Stack>)}<Button variant="outline" disabled={!state.events.length} onClick={log}><Download size={16}/>Export interaction log</Button><p className="type-caption">The log records prototype events. Participant observations and measured active time require a separate test record.</p><Button variant="outline" onClick={()=>setReset(state.path)}><RefreshCw size={16}/>Restart trial</Button></Stack></ScrollArea></SheetContent></Sheet>
- <AlertDialog open={reset!==null} onOpenChange={open=>{if(!open)setReset(null)}}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Start a fresh trial?</AlertDialogTitle><AlertDialogDescription>The current demo draft and interaction log will be cleared. Export the log first if you want to keep it.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Keep current trial</AlertDialogCancel><AlertDialogAction onClick={()=>{if(reset)resetTo(reset)}}>Restart trial</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
- </div></TooltipProvider>
+export default function Prototype({
+  embedded = false,
+}: {
+  embedded?: boolean
+}) {
+  const compact = useCompactViewport()
+  const [state, dispatch] = useReducer(workspaceReducer, undefined, () =>
+    initialWorkspace(
+      `DEMO-${crypto.randomUUID().slice(0, 8)}`,
+      new Date().toISOString(),
+    ),
+  )
+  const [view, setView] = useState<WorkspaceView>('payments')
+  const [controls, setControls] = useState(false)
+  const [mobile, setMobile] = useState(false)
+  const [scenario, setScenario] = useState<Outcome>('success')
+  const statusTask = useDeferredTask()
+  const checking = statusTask.label !== null
+  const [query, setQuery] = useState('')
+  const [flowOpen, setFlowOpen] = useState(false)
+  const [editNotice, setEditNotice] = useState('')
+  const [qrOpen, setQrOpen] = useState(false)
+  const [reviewAsApprover, setReviewAsApprover] = useState(false)
+
+  const [activeScenario, setActiveScenario] = useState<Scenario | null>(null)
+  const [setupError, setSetupError] = useState('')
+  const [failureCause, setFailureCause] = useState<
+    'balance' | 'limit' | 'unavailable'
+  >('balance')
+  const [connectionResult, setConnectionResult] = useState('confirmed')
+  const [openNavGroup, setOpenNavGroup] = useState('Accounts payable')
+  useEffect(
+    () =>
+      setOpenNavGroup(
+        view === 'accounts' ? 'Digital account' : 'Accounts payable',
+      ),
+    [view],
+  )
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('clara-sidebar-collapsed') === 'true'
+    } catch {
+      return false
+    }
+  })
+  useEffect(() => {
+    try {
+      localStorage.setItem('clara-sidebar-collapsed', String(collapsed))
+    } catch {}
+  }, [collapsed])
+  const [deviceLink, setDeviceLink] = useState(false)
+  const [setup, setSetup] = useState<
+    'list' | 'choose' | 'permission' | 'bank' | 'device' | 'done'
+  >('list')
+  const [setupBank, setSetupBank] = useState('Example Bank A')
+  const [paymentFilter, setPaymentFilter] = useState<PaymentQueueScope>('all')
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [bulkDecision, setBulkDecision] = useState<'approve' | 'reject' | null>(
+    null,
+  )
+  const [bulkReason, setBulkReason] = useState('')
+  const [bulkError, setBulkError] = useState('')
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const [sortOrder, setSortOrder] = useState<PaymentSort>('newest')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+  const [sourceFilter, setSourceFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [periodFilter, setPeriodFilter] = useState('all')
+  const [tablePage, setTablePage] = useState(0)
+  useEffect(() => {
+    setTablePage(0)
+    setSelectedIds([])
+  }, [
+    query,
+    paymentFilter,
+    sourceFilter,
+    statusFilter,
+    periodFilter,
+    view,
+    sortOrder,
+    dateFrom,
+    dateTo,
+  ])
+  const [rejectionOpen, setRejectionOpen] = useState(false)
+  const [rejectionReason, setRejectionReason] = useState('')
+  const [rejectionError, setRejectionError] = useState('')
+  const transitionTask = useDeferredTask()
+  const transition = transitionTask.label
+  const promoStarting = transition === 'starting'
+  const rejectionField = useRef<HTMLTextAreaElement>(null)
+  useEffect(() => {
+    if (rejectionError || rejectionOpen) rejectionField.current?.focus()
+  }, [rejectionError, rejectionOpen])
+  const heading = useRef<HTMLDivElement>(null)
+  const send = (action: WorkspaceAction) =>
+    dispatch({ ...action, at: new Date().toISOString() })
+  useEffect(() => {
+    const processing = [...state.payments, state].filter(
+      (p) => p.stage === 'processing',
+    )
+    const timers = processing.map((p) =>
+      setTimeout(
+        () =>
+          dispatch({
+            type: 'RESULT',
+            attempt: p.attempt,
+            outcome: scenario,
+            reason: failureCause,
+            value: p.intent,
+            at: new Date().toISOString(),
+          }),
+        1000,
+      ),
+    )
+    return () => timers.forEach(clearTimeout)
+  }, [
+    state.stage,
+    state.intent,
+    state.attempt,
+    state.payments,
+    scenario,
+    failureCause,
+  ])
+  useEffect(() => {
+    heading.current?.focus()
+  }, [view])
+  const advance = (action: Action, label: string, after?: () => void) => {
+    transitionTask.run(
+      label,
+      () => {
+        send(action)
+        after?.()
+      },
+      label === 'lookup' ? 550 : label === 'editing' ? 280 : 800,
+    )
+  }
+  const receiveConnection = () => {
+    if (transition) return
+    transitionTask.run(
+      'connection',
+      () => {
+        if (connectionResult === 'refused') {
+          send({ type: 'CANCEL_CONNECTION', value: 'refused' })
+          setDeviceLink(false)
+        } else setDeviceLink(true)
+      },
+      900,
+    )
+  }
+  const advanceSetup = () => {
+    if (transition) return
+    if (setup === 'done') {
+      setSetup('list')
+      return
+    }
+    if (setup === 'choose') {
+      setSetupError('')
+      setSetup('permission')
+      return
+    }
+    if (setup === 'permission') {
+      setSetupError('')
+      setSetup('bank')
+      return
+    }
+    transitionTask.run(
+      setup === 'bank' ? 'connection' : 'device',
+      () => {
+        if (setup === 'bank') {
+          if (connectionResult === 'refused') {
+            setSetupError(
+              'Your bank did not confirm the connection. Try again or choose another bank.',
+            )
+            setSetup('permission')
+          } else {
+            setSetupError('')
+            setSetup('device')
+          }
+        } else {
+          send({ type: 'REGISTER_ACCOUNT', bank: setupBank })
+          setSetup('done')
+        }
+      },
+      setup === 'device' ? 800 : 900,
+    )
+  }
+  const editPayment = (source = false) => {
+    setEditNotice(
+      source
+        ? 'Change the funding account. Recipient and amount are saved.'
+        : state.stage === 'rejected'
+          ? 'Correct this request: ' + state.rejectionReason
+          : 'Edit the saved recipient or amount, then review the request again.',
+    )
+    advance({ type: 'EDIT', ...(source ? { value: 'source' } : {}) }, 'editing')
+  }
+  const check = () => {
+    const intent = state.intent
+    statusTask.run(
+      'checking',
+      () => {
+        dispatch({
+          type: 'CHECK',
+          outcome: scenario,
+          reason: failureCause,
+          at: new Date().toISOString(),
+          value: intent,
+        })
+      },
+      800,
+    )
+  }
+  const loadData = (value: 'empty' | 'populated') => {
+    setReviewAsApprover(false)
+    setSelectedIds([])
+    transitionTask.cancel()
+    statusTask.cancel()
+    send({ type: 'LOAD_DATA', value })
+    setFlowOpen(false)
+    setSetup('list')
+    setSourceFilter('all')
+    setStatusFilter('all')
+    setPeriodFilter('all')
+    setSortOrder('newest')
+    setQuery('')
+    setPaymentFilter('all')
+    setView('payments')
+  }
+  const launchScenario = (option: (typeof scenarioOptions)[number]) => {
+    setQrOpen(false)
+    setEditNotice('')
+    setSelectedIds([])
+    transitionTask.cancel()
+    statusTask.cancel()
+    setDeviceLink(false)
+    setSetup('list')
+    setSetupError('')
+    setRejectionOpen(false)
+    setRejectionReason('')
+    setRejectionError('')
+    setQuery('')
+    setSourceFilter('all')
+    setStatusFilter('all')
+    setPeriodFilter('all')
+    setPaymentFilter('all')
+    setTablePage(0)
+    setScenario('success')
+    setFailureCause('balance')
+    setConnectionResult('confirmed')
+    setActiveScenario(option.id)
+    send({ type: 'LOAD_SCENARIO', value: option.id })
+    setControls(false)
+    setReviewAsApprover(option.id === 'approval')
+    setPaymentFilter(option.id === 'approval' ? 'approval' : 'all')
+    setView('payments')
+    setFlowOpen(true)
+  }
+  useEffect(() => {
+    const scenarioId = new URLSearchParams(window.location.search).get(
+      'scenario',
+    )
+    const option = scenarioOptions.find((item) => item.id === scenarioId)
+    if (option) launchScenario(option)
+  }, [])
+  const payFrom = (bank: string) => {
+    setView('payments')
+    setPaymentFilter('all')
+    setFlowOpen(true)
+    send({
+      type: 'NEW_PAYMENT',
+      intent: `DEMO-${crypto.randomUUID().slice(0, 8)}`,
+      bank,
+    })
+  }
+  const beginExternal = () => {
+    setReviewAsApprover(false)
+    setQrOpen(false)
+    setEditNotice('')
+    setPaymentFilter('all')
+    setView('payments')
+    setFlowOpen(true)
+    send({
+      type: 'NEW_PAYMENT',
+      intent: `DEMO-${crypto.randomUUID().slice(0, 8)}`,
+    })
+  }
+  const openPayment = (intent: string, asApprover = false) => {
+    send({ type: 'OPEN_PAYMENT', intent })
+    setReviewAsApprover(asApprover)
+    setView('payments')
+    setFlowOpen(true)
+    setRejectionOpen(false)
+    setRejectionReason('')
+    setRejectionError('')
+  }
+  const navigate = (id: WorkspaceView) => {
+    setQuery('')
+    setSourceFilter('all')
+    setStatusFilter('all')
+    setPeriodFilter('all')
+    setTablePage(0)
+    setView(id)
+    setMobile(false)
+  }
+  const allPayments = [
+    ...state.payments,
+    ...(state.stage === 'idle' ? [] : [state]),
+  ]
+  const filteredPayments = allPayments.filter((p) =>
+    paymentFilter === 'all' || paymentFilter === 'processing'
+      ? paymentFilter === 'all' || ['processing', 'unknown'].includes(p.stage)
+      : p.stage === paymentFilter,
+  )
+  const queueCount = filteredPayments.length
+
+  const amount = money(state.amount)
+  const paid = state.stage === 'paid'
+  const active = state.stage !== 'idle'
+  const fields = getPaymentReviewFields(state)
+  const collapseControl = (
+    <Button
+      variant={collapsed ? 'outline' : 'ghost'}
+      size="icon"
+      className="proto-collapse"
+      aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      aria-expanded={!collapsed}
+      aria-controls="proto-sidebar"
+      onClick={() => setCollapsed((v) => !v)}
+    >
+      {collapsed ? <Sidebar size={16} /> : <SidebarSimple size={16} />}
+      <span className="sr-only">
+        {collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      </span>
+    </Button>
+  )
+  const brand = (
+    <div className="proto-brand">
+      <BrandMark wordmark={!collapsed || mobile} />
+      {!collapsed && !mobile && collapseControl}
+    </div>
+  )
+  const startNewPayment = () => {
+    if (transition) return
+    setMobile(false)
+    transitionTask.run('starting', beginExternal, 800)
+  }
+  const sidebarPromo = (
+    <div className="proto-sidebar-promo">
+      <Banner
+        tone="inverse"
+        title="Pay from your bank"
+        description="Pay suppliers without adding money to Clara."
+        actions={
+          <Button variant="secondary" onClick={startNewPayment}>
+            Start payment
+            <ArrowRight size={14} />
+          </Button>
+        }
+        visual={<NewPaymentIllustration />}
+      />
+    </div>
+  )
+  const navigation = (
+    <ProductNavigation
+      view={view}
+      collapsed={collapsed}
+      mobile={mobile}
+      openNavGroup={openNavGroup}
+      setOpenNavGroup={setOpenNavGroup}
+      setCollapsed={setCollapsed}
+      navigate={navigate}
+      brand={brand}
+      sidebarPromo={sidebarPromo}
+    />
+  )
+
+  const flow = active && flowOpen
+  const { approvalReceipt, busyLabel, ...wizardPresentation } =
+    getPaymentTaskPresentation({
+      stage: state.stage,
+      bank: state.bank,
+      reviewAsApprover,
+      deviceLinked: deviceLink,
+      qrOpen,
+      editNotice,
+      transition,
+    })
+  const back =
+    state.stage === 'connect'
+      ? () => send({ type: 'EDIT' })
+      : state.stage === 'review'
+        ? () => send({ type: 'EDIT', value: 'source' })
+        : state.stage === 'bank-connect'
+          ? () => send({ type: 'CANCEL_CONNECTION' })
+          : state.stage === 'bank'
+            ? () => send({ type: 'CANCEL_AUTH' })
+            : undefined
+  const paymentActions = (
+    <PaymentActions
+      stage={state.stage}
+      transition={transition}
+      connected={state.connected}
+      deviceLinked={deviceLink}
+      reviewAsApprover={reviewAsApprover}
+      approvalReceipt={approvalReceipt}
+      rejectionOpen={rejectionOpen}
+      checking={checking}
+      bank={state.bank}
+      onContinue={() => send({ type: 'REVIEW' })}
+      onConnect={() => {
+        setDeviceLink(false)
+        send({ type: 'CONNECT' })
+      }}
+      onReceiveConnection={receiveConnection}
+      onConfirmDevice={() => advance({ type: 'CONNECTED' }, 'device')}
+      onRequest={() =>
+        advance({ type: 'REQUEST' }, 'request', () => {
+          setEditNotice('')
+          setPaymentFilter('approval')
+        })
+      }
+      onApprove={() =>
+        advance({ type: 'APPROVE', actor: 'approver' }, 'approval', () =>
+          setPaymentFilter('approval'),
+        )
+      }
+      onShowRejection={setRejectionOpen}
+      onReject={() => {
+        if (!rejectionReason.trim()) {
+          setRejectionError('Enter a reason for the requester.')
+          return
+        }
+        advance(
+          { type: 'REJECT', actor: 'approver', value: rejectionReason },
+          'rejection',
+        )
+      }}
+      onAuthorize={() => send({ type: 'AUTHORIZE' })}
+      onConfirmPayment={() => advance({ type: 'SEND' }, 'authorization')}
+      onPayFunded={() => send({ type: 'PAY_FUNDED' })}
+      onRetry={() => send({ type: 'RETRY' })}
+      onCheck={check}
+      onEdit={() => editPayment()}
+      onClose={() => setFlowOpen(false)}
+      onViewAll={() => {
+        setFlowOpen(false)
+        setPaymentFilter('all')
+      }}
+    />
+  )
+  const visiblePayments = selectPaymentQueue(
+    view === 'overview' ? allPayments : filteredPayments,
+    {
+      query: view === 'overview' ? '' : query,
+      source: view === 'overview' ? 'all' : sourceFilter,
+      status:
+        view !== 'payments' || paymentFilter !== 'all' ? 'all' : statusFilter,
+      period: view === 'overview' ? 'all' : periodFilter,
+      dateFrom,
+      dateTo,
+    },
+    view === 'overview' ? 'newest' : (sortOrder as PaymentSort),
+  )
+  const searchMatches = visiblePayments.length
+  const pagePayments = visiblePayments.slice(
+    tablePage * 10,
+    (tablePage + 1) * 10,
+  )
+  const selectedPayments = allPayments.filter((p) =>
+    selectedIds.includes(p.intent),
+  )
+  const toggleSelection = (intent: string) =>
+    setSelectedIds((ids) =>
+      ids.includes(intent)
+        ? ids.filter((id) => id !== intent)
+        : [...ids, intent],
+    )
+  const selectPage = (
+    <Checkbox
+      aria-label="Select payments on this page"
+      checked={
+        pagePayments.length > 0 &&
+        pagePayments.every((p) => selectedIds.includes(p.intent))
+          ? true
+          : pagePayments.some((p) => selectedIds.includes(p.intent))
+            ? 'indeterminate'
+            : false
+      }
+      onCheckedChange={(checked) =>
+        setSelectedIds((selected) =>
+          selectPageIds(
+            selected,
+            pagePayments.map((p) => p.intent),
+            checked === true,
+          ),
+        )
+      }
+    />
+  )
+  const exportSelected = () => {
+    const cell = (value: string) => '"' + value.replaceAll('"', '""') + '"'
+    const csv = [
+      ['Reference', 'Supplier', 'Amount BRL', 'Source', 'Status'],
+      ...selectedPayments.map((p) => [
+        p.intent,
+        p.recipient,
+        p.amount,
+        p.bank,
+        status[p.stage],
+      ]),
+    ]
+      .map((row) => row.map(cell).join(','))
+      .join('\n')
+    const url = URL.createObjectURL(
+      new Blob([csv], { type: 'text/csv;charset=utf-8' }),
+    )
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'selected-payments.csv'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+  const bulkBar = selectedIds.length > 0 && (
+    <SelectionToolbar
+      count={selectedIds.length}
+      total={money(
+        (
+          selectedPayments.reduce((sum, p) => sum + amountCents(p.amount), 0) /
+          100
+        ).toFixed(2),
+      )}
+      canApprove={view === 'payments' && paymentFilter === 'approval'}
+      onApprove={() => {
+        setBulkReason('')
+        setBulkError('')
+        setBulkDecision('approve')
+      }}
+      onReject={() => {
+        setBulkReason('')
+        setBulkError('')
+        setBulkDecision('reject')
+      }}
+      onExport={exportSelected}
+      onClear={() => setSelectedIds([])}
+    />
+  )
+  const clearFilters = () => {
+    setQuery('')
+    setSourceFilter('all')
+    setStatusFilter('all')
+    setPeriodFilter('all')
+    setDateFrom('')
+    setDateTo('')
+    setTablePage(0)
+  }
+  const filters = (
+    <PaymentFilters
+      value={{
+        query,
+        source: sourceFilter,
+        period: periodFilter,
+        status: statusFilter,
+        dateFrom,
+        dateTo,
+      }}
+      showStatus={view === 'payments' && paymentFilter === 'all'}
+      open={filtersOpen}
+      onOpenChange={setFiltersOpen}
+      onReset={clearFilters}
+      onChange={(changes) => {
+        if (changes.query !== undefined) setQuery(changes.query)
+        if (changes.source !== undefined) setSourceFilter(changes.source)
+        if (changes.period !== undefined) setPeriodFilter(changes.period)
+        if (changes.status !== undefined) setStatusFilter(changes.status)
+        if (changes.dateFrom !== undefined) setDateFrom(changes.dateFrom)
+        if (changes.dateTo !== undefined) setDateTo(changes.dateTo)
+      }}
+    />
+  )
+
+  const pagination = (total: number) =>
+    total > 10 ? (
+      <div className="proto-pagination">
+        <span className="type-caption">
+          {total === 0 ? '0' : tablePage * 10 + 1}–
+          {Math.min((tablePage + 1) * 10, total)} of {total} payments
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={tablePage === 0}
+          onClick={() => setTablePage((p) => p - 1)}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={(tablePage + 1) * 10 >= total}
+          onClick={() => setTablePage((p) => p + 1)}
+        >
+          Next
+        </Button>
+      </div>
+    ) : null
+  const paymentTable = (
+    <PaymentTable
+      visiblePayments={visiblePayments}
+      overview={view === 'overview'}
+      reviewQueue={paymentFilter === 'approval'}
+      tablePage={tablePage}
+      sortOrder={sortOrder}
+      selected={selectedIds}
+      total={searchMatches}
+      selectPage={selectPage}
+      onSort={setSortOrder}
+      onSelect={toggleSelection}
+      onOpen={openPayment}
+      onClearSelection={() => setSelectedIds([])}
+    />
+  )
+  const milestones = [
+    { label: 'Request saved', done: true },
+    {
+      label:
+        state.stage === 'rejected'
+          ? 'Company review rejected'
+          : 'Company approval',
+      done: state.approved,
+      blocked: state.stage === 'rejected',
+    },
+    {
+      label: 'Payment authorized',
+      done: ['processing', 'unknown', 'paid', 'failed'].includes(state.stage),
+    },
+    {
+      label: state.stage === 'failed' ? 'Payment failed' : 'Payment confirmed',
+      done: paid,
+      blocked: state.stage === 'failed',
+    },
+  ]
+  const nextMilestone = milestones.findIndex((item) => !item.done)
+  const requestProgress = (
+    <ol className="proto-request-progress" aria-label="Request progress">
+      {milestones.map((item, index) => (
+        <li
+          key={index}
+          className={
+            item.blocked
+              ? 'blocked'
+              : item.done
+                ? 'done'
+                : index === nextMilestone
+                  ? 'current'
+                  : ''
+          }
+          aria-current={
+            !item.blocked && index === nextMilestone ? 'step' : undefined
+          }
+        >
+          <span aria-hidden="true">
+            {item.blocked ? (
+              <Info size={14} />
+            ) : item.done ? (
+              <Check size={14} />
+            ) : (
+              <Clock size={14} />
+            )}
+          </span>
+          <span>{item.label}</span>
+          <span className="sr-only">
+            {' '}
+            ·{' '}
+            {item.blocked
+              ? 'Stopped'
+              : item.done
+                ? 'Completed'
+                : index === nextMilestone
+                  ? 'Next'
+                  : 'Not completed'}
+          </span>
+        </li>
+      ))}
+    </ol>
+  )
+
+  const trackingSidebar = [
+    'approval',
+    'authorize',
+    'bank',
+    'processing',
+    'unknown',
+    'paid',
+    'failed',
+    'rejected',
+  ].includes(state.stage) ? (
+    <div className="proto-tracking-column">
+      <Stack gap={16}>
+        <h3 className="type-h3">Payment progress</h3>
+        {requestProgress}
+        <Separator />
+        <h3 className="type-h3">History</h3>
+        {state.events.length ? (
+          <Timeline
+            events={[...state.events]
+              .reverse()
+              .map((e) => ({ ...e, date: displayDate(e.dateTime) }))}
+          />
+        ) : (
+          <p className="type-caption">No recorded events yet.</p>
+        )}
+      </Stack>
+    </div>
+  ) : undefined
+  return (
+    <TooltipProvider>
+      <div className={`proto-root ${embedded ? 'proto-embedded' : ''}`}>
+        {!embedded && (
+          <Toaster position={compact ? 'top-center' : 'bottom-right'} />
+        )}
+        <a className="skip-link" href="#proto-main">
+          Skip to workspace
+        </a>
+        <div
+          className={`proto-shell ${collapsed ? 'proto-shell-collapsed' : ''}`}
+        >
+          <aside id="proto-sidebar" className="proto-sidebar">
+            {brand}
+            <ScrollArea className="proto-navigation-scroll">
+              {navigation}
+            </ScrollArea>
+            {!collapsed && sidebarPromo}
+            {collapsed && collapseControl}
+            <div className="proto-global-settings" aria-disabled="true">
+              <Gear size={16} />
+              {!collapsed && <span>Settings</span>}
+            </div>
+            <div className="proto-user">
+              <Avatar
+                name={reviewAsApprover ? 'Carlos Almeida' : 'Nágela Carvalho'}
+              />
+              {!collapsed && (
+                <span className="type-ui">
+                  {reviewAsApprover ? 'Carlos · Approver' : 'Nágela · Finance'}
+                </span>
+              )}
+            </div>
+          </aside>
+          <div className="proto-main-shell">
+            <ScrollArea className="proto-content-scroll">
+              <main id="proto-main" tabIndex={-1} className="proto-content">
+                <div
+                  ref={heading}
+                  tabIndex={-1}
+                  className={`proto-heading ${reviewAsApprover ? 'proto-heading-with-tabs' : ''}`}
+                >
+                  <PageHeader
+                    title={
+                      view === 'accounts'
+                        ? 'Connected banks'
+                        : view === 'overview'
+                          ? 'Accounts payable overview'
+                          : 'Payments'
+                    }
+                    titleLevel={embedded ? 2 : 1}
+                    leading={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="proto-mobile-menu"
+                        aria-label="Open product navigation"
+                        onClick={() => setMobile(true)}
+                      >
+                        <List size={16} />
+                      </Button>
+                    }
+                    description={
+                      view === 'accounts'
+                        ? 'Use your existing business bank accounts to pay suppliers through Clara.'
+                        : undefined
+                    }
+                    actions={
+                      view === 'payments' ? (
+                        <FundingMenu onExternal={startNewPayment} />
+                      ) : undefined
+                    }
+                    primaryAction={
+                      view === 'accounts' && state.accounts.length
+                        ? {
+                            label: 'Connect bank account',
+                            onClick: () => setSetup('choose'),
+                          }
+                        : undefined
+                    }
+                  />
+                </div>
+                <Separator />
+
+                <div key={view} className="proto-page-enter">
+                  <WorkspaceViews
+                    view={view}
+                    accounts={state.accounts}
+                    allPayments={allPayments}
+                    paymentFilter={paymentFilter}
+                    queueCount={queueCount}
+                    searchMatches={searchMatches}
+                    paymentTable={paymentTable}
+                    filters={filters}
+                    bulkBar={bulkBar}
+                    pagination={pagination(searchMatches)}
+                    onQueue={(scope) => {
+                      if (view === 'overview') clearFilters()
+                      setPaymentFilter(scope)
+                      setReviewAsApprover(scope === 'approval')
+                      if (view !== 'payments') navigate('payments')
+                    }}
+                    onViewAll={() => {
+                      setQuery('')
+                      setPaymentFilter('all')
+                      navigate('payments')
+                    }}
+                    onNewPayment={startNewPayment}
+                    onPayFrom={payFrom}
+                    onConnect={() => setSetup('choose')}
+                    onClearFilters={clearFilters}
+                  />
+                </div>
+              </main>
+            </ScrollArea>
+          </div>
+        </div>
+        <Wizard
+          footerContent={
+            state.stage === 'approval' && reviewAsApprover && rejectionOpen ? (
+              <section className="proto-rejection-form">
+                <Stack gap={8}>
+                  <Label htmlFor="proto-rejection">Reason for rejection</Label>
+                  <Textarea
+                    ref={rejectionField}
+                    id="proto-rejection"
+                    aria-invalid={!!rejectionError}
+                    aria-describedby="proto-rejection-help"
+                    value={rejectionReason}
+                    onChange={(e) => {
+                      setRejectionReason(e.target.value)
+                      setRejectionError('')
+                    }}
+                  />
+                  <p
+                    id="proto-rejection-help"
+                    className="type-caption"
+                    role={rejectionError ? 'alert' : undefined}
+                  >
+                    {rejectionError ||
+                      'The requester will see this reason and can correct the request.'}
+                  </p>
+                </Stack>
+              </section>
+            ) : undefined
+          }
+          sideContent={trackingSidebar}
+          {...wizardPresentation}
+          busyContent={
+            busyLabel ? <BrandLoading label={busyLabel} /> : undefined
+          }
+          open={flow}
+          onOpenChange={(value) => {
+            if (!transition && state.stage !== 'processing') {
+              setFlowOpen(value)
+              if (!value) setQrOpen(false)
+            }
+          }}
+          titleLeading={<BrandMark />}
+          context={
+            approvalReceipt ||
+            ['entry', 'approval', 'paid'].includes(state.stage) ? undefined : (
+              <div className="proto-route">
+                <Bank size={16} />
+                <span>{state.bank}</span>
+                <ArrowRight size={16} />
+                {state.path === 'topup' && (
+                  <>
+                    <span>Clara account</span>
+                    <ArrowRight size={16} />
+                  </>
+                )}
+                <span>{state.recipient || 'Supplier'}</span>
+                <strong>{amount}</strong>
+              </div>
+            )
+          }
+          actions={
+            qrOpen ? (
+              <Button
+                onClick={() => {
+                  send({ type: 'FIELD', field: 'key', value: demoPixCode })
+                  setQrOpen(false)
+                }}
+              >
+                Simulate QR reading
+                <ArrowRight size={16} />
+              </Button>
+            ) : (
+              paymentActions
+            )
+          }
+          onBack={
+            qrOpen ? () => setQrOpen(false) : transition ? undefined : back
+          }
+        >
+          <Stack
+            key={qrOpen ? 'scanner' : state.stage}
+            gap={16}
+            className={
+              (paid || approvalReceipt
+                ? 'proto-phase-enter proto-completion-body'
+                : 'proto-phase-enter') +
+              (transition &&
+              [
+                'request',
+                'approval',
+                'authorization',
+                'device',
+                'rejection',
+              ].includes(transition)
+                ? ' proto-finalizing'
+                : '')
+            }
+          >
+            {transition === 'editing' && (
+              <div className="proto-edit-feedback" role="status">
+                <Spinner />
+                <span>Opening saved details…</span>
+              </div>
+            )}
+            {editNotice && ['entry', 'connect'].includes(state.stage) && (
+              <div className="proto-edit-feedback" role="status">
+                <Info size={16} />
+                <p className="type-ui">{editNotice}</p>
+              </div>
+            )}
+            {state.notice && state.stage === 'authorize' && (
+              <Alert className="proto-interruption">
+                <Info size={16} />
+                <AlertTitle>Payment authorization canceled</AlertTitle>
+                <AlertDescription>
+                  {state.notice} Select Authorize payment to try again.
+                </AlertDescription>
+              </Alert>
+            )}
+            {state.error && state.stage !== 'entry' && (
+              <Alert variant="destructive">
+                <AlertTitle>Check this step</AlertTitle>
+                <AlertDescription>{state.error}</AlertDescription>
+              </Alert>
+            )}
+            {(state.stage === 'connect' || state.stage === 'bank-connect') && (
+              <SourceAccountStep
+                phase={state.stage}
+                bank={state.bank}
+                connected={state.connected}
+                accounts={state.accounts}
+                deviceLinked={deviceLink}
+                receiving={transition === 'connection'}
+                onBankChange={(bank) => send({ type: 'BANK', bank })}
+              />
+            )}
+            {state.stage === 'entry' && qrOpen && <PixQrInput />}
+            {state.stage === 'entry' && !qrOpen && (
+              <PaymentDetailsStep
+                details={state}
+                busy={!!transition}
+                findingRecipient={transition === 'lookup'}
+                onLookup={() => advance({ type: 'LOOKUP' }, 'lookup')}
+                onScanQr={() => setQrOpen(true)}
+                onFieldChange={(field, value) =>
+                  send({ type: 'FIELD', field, value })
+                }
+                onContextChange={(field, value) =>
+                  send({ type: 'CONTEXT', field, value })
+                }
+              />
+            )}
+            {state.stage === 'review' && (
+              <>
+                <PaymentReview
+                  title="Review your request"
+                  fields={{
+                    ...fields,
+                    context: [
+                      ...fields.context,
+                      {
+                        label: 'Company policy',
+                        value: 'Supplier payments · Carlos reviews',
+                      },
+                    ],
+                  }}
+                />
+                <div className="proto-case-actions">
+                  <Button
+                    variant="link"
+                    disabled={!!transition}
+                    onClick={() => editPayment()}
+                  >
+                    Edit recipient or amount
+                  </Button>
+                  <Button
+                    variant="link"
+                    disabled={!!transition}
+                    onClick={() => editPayment(true)}
+                  >
+                    Change account
+                  </Button>
+                </div>
+              </>
+            )}
+            <PaymentOutcome
+              state={state}
+              fields={fields}
+              reviewAsApprover={reviewAsApprover}
+              approvalReceipt={approvalReceipt}
+            />
+          </Stack>
+        </Wizard>
+
+        <BankConnectionWizard
+          setup={setup}
+          setSetup={setSetup}
+          setupBank={setupBank}
+          setSetupBank={setSetupBank}
+          setupError={setupError}
+          transition={transition}
+          advanceSetup={advanceSetup}
+        />
+        <Sheet open={mobile} onOpenChange={setMobile}>
+          <SheetContent side="left">
+            <SheetTitle className="sr-only">Product navigation</SheetTitle>
+            <SheetDescription className="sr-only">
+              Finance workspace sections
+            </SheetDescription>
+            {navigation}
+          </SheetContent>
+        </Sheet>
+        <Button
+          className="proto-scenario-fab"
+          variant="outline"
+          onClick={() => setControls(true)}
+          aria-label="Explore prototype scenarios"
+        >
+          <ListChecks size={18} />
+          <span>
+            Scenarios
+            {activeScenario
+              ? ' · ' +
+                scenarioOptions.find((o) => o.id === activeScenario)?.hypothesis
+              : ''}
+          </span>
+        </Button>
+
+        <Dialog open={promoStarting}>
+          <DialogContent
+            className="proto-promo-loading"
+            showCloseButton={false}
+            aria-describedby={undefined}
+          >
+            <DialogTitle className="sr-only">Starting supplier Pix</DialogTitle>
+            <BrandLoading label="Preparing your payment" />
+          </DialogContent>
+        </Dialog>
+        <ScenarioExplorer
+          open={controls}
+          onOpenChange={setControls}
+          outcome={scenario}
+          onOutcomeChange={setScenario}
+          onScenario={launchScenario}
+          onWorkspace={(value) => {
+            loadData(value)
+            setActiveScenario(null)
+            setControls(false)
+          }}
+          onPixExample={() => {
+            setReviewAsApprover(false)
+            setQrOpen(false)
+            send({ type: 'LOAD_SCENARIO', value: 'first' })
+            send({
+              type: 'FIELD',
+              field: 'key',
+              value: demoPixCode,
+            })
+            setControls(false)
+            setView('payments')
+            setPaymentFilter('all')
+            setFlowOpen(true)
+          }}
+        />
+        <AlertDialog
+          open={bulkDecision !== null}
+          onOpenChange={(open) => {
+            if (!open) setBulkDecision(null)
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {bulkDecision === 'approve' ? 'Approve' : 'Reject'}{' '}
+                {selectedIds.length} requests?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                {bulkDecision === 'approve'
+                  ? 'This records company approval for each selected request. Each Pix still requires individual payment authorization.'
+                  : 'Each requester receives this reason and can correct and resubmit their request.'}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <ScrollArea className="proto-bulk-review">
+              <Stack gap={8}>
+                {selectedPayments.map((p) => (
+                  <div key={p.intent} className="proto-bulk-review-row">
+                    <span>
+                      <strong>{p.recipient}</strong>
+                      <span className="type-caption">
+                        {p.intent} · {p.bank}
+                      </span>
+                    </span>
+                    <strong>{money(p.amount)}</strong>
+                  </div>
+                ))}
+              </Stack>
+            </ScrollArea>
+            {bulkDecision === 'reject' && (
+              <Stack gap={4}>
+                <Label htmlFor="bulk-reason">Reason for rejection</Label>
+                <Textarea
+                  id="bulk-reason"
+                  value={bulkReason}
+                  aria-invalid={!!bulkError}
+                  aria-describedby="bulk-error"
+                  onChange={(e) => {
+                    setBulkReason(e.target.value)
+                    setBulkError('')
+                  }}
+                />
+                <p
+                  id="bulk-error"
+                  className="type-caption"
+                  role={bulkError ? 'alert' : undefined}
+                >
+                  {bulkError || 'This reason applies to all selected requests.'}
+                </p>
+              </Stack>
+            )}
+            <AlertDialogFooter>
+              <AlertDialogCancel>Keep reviewing</AlertDialogCancel>
+              <Button
+                variant={bulkDecision === 'reject' ? 'destructive' : 'default'}
+                onClick={() => {
+                  if (bulkDecision === 'reject' && !bulkReason.trim()) {
+                    setBulkError(
+                      'Enter a reason before rejecting these requests.',
+                    )
+                    return
+                  }
+                  if (bulkDecision) {
+                    send({
+                      type: 'BULK_DECISION',
+                      intents: selectedIds,
+                      decision: bulkDecision,
+                      reason: bulkReason,
+                      actor: 'approver',
+                    })
+                    toast(
+                      `${selectedIds.length} requests ${bulkDecision === 'approve' ? 'approved' : 'rejected'}`,
+                      {
+                        description:
+                          bulkDecision === 'approve'
+                            ? 'Each payment still requires individual authorization.'
+                            : 'Requesters can correct and resubmit their requests.',
+                      },
+                    )
+                    setSelectedIds([])
+                    setBulkDecision(null)
+                  }
+                }}
+              >
+                Confirm {bulkDecision === 'approve' ? 'approval' : 'rejection'}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </TooltipProvider>
+  )
 }

@@ -19,7 +19,7 @@ export * from '@/components/ui/skeleton'
 export * from '@/components/ui/spinner'
 export * from '@/components/shared/content-skeleton'
 
-export type {HeaderAction} from './layout'
+export type { HeaderAction } from './layout'
 export * from '@/components/ui/dropdown-menu'
 export * from '@/components/ui/scroll-area'
 export * from '@/components/ui/switch'
@@ -57,3 +57,12 @@ export * from '@/components/ui/input-group'
 export * from '@/components/shared/banner'
 
 export * from '@/components/shared/wizard'
+
+export * from '@/components/shared/flow-state'
+
+export * from '@/components/shared/avatar'
+
+export * from '@/components/shared/brand-loading'
+
+// Notification service is exposed with the shared Toaster surface.
+export { toast } from 'sonner'

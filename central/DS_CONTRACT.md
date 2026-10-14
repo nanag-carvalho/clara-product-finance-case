@@ -144,3 +144,29 @@ The page header owns the page title. When the opening research section repeats t
 ### Proposed payment feedback and visual direction
 
 The case's Visual and interaction direction maps references and H1–H4 to proposed UI behavior. Use the shared type weights, neutral Slate surfaces, 2/4/8 proximity and 16/24 grouping. Motion starting values (selection ~120 ms; step transition 160–200 ms) are design proposals, not service timings or benchmark measurements. Preserve state and all feedback under reduced motion; focus moves to the new step heading. Lookup errors remain adjacent and associated; loading reserves space. Progress represents verified milestones, never an invented payment percentage. Approval, authorization and paid must remain distinct in text, color and motion. No settlement celebration before authoritative confirmation. Validate keyboard, focus, zoom, contrast and announcements alongside visual quality; no accessibility conformance is claimed by the build.
+
+### Service state feedback
+
+`FlowState` combines a decorative line illustration with a state title, description, responsible actor, next dependency and optional action. Variants: setup, security, waiting, ready, processing, unknown, paid, failed. The optional footer groups request milestones inside the same surface. Queue banners summarize the selected status; individual progress belongs to a single request. Illustration never replaces the status text; asynchronous approvals remain visible outside the wizard, and requesting approval does not unlock payment authorization. Motion acknowledges a recorded change and respects reduced-motion preferences.
+
+`ReviewSummary variant="subtle"` groups transaction data on a Slate 50 surface with a light border and 16 px padding. Keep state messages and primary actions outside the detail group. Wizard scroll content reserves 8 px on each side so keyboard focus rings stay visible.
+
+Wizard progress counts user steps within one task. Payment preparation has three steps; company review is an asynchronous dependency; authorization has its own two-step task. Use `showProgress={false}` for a saved-request acknowledgement or a service result, and provide an explicit return action. Approval confirmation must never turn directly into another role’s authorization task.
+
+`Avatar` provides fixed 32 × 32 circular initials with an accessible profile name. Use it for user identity; Badge remains a status/category label. The circular silhouette is an intentional shape exception to the standard control radius.
+
+Workspace fixtures support empty and populated review states. The populated fixture has two connected accounts and 11 independent requests spanning pending review, ready authorization, unknown result, confirmed paid, confirmed failure and a draft. Fixture switching is in the header menu; no bank setup is required to inspect repeat-use states.
+
+## Financial-task entry and brand feedback
+
+The short branded entry aims to convey care, confidence and continuity when moving from the workspace into payment details. The sidebar invitation opens a translucent full-screen transition with light blur, then the shared Wizard. Reduced motion retains the context and message. Demo timing: 800 ms for the entry/recorded decisions and 1000 ms for simulated service processing.
+
+The service state remains authoritative: animation does not set an outcome. Keep this technical responsibility separate from the intended perception of safety and reassurance. Banner inverse reuses Slate 900, light text and the existing neutral action variant.
+
+## Icon library
+
+Use `@phosphor-icons/react` with regular weight and DS control sizes (typically 16 px). Filter and company-review actions use distinct semantic symbols. Decorative icons are hidden from assistive technology; icon-only controls require an accessible label. Use native Phosphor symbol names; Lucide is no longer a dependency.
+
+## Responsive financial tasks
+
+At mobile width, Wizard uses a full-screen task with a stable action area, 44 px primary touch targets, safe-area padding and one content scroll. InputGroup `actionLayout="responsive"` preserves important field values by moving its action below the input. ReviewSummary fields may declare `emphasis` and `stackOnMobile` so the consumer controls priority and legibility. Desktop/mobile payment views share the same pure filtering, sorting and selection rules. Financial state transitions remain outside presentation components.

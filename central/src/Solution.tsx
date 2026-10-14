@@ -1,10 +1,139 @@
-import {useState} from 'react'
-import {ArrowRight,ArrowUpRight} from 'lucide-react'
-import {Badge,Button,Card,CardContent,CardDescription,CardHeader,CardTitle,Stack,Table,TableBody,TableCell,TableHead,TableHeader,TableRow,Tabs,TabsContent,TabsList,TabsTrigger} from '@/design-system'
-import Prototype from './Prototype'
-export default function Solution(){
- const [tab,setTab]=useState('design')
- const path='direct' as const
- const tryPath=()=>setTab('prototype')
- return <Tabs value={tab} onValueChange={setTab}><TabsList variant="line"><TabsTrigger value="design">Design and comparison</TabsTrigger><TabsTrigger value="prototype">Interactive prototype</TabsTrigger></TabsList><TabsContent value="design"><div className="solution-design"><Button variant="outline" asChild><a href="/wireflow.html" target="_blank" rel="noreferrer">Explore the low-fidelity wireflow first<ArrowUpRight size={16}/></a></Button><Card><CardHeader><Badge variant="outline">Opportunity defined by the brief</Badge><CardTitle>Fund the payment in context</CardTitle><CardDescription>I bring the funding decision into the supplier-payment task. The source and its consequences stay explicit; company approval and safe recovery are required boundaries.</CardDescription></CardHeader><CardContent><p className="type-ui">The current prototype is my first iteration. I will refine source choice, commitment wording and review against H1, H2 and H4, keeping first connection, Pix and failure recovery required by the brief. The external-bank-to-supplier route is defined; interaction alternatives remain to test.</p></CardContent></Card><Card><CardHeader><Badge variant="outline">Defined by the brief</Badge><CardTitle>External bank → supplier</CardTitle><CardDescription>Initiate the Pix in Clara using the external account balance, without prefunding Clara.</CardDescription></CardHeader><CardContent><Stack gap={16}><p className="type-ui">Compare interaction variants within this service: guided steps, contextual source preparation and review hierarchy. Preserve company controls, bank authorization and recovery.</p><Button onClick={tryPath}>Explore the payment experience<ArrowRight size={16}/></Button></Stack></CardContent></Card><Card><CardHeader><CardTitle>Four experience hypotheses</CardTitle></CardHeader><CardContent><Table><TableHeader><TableRow><TableHead>Hypothesis</TableHead><TableHead>Prototype task</TableHead><TableHead>Observe and measure</TableHead></TableRow></TableHeader><TableBody>{[['H1 · source decision','Select the intended source and identify the debited account.','Source mistakes, unnecessary navigation and retained context.'],['H2 · commitment','Explain review, company approval and bank authorization.','Next actor, debited account and whether money has moved.'],['H3 · recovery guardrail','Cancel bank authorization; inspect failure and unknown result.','Retained details, safe resumption and duplicate-payment intent.'],['H4 · review clarity','Detect an intentionally incorrect amount or recipient in review.','Mismatch detected before commitment; omissions and rereading.']].map(([id,task,measure])=><TableRow key={id}><TableCell>{id}</TableCell><TableCell>{task}</TableCell><TableCell>{measure}</TableCell></TableRow>)}</TableBody></Table></CardContent></Card><Card><CardHeader><CardTitle>A payment wizard governed by service states</CardTitle><CardDescription>I use one focused phase at a time, with the payment list kept underneath and the money route carried through the task.</CardDescription></CardHeader><CardContent><Stack gap={16}><Table><TableHeader><TableRow><TableHead>Design decision</TableHead><TableHead>Service constraint</TableHead><TableHead>Validate</TableHead></TableRow></TableHeader><TableBody>{[['Guided progress and a retained draft','Account preparation, company approval and bank authorization remain distinct.','H2 · explain the next actor'],['Source and recipient beside each phase','Consent must match the reviewed payment; edits invalidate approval.','H4 · identify the debited account'],['Resume and contextual recovery','Unknown outcome is queried on the same payment intent.','H3 · avoid a duplicate payment']].map(([decision,constraint,measure])=><TableRow key={decision}><TableCell>{decision}</TableCell><TableCell>{constraint}</TableCell><TableCell>{measure}</TableCell></TableRow>)}</TableBody></Table><p className="type-ui">The Origin references inform the contained interaction. Nu Empresas informs familiar Pix review. W3C WAI informs step orientation and keyboard behavior. The wizard is my proposal; its usability gains need task testing.</p><Button variant="link" asChild><a href="/api/PAYMENT_WIZARD_CONTRACT.md" target="_blank" rel="noreferrer">Read the service and security contract<ArrowUpRight size={16}/></a></Button></Stack></CardContent></Card><Card><CardHeader><CardTitle>Designed as a finance workspace</CardTitle><CardDescription>The same sidebar and header connect overview, payments, approvals, accounts and activity. The selected job stays in Payments; each surrounding view explains its source, actor or outcome.</CardDescription></CardHeader><CardContent><p className="type-ui">Shared DS API: PageHeader, Card, InputGroup, Select, Checkbox, Wizard, ReviewSummary, Alert, Receipt, Timeline, ScrollArea and Button. Test controls remain outside the product workflow.</p></CardContent></Card></div></TabsContent><TabsContent value="prototype"><Stack gap={16}><div className="proto-case-actions"><Badge variant="outline">One supplier · BRL · Pix</Badge><Button variant="outline" asChild><a href={`/prototype.html?path=${path}`} target="_blank" rel="noreferrer">Open full-screen prototype<ArrowUpRight size={16}/></a></Button></div><Prototype key={path} embedded initialPath={path}/></Stack></TabsContent></Tabs>
+import ResearchMarkdown from './ResearchMarkdown'
+import { ArrowUpRight } from '@phosphor-icons/react'
+import { Badge, Button, Stack } from '@/design-system'
+
+const screens = [
+  {
+    id: 'solution-overview',
+    image: 'overview',
+    scenario: 'approval',
+    title: 'See what needs attention',
+    hypothesis: 'H2 · Responsibility',
+    description:
+      'I kept three actionable queues in the overview so the next actor can find company review, authorization or an uncertain result without opening every request.',
+    alt: 'Accounts payable overview with three actionable queues and recently updated payments',
+  },
+  {
+    id: 'solution-volume',
+    image: 'payments',
+    scenario: 'ready',
+    title: 'Work with a payment queue',
+    hypothesis: 'H4 · Review clarity',
+    description:
+      'I kept source and status in each row, with contextual filters and bulk review for repeated work. On mobile, the same records become readable lists.',
+    alt: 'Payments table with source bank, updated date, status, selection and filtering',
+  },
+  {
+    id: 'solution-tracking',
+    image: 'request',
+    scenario: 'approval',
+    title: 'Keep the request understandable',
+    hypothesis: 'H2 · Responsibility',
+    description:
+      'I separated company approval from payment completion and kept progress beside request details. On mobile, history expands inside the same scroll.',
+    alt: 'Saved payment request with details and a fixed progress and history column',
+  },
+  {
+    id: 'solution-recovery',
+    image: 'recovery',
+    scenario: 'rejected',
+    title: 'Correct without starting over',
+    hypothesis: 'H3 · Recovery',
+    description:
+      'I placed the reason beside the saved request and preserved its details during correction. A changed request returns to review rather than reusing an outdated approval.',
+    alt: 'Rejected request showing its reason, retained details, history and Correct request action',
+  },
+]
+export default function Solution({
+  onImage,
+}: {
+  onImage: (file: string, alt: string) => void
+}) {
+  return (
+    <Stack gap={24}>
+      <section id="solution-entry" className="solution-screen">
+        <h2 className="type-h2">
+          Bring the source into the existing payment task
+        </h2>
+        <p className="type-ui">
+          New payment offers Clara balance alongside the proposed business-bank
+          account. I kept this choice in an anchored popover: a separate modal
+          gave a short decision too much weight. The Clara-balance route remains
+          visible as existing product context; this case implements the
+          external-bank journey.
+        </p>
+        <h3 className="type-h3">
+          Recognize the input, then review the recipient
+        </h3>
+        <p className="type-ui">
+          The Pix field recognizes supported key formats and static Copia e
+          Cola. Paste is an explicit action; QR scanning is a camera simulation.
+          Recipient lookup uses fictional data. The person still checks
+          recipient identity, amount and source before submitting the request.
+        </p>
+      </section>
+      <section id="solution-connection" className="solution-screen">
+        <h2 className="type-h2">Connect once; authorize each payment</h2>
+        <p className="type-ui">
+          First use introduces account selection, permission, bank confirmation
+          and device setup before returning to the saved payment. A prepared
+          eligible account can be reused. Connection does not authorize future
+          payments: company approval and payment-specific confirmation remain
+          separate decisions.
+        </p>
+        <Button variant="link" asChild>
+          <a
+            href="/prototype.html?scenario=first"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Inspect first connection <ArrowUpRight size={16} />
+          </a>
+        </Button>
+      </section>
+      {screens.map((screen) => (
+        <section key={screen.id} id={screen.id} className="solution-screen">
+          <div className="solution-screen-heading">
+            <h2 className="type-h2">{screen.title}</h2>
+            <Badge variant="outline" asChild>
+              <a
+                href={`/prototype.html?scenario=${screen.scenario}`}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Explore ${screen.hypothesis} in the prototype`}
+              >
+                {screen.hypothesis}
+              </a>
+            </Badge>
+          </div>
+          <p className="type-ui">{screen.description}</p>
+          <ResearchMarkdown
+            body={`![${screen.alt}](/proposal/${screen.image}.png)`}
+            onImage={onImage}
+          />
+        </section>
+      ))}
+      <details className="solution-boundaries">
+        <summary>Scope and feasibility</summary>
+        <Stack gap={16} className="solution-boundaries-content">
+          <p className="type-ui">
+            The prototype illustrates one manual approval layer. Automatic
+            rules, dynamic QR resolution and production integration remain
+            outside the simulation. Authorization in Clara depends on provider
+            support, PJ eligibility, signatory permissions and device binding.
+          </p>
+          <Button variant="link" asChild>
+            <a
+              href="/api/PAYMENT_WIZARD_CONTRACT.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read the service contract
+              <ArrowUpRight size={16} />
+            </a>
+          </Button>
+        </Stack>
+      </details>
+    </Stack>
+  )
 }

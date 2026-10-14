@@ -1,81 +1,860 @@
-import ComponentCatalog, {componentSlug} from './ComponentCatalog'
+import ComponentCatalog, { componentSlug } from './ComponentCatalog'
 import { useEffect, useState, type CSSProperties } from 'react'
-import { Lightbulb, ArrowLeft, ArrowRight, ArrowUpRight, Check, CheckCircle2, CircleAlert, Component, LayoutTemplate, Menu, Palette, PanelTop, Type, X } from 'lucide-react'
-import { Alert, AlertDescription, Table, TableHeader, TableBody, TableRow, TableHead, TableCell, ScrollArea, Toaster, TooltipProvider, ContentSkeleton, Spinner, designSystem, PageHeader, Stack, Inline, Separator } from '@/design-system'
+import {
+  Lightbulb,
+  ArrowLeft,
+  ArrowUpRight,
+  Check,
+  CheckCircle,
+  WarningCircle,
+  PuzzlePiece,
+  Layout,
+  List,
+  Palette,
+  Browser,
+} from '@phosphor-icons/react'
+import {
+  Alert,
+  AlertDescription,
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+  ScrollArea,
+  Toaster,
+  TooltipProvider,
+  designSystem,
+  PageHeader,
+  Stack,
+} from '@/design-system'
 import { BrandMark } from '@/design-system'
 import { Button } from '@/design-system'
 import { Card, CardContent } from '@/design-system'
-import { Badge } from '@/design-system'
 import { Input } from '@/design-system'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/design-system'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/design-system'
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/design-system'
+import { Tabs, TabsList, TabsTrigger } from '@/design-system'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/design-system'
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+} from '@/design-system'
 import { EvidenceBadge } from '@/design-system'
 import { PaymentStatus, type PaymentState } from '@/design-system'
 
 const pages = [
-  {id:'foundations',label:"Foundations",icon:Palette,n:'01'},
-  {id:'components',label:"Components",icon:Component,n:'02'},
-  {id:'patterns',label:"Patterns and composition",icon:LayoutTemplate,n:'03'},
-  {id:'preview',label:"Applied preview",icon:PanelTop,n:'04'},
+  { id: 'foundations', label: 'Foundations', icon: Palette, n: '01' },
+  { id: 'components', label: 'Components', icon: PuzzlePiece, n: '02' },
+  {
+    id: 'patterns',
+    label: 'Patterns and composition',
+    icon: Layout,
+    n: '03',
+  },
+  { id: 'preview', label: 'Applied preview', icon: Browser, n: '04' },
 ]
 const fontOptions = designSystem.fonts
-const types = Object.entries(designSystem.typography).map(([role,t])=>({name:t.label,className:`type-${role}`,size:`${t.size} / ${t.lineHeight}`,weight:t.weight,use:t.use}))
-const colors = Object.entries(designSystem.colors).filter(([name])=>['primary','foreground','muted-foreground','card','border','success','warning','error'].includes(name)||name.startsWith('slate-')).map(([name,value])=>({name,value,token:`--${name}`}))
-function DemoField({id='field'}:{id?:string}) {
-  const [value,setValue]=useState('')
-  const [checked,setChecked]=useState(false)
-  const valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-  const error=checked&&!valid
-  return <div className="ds-field"><label htmlFor={id}>Example email</label><div className="ds-field-row"><Input id={id} value={value} onChange={e=>{setValue(e.target.value);setChecked(false)}} placeholder="name@example.com" aria-invalid={error} aria-describedby={`${id}-help`}/><Button variant="outline" onClick={()=>setChecked(true)}>Validate format</Button></div><p id={`${id}-help`} className={error?'ds-field-error':checked?'ds-field-success':'ds-field-help'}>{error?<><CircleAlert size={14}/>Enter a valid email address.</>:checked?<><CheckCircle2 size={14}/>Valid format. No external request was made.</>:"Local validation to preview field states."}</p></div>
+const types = Object.entries(designSystem.typography).map(([role, t]) => ({
+  name: t.label,
+  className: `type-${role}`,
+  size: `${t.size} / ${t.lineHeight}`,
+  weight: t.weight,
+  use: t.use,
+}))
+const colors = Object.entries(designSystem.colors)
+  .filter(
+    ([name]) =>
+      [
+        'primary',
+        'foreground',
+        'muted-foreground',
+        'card',
+        'border',
+        'success',
+        'warning',
+        'error',
+      ].includes(name) || name.startsWith('slate-'),
+  )
+  .map(([name, value]) => ({ name, value, token: `--${name}` }))
+function DemoField({ id = 'field' }: { id?: string }) {
+  const [value, setValue] = useState('')
+  const [checked, setChecked] = useState(false)
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  const error = checked && !valid
+  return (
+    <div className="ds-field">
+      <label htmlFor={id}>Example email</label>
+      <div className="ds-field-row">
+        <Input
+          id={id}
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value)
+            setChecked(false)
+          }}
+          placeholder="name@example.com"
+          aria-invalid={error}
+          aria-describedby={`${id}-help`}
+        />
+        <Button variant="outline" onClick={() => setChecked(true)}>
+          Validate format
+        </Button>
+      </div>
+      <p
+        id={`${id}-help`}
+        className={
+          error
+            ? 'ds-field-error'
+            : checked
+              ? 'ds-field-success'
+              : 'ds-field-help'
+        }
+      >
+        {error ? (
+          <>
+            <WarningCircle size={14} />
+            Enter a valid email address.
+          </>
+        ) : checked ? (
+          <>
+            <CheckCircle size={14} />
+            Valid format. No external request was made.
+          </>
+        ) : (
+          'Local validation to preview field states.'
+        )}
+      </p>
+    </div>
+  )
 }
 
 export default function DesignSystem() {
-  const route=()=>{const id=location.hash.slice(2);return pages.some(p=>p.id===id)||designSystem.components.some(c=>`components/${componentSlug(c.name)}`===id)?id:'foundations'}
-  const [page,setPage]=useState(route)
-  const selectedComponent=designSystem.components.find(c=>`components/${componentSlug(c.name)}`===page)
-  const pageTitle=selectedComponent?(selectedComponent.name==='Toaster'?'Sonner':selectedComponent.name):pages.find(p=>p.id===page)?.label??"Components"
-  const [catalogQuery,setCatalogQuery]=useState('')
-  const [menu,setMenu]=useState(false)
-  const [dialog,setDialog]=useState(false)
-  const [payment,setPayment]=useState<PaymentState>("Pending approval")
-  const [previewQuery,setPreviewQuery]=useState('')
-  const [fontLoaded,setFontLoaded]=useState(false)
-  const [context,setContext]=useState('product')
-  const [font,setFont]=useState(designSystem.defaultFont as string)
-  useEffect(()=>setFont(designSystem.defaultFont),[designSystem.defaultFont])
-  const selectedFont=fontOptions.find(option=>option.id===font)!
-  useEffect(()=>{const handle=()=>{setPage(route());setMenu(false);document.querySelector('.ds-page-scroll [data-slot=scroll-area-viewport]')?.scrollTo(0,0)};window.addEventListener('hashchange',handle);return()=>window.removeEventListener('hashchange',handle)},[])
-  useEffect(()=>{let active=true;setFontLoaded(false);Promise.all([400,500,700].map(weight=>document.fonts.load(`${weight} 14px \"${selectedFont.cssFamily}\"`))).then(groups=>{if(active)setFontLoaded(groups.every(faces=>faces.length>0))});return()=>{active=false}},[font])
-  useEffect(()=>{document.title=`${pageTitle} · Clara Design system`},[page])
-  const navigate=(id:string)=>{location.hash=`/${id}`;setPage(id);setMenu(false);document.querySelector('.ds-page-scroll [data-slot=scroll-area-viewport]')?.scrollTo(0,0)}
-  const nav=<><a href="/design-system.html" className="ds-brand"><span><BrandMark/></span><div>Clara Case<small>DESIGN SYSTEM</small></div></a><ScrollArea className="ds-nav-scroll"><nav aria-label="Design system navigation">{pages.map(item=><a href={`#/${item.id}`} key={item.id} className={page===item.id?'selected':''} aria-current={page===item.id?'page':undefined} onClick={()=>navigate(item.id)}><item.icon size={16}/>{item.label}</a>)}<Input className="ds-nav-search" aria-label="Filter components" placeholder="Search components…" value={catalogQuery} onChange={e=>setCatalogQuery(e.target.value)}/>{designSystem.groups.map(group=>({...group,components:group.components.filter(name=>name.toLowerCase().includes(catalogQuery.toLowerCase())||group.name.toLowerCase().includes(catalogQuery.toLowerCase()))})).filter(group=>group.components.length).map(group=><details key={group.name} className="ds-nav-group" open={!!catalogQuery||page==='components'||!!selectedComponent&&group.components.includes(selectedComponent.name)}><summary>{group.name}</summary>{group.components.map(name=><a key={name} href={`#/components/${componentSlug(name)}`} className={selectedComponent?.name===name?'selected':''} aria-current={selectedComponent?.name===name?'page':undefined} onClick={()=>navigate(`components/${componentSlug(name)}`)}>{name==='Toaster'?'Sonner':name==='Tabs'?'Tabs · line e pill':name}</a>)}</details>)}</nav></ScrollArea><div className="ds-nav-footer"><Button variant="ghost" asChild><a href="/#/overview"><ArrowLeft size={16}/>Back to hub</a></Button></div></>
+  const route = () => {
+    const id = location.hash.slice(2)
+    return pages.some((p) => p.id === id) ||
+      designSystem.components.some(
+        (c) => `components/${componentSlug(c.name)}` === id,
+      )
+      ? id
+      : 'foundations'
+  }
+  const [page, setPage] = useState(route)
+  const selectedComponent = designSystem.components.find(
+    (c) => `components/${componentSlug(c.name)}` === page,
+  )
+  const pageTitle = selectedComponent
+    ? selectedComponent.name === 'Toaster'
+      ? 'Sonner'
+      : selectedComponent.name
+    : (pages.find((p) => p.id === page)?.label ?? 'Components')
+  const [catalogQuery, setCatalogQuery] = useState('')
+  const [menu, setMenu] = useState(false)
+  const [dialog, setDialog] = useState(false)
+  const [payment, setPayment] = useState<PaymentState>('Pending approval')
+  const [previewQuery, setPreviewQuery] = useState('')
+  const [fontLoaded, setFontLoaded] = useState(false)
+  const [context, setContext] = useState('product')
+  const [font, setFont] = useState(designSystem.defaultFont as string)
+  useEffect(() => setFont(designSystem.defaultFont), [designSystem.defaultFont])
+  const selectedFont = fontOptions.find((option) => option.id === font)!
+  useEffect(() => {
+    const handle = () => {
+      setPage(route())
+      setMenu(false)
+      document
+        .querySelector('.ds-page-scroll [data-slot=scroll-area-viewport]')
+        ?.scrollTo(0, 0)
+    }
+    window.addEventListener('hashchange', handle)
+    return () => window.removeEventListener('hashchange', handle)
+  }, [])
+  useEffect(() => {
+    let active = true
+    setFontLoaded(false)
+    Promise.all(
+      [400, 500, 700].map((weight) =>
+        document.fonts.load(`${weight} 14px \"${selectedFont.cssFamily}\"`),
+      ),
+    ).then((groups) => {
+      if (active) setFontLoaded(groups.every((faces) => faces.length > 0))
+    })
+    return () => {
+      active = false
+    }
+  }, [font])
+  useEffect(() => {
+    document.title = `${pageTitle} · Clara Design system`
+  }, [page])
+  const navigate = (id: string) => {
+    location.hash = `/${id}`
+    setPage(id)
+    setMenu(false)
+    document
+      .querySelector('.ds-page-scroll [data-slot=scroll-area-viewport]')
+      ?.scrollTo(0, 0)
+  }
+  const nav = (
+    <>
+      <a href="/design-system.html" className="ds-brand case-brand-lockup">
+        <BrandMark wordmark />
+        <small>Case · Design system</small>
+      </a>
+      <ScrollArea className="ds-nav-scroll">
+        <nav aria-label="Design system navigation">
+          {pages.map((item) => (
+            <a
+              href={`#/${item.id}`}
+              key={item.id}
+              className={page === item.id ? 'selected' : ''}
+              aria-current={page === item.id ? 'page' : undefined}
+              onClick={() => navigate(item.id)}
+            >
+              <item.icon size={16} />
+              {item.label}
+            </a>
+          ))}
+          <Input
+            className="ds-nav-search"
+            aria-label="Filter components"
+            placeholder="Search components…"
+            value={catalogQuery}
+            onChange={(e) => setCatalogQuery(e.target.value)}
+          />
+          {designSystem.groups
+            .map((group) => ({
+              ...group,
+              components: group.components.filter(
+                (name) =>
+                  name.toLowerCase().includes(catalogQuery.toLowerCase()) ||
+                  group.name.toLowerCase().includes(catalogQuery.toLowerCase()),
+              ),
+            }))
+            .filter((group) => group.components.length)
+            .map((group) => (
+              <details
+                key={group.name}
+                className="ds-nav-group"
+                open={
+                  !!catalogQuery ||
+                  page === 'components' ||
+                  (!!selectedComponent &&
+                    group.components.includes(selectedComponent.name))
+                }
+              >
+                <summary>{group.name}</summary>
+                {group.components.map((name) => (
+                  <a
+                    key={name}
+                    href={`#/components/${componentSlug(name)}`}
+                    className={
+                      selectedComponent?.name === name ? 'selected' : ''
+                    }
+                    aria-current={
+                      selectedComponent?.name === name ? 'page' : undefined
+                    }
+                    onClick={() =>
+                      navigate(`components/${componentSlug(name)}`)
+                    }
+                  >
+                    {name === 'Toaster'
+                      ? 'Sonner'
+                      : name === 'Tabs'
+                        ? 'Tabs · line e pill'
+                        : name}
+                  </a>
+                ))}
+              </details>
+            ))}
+        </nav>
+      </ScrollArea>
+      <div className="ds-nav-footer">
+        <Button variant="ghost" asChild>
+          <a href="/#/overview">
+            <ArrowLeft size={16} />
+            Back to hub
+          </a>
+        </Button>
+      </div>
+    </>
+  )
 
-  return <TooltipProvider><div className="ds-app" style={{'--font-sans':selectedFont.family} as CSSProperties}><a href="#ds-main" className="skip-link" onClick={e=>{e.preventDefault();document.getElementById('ds-main')?.focus()}}>Skip to content</a><aside className="ds-sidebar">{nav}</aside><div className="ds-shell"><ScrollArea className="ds-page-scroll" key={page}><main key={page} id="ds-main" tabIndex={-1} className="ds-main">
-    <PageHeader title={pageTitle} description={selectedComponent?(designSystem.documentation[selectedComponent.name as keyof typeof designSystem.documentation]?.description??selectedComponent.role):page==='patterns'?"Composition and density rules.":page==='components'?"Component and pattern catalog.":page==='preview'?"Fictional data for validating composition.":"Tokens shared by the hub and proposal."} leading={<Button className="ds-mobile-toggle" variant="ghost" size="icon" aria-label="Open design system navigation" onClick={()=>setMenu(true)}><Menu size={16}/></Button>}/>
+  return (
+    <TooltipProvider>
+      <div
+        className="ds-app"
+        style={{ '--font-sans': selectedFont.family } as CSSProperties}
+      >
+        <a
+          href="#ds-main"
+          className="skip-link"
+          onClick={(e) => {
+            e.preventDefault()
+            document.getElementById('ds-main')?.focus()
+          }}
+        >
+          Skip to content
+        </a>
+        <aside className="ds-sidebar">{nav}</aside>
+        <div className="ds-shell">
+          <ScrollArea className="ds-page-scroll" key={page}>
+            <main key={page} id="ds-main" tabIndex={-1} className="ds-main">
+              <PageHeader
+                title={pageTitle}
+                description={
+                  selectedComponent
+                    ? (designSystem.documentation[
+                        selectedComponent.name as keyof typeof designSystem.documentation
+                      ]?.description ?? selectedComponent.role)
+                    : page === 'patterns'
+                      ? 'Composition and density rules.'
+                      : page === 'components'
+                        ? 'Component and pattern catalog.'
+                        : page === 'preview'
+                          ? 'Fictional data for validating composition.'
+                          : 'Tokens shared by the hub and proposal.'
+                }
+                leading={
+                  <Button
+                    className="ds-mobile-toggle"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Open design system navigation"
+                    onClick={() => setMenu(true)}
+                  >
+                    <List size={16} />
+                  </Button>
+                }
+              />
 
-
-    {page==='foundations'&&<>
-      <div className="ds-font-choice"><div><span className="eyebrow">COMPARE FONTS</span><p>Change the font in this preview while keeping the same scale.</p></div><Tabs value={font} onValueChange={setFont}><TabsList>{fontOptions.map(option=><TabsTrigger key={option.id} value={option.id}>{option.name}</TabsTrigger>)}</TabsList></Tabs></div><section className="ds-font-intro"><div><span className="ds-type-mark">Aa</span><p className="type-h3">{selectedFont.name}</p><p className="type-ui">{fontLoaded?"Local font loaded · 400, 500, 700":"Checking font loading…"}</p></div><div><h2 className="type-h2">A compact scale for work.</h2><p className="type-body">{selectedFont.description}. Fonts are loaded locally. The hub uses Nunito Sans; this comparison only changes the design system preview.</p><a href={selectedFont.url} target="_blank" rel="noreferrer">About the font <ArrowUpRight size={15}/></a></div></section>
-      <section className="ds-section"><div className="ds-section-title"><h2 className="type-h2">Type scale</h2><span>Desktop · size / line height in px</span></div><div className="ds-type-table">{types.map(type=><div className="ds-type-row" key={type.name}><div className="ds-type-meta"><strong>{type.name}</strong><code>{type.size} · {type.weight}</code><span>{type.use}</span></div><p className={type.className}>{type.name==='Display'?"Payments with clarity":type.name==="Reading text"?"Each step should clarify what happened and what comes next.":"A consistent experience"}</p></div>)}</div><p className="ds-note">Display type is reserved for presentations. Page 20/28, section 16/24 and group 14/20. Supporting text does not carry important decisions.</p></section>
-      <section className="ds-section"><div className="ds-section-title"><h2 className="type-h2">Colors and roles</h2><span>Shared tokens</span></div><div className="ds-color-grid">{colors.map(color=><div className="ds-color" key={color.token}><div style={{background:`var(${color.token})`}}/><strong>{color.name}</strong><code>{color.value}</code><span>{color.token}</span></div>)}</div><p className="ds-note">The action blue draws on Clara's visual reference. This is the case foundation, not the company's official design system.</p></section>
-    </>}
-    {(page==='components'||selectedComponent)&&<ComponentCatalog selected={page.split('/')[1]} onNavigate={navigate}/>}
-    {page==='patterns'&&<>
-      <section className="ds-section"><h2 className="type-h2">Research callouts</h2><Stack gap={8}><Alert variant="note"><Lightbulb aria-hidden="true"/><AlertDescription><p><strong>My reading:</strong> keep interpretation distinct from the evidence it explains.</p></AlertDescription></Alert><Alert variant="note"><Lightbulb aria-hidden="true"/><AlertDescription><p><strong>Hypothesis to test:</strong> a named next actor may clarify who needs to act.</p></AlertDescription></Alert><code>{'<Alert variant="note"><Lightbulb aria-hidden /><AlertDescription>…</AlertDescription></Alert>'}</code><p className="type-body">Static notes use role=note, not an assertive announcement. Use a short visible label, neutral surface and one related idea. In research Markdown, a blockquote renders this shared composition.</p></Stack></section>
-      <section className="ds-section ds-section-first"><div className="ds-section-title"><h2 className="type-h2">Spacing</h2><span>Scale 2 · 4 · 8 · 16 · 24</span></div><div className="ds-space-grid">{designSystem.spacing.map(space=><div key={space}><span style={{width:space,height:48}}/><strong>{space} px</strong><code>space-{space}</code></div>)}</div><p className="ds-note">8 px between related elements, 16 px between groups and 24 px between sections. Title and description are 4 px apart; the related action sits 8 px away.</p></section>
-      <section className="ds-section"><h2 className="type-h2">Surfaces and focus</h2><div className="ds-two-columns ds-pattern-panels"><Card className="ds-demo-card"><CardContent><h3 className="type-h3">Content</h3><p className="type-body">Title and description are 4 px apart. A 16 px padding and radius define this group.</p></CardContent></Card><div className="ds-focus-panel"><h3 className="type-h3">Control</h3><p className="type-body">Description 4 px from the title; action 8 px from the content. Control radius: 10 px.</p><Button variant="outline" onClick={()=>setDialog(true)}>Open example <ArrowUpRight size={16}/></Button></div></div></section>
-      <section className="ds-section"><div className="ds-section-title"><h2 className="type-h2">Layers and shadows</h2><span>White on white · Slate 100 border</span></div><div className="ds-elevation-grid">{Object.entries(designSystem.elevation).map(([name,value])=><div key={name} className="ds-elevation-sample" style={{boxShadow:value}}><h3 className="type-h3">{name==='none'?'Base':name==='card'?'Card':'Overlay'}</h3><p className="type-caption">shadow-{name}</p></div>)}</div></section>
-      <section className="ds-section"><h2 className="type-h2">Composition rules</h2><div className="ds-rule-list">{[["One hierarchy per page","Title, context, content and action. Display type is reserved for openings."],["Always label statuses","Color reinforces meaning; the label must communicate the outcome on its own."],["Aligned numbers","Currency amounts use tabular figures and align in lists."],["Labeled evidence","Demo, official source and reconstruction labels stay beside the material."],["Unambiguous progress","Internal approval, bank authorization and confirmed payment need distinct states."]].map(([title,text])=><div key={title}><Check size={18}/><div><h3 className="type-h3">{title}</h3><p className="type-body">{text}</p></div></div>)}</div></section>
-    </>}
-    {page==='preview'&&<><div className="ds-context-tabs"><Tabs value={context} onValueChange={setContext}><TabsList><TabsTrigger value="doc">Documentation</TabsTrigger><TabsTrigger value="slides">Presentation</TabsTrigger><TabsTrigger value="product">Product</TabsTrigger></TabsList></Tabs><span>Composition preview · fictional data</span></div>
-      {context==='doc'&&<section className="ds-document-preview"><p className="eyebrow">DOCUMENTATION / CURRENT JOURNEY</p><h2 className="type-h1">Review and approval</h2><p className="type-body">Before submitting, the finance team needs to review the recipient, amount and funding source.</p><div className="ds-preview-reference"><EvidenceBadge kind="Official"/><span>Behavior described in Clara's documentation.</span></div><h3 className="type-h2">What needs to be clear</h3><p className="type-body">Request approval and payment confirmation represent different stages of the operation.</p><div className="ds-preview-callout"><CircleAlert size={19}/><p className="type-ui">Internal approval does not mean the payment has settled.</p></div><a href="/#/as-is">View hub documentation <ArrowUpRight size={15}/></a></section>}
-      {context==='slides'&&<section className="ds-slide-preview"><p className="eyebrow">01 / CONTEXT</p><h2 className="type-display">The funds are held at a bank.<br/>The work happens in Clara.</h2><p className="type-body">An experience that preserves context and control when paying suppliers.</p><div><span>Open Finance</span><span>Pix</span><span>Business account</span></div><footer>NÁGELA CARVALHO / PRODUCT FINANCE CASE</footer></section>}
-      {context==='product'&&<section className="ds-workspace"><div className="ds-workspace-header"><div><h2 className="type-h3">Payments</h2><p className="type-caption">Proposal preview · fictional data</p></div><Button onClick={()=>setDialog(true)}>New payment</Button></div><div className="ds-workspace-body"><div className="ds-workspace-list"><div className="ds-workspace-toolbar"><Input aria-label="Search suppliers in the preview" placeholder="Search suppliers" value={previewQuery} onChange={e=>setPreviewQuery(e.target.value)}/><Button variant="outline" onClick={()=>setPreviewQuery('')}>Clear search</Button></div><Table className="ds-workspace-table"><TableHeader><TableRow><TableHead>Beneficiary</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead></TableRow></TableHeader><TableBody>{[{name:"Example Supplier Ltd.",value:'1.750,00',state:payment},{name:"Beta Services",value:'320,00',state:"Paid" as PaymentState},{name:"Gamma Distributors",value:'890,00',state:"Processing" as PaymentState}].filter(row=>row.name.toLowerCase().includes(previewQuery.toLowerCase())).map((row,i)=><TableRow key={row.name} className={i===0?'selected':''}><TableCell>{row.name}</TableCell><TableCell>R$ {row.value}</TableCell><TableCell><PaymentStatus state={row.state}/></TableCell></TableRow>)}</TableBody></Table></div><aside className="ds-workspace-detail"><div><h3 className="type-h3">Example Supplier Ltd.</h3><p className="type-caption">Detail selected</p></div><PaymentStatus state={payment}/><dl className="type-ui"><div><dt>Amount</dt><dd>R$ 1.750,00</dd></div><div><dt>Method</dt><dd>Pix</dd></div><div><dt>Source</dt><dd>Example account</dd></div></dl><div className={`ds-payment-message ${payment==="Failed"?'is-error':payment==="Paid"?'is-success':payment==="Pending approval"?'is-pending':''}`}><CircleAlert size={16}/><div><h3 className="type-ui">{payment==="Paid"?"Payment confirmed":payment==="Failed"?"Payment not completed":payment==="Processing"?"Awaiting confirmation":"Awaiting approval"}</h3><p>{payment==="Paid"?"Final outcome confirmed in the example.":payment==="Failed"?"Confirmed failure. Check the reason before retrying.":payment==="Processing"?"Outcome still unknown. Avoid duplicating the request.":"Execution depends on internal approval."}</p></div></div><div className="ds-status-controls"><p className="type-caption">Simulate state</p><div>{(["Pending approval","Processing","Paid","Failed"] as PaymentState[]).map(state=><Button size="sm" key={state} variant={payment===state?'default':'outline'} onClick={()=>setPayment(state)}>{state==="Pending approval"?"Pending":state}</Button>)}</div></div></aside></div></section>}
-    </>}
-    <div className="ds-contract-links"><a href="/api/DS_CONTRACT.md" target="_blank">Markdown contract ↗</a><a href="/api/design-system.json" target="_blank">API JSON ↗</a><a href="/registry.json" target="_blank">Registry ↗</a></div><footer className="ds-footer"><span>Clara · Case design system</span><Button variant="ghost" asChild><a href="/#/system">Back to hub <ArrowLeft size={16}/></a></Button></footer>
-  </main></ScrollArea></div>
-  <Sheet open={menu} onOpenChange={setMenu}><SheetContent side="left" className="ds-mobile-nav"><SheetTitle className="sr-only">Design system navigation</SheetTitle><SheetDescription className="sr-only">Foundations, components, patterns and previews</SheetDescription>{nav}</SheetContent></Sheet>
-  <Dialog open={dialog} onOpenChange={setDialog}><DialogContent className="ds-example-dialog"><DialogHeader><DialogTitle>A context and its action.</DialogTitle><DialogDescription>Shared modal example. Use Tab to navigate and Escape to close.</DialogDescription></DialogHeader><DemoField id="dialog-field"/><div className="ds-dialog-footer"><Button variant="outline" onClick={()=>setDialog(false)}>Close example</Button><Button onClick={()=>setDialog(false)}>Finish preview <Check size={16}/></Button></div></DialogContent></Dialog>
-  <Toaster/></div></TooltipProvider>
+              {page === 'foundations' && (
+                <>
+                  <div className="ds-font-choice">
+                    <div>
+                      <span className="eyebrow">COMPARE FONTS</span>
+                      <p>
+                        Change the font in this preview while keeping the same
+                        scale.
+                      </p>
+                    </div>
+                    <Tabs value={font} onValueChange={setFont}>
+                      <TabsList>
+                        {fontOptions.map((option) => (
+                          <TabsTrigger key={option.id} value={option.id}>
+                            {option.name}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                  <section className="ds-font-intro">
+                    <div>
+                      <span className="ds-type-mark">Aa</span>
+                      <p className="type-h3">{selectedFont.name}</p>
+                      <p className="type-ui">
+                        {fontLoaded
+                          ? 'Local font loaded · 400, 500, 700'
+                          : 'Checking font loading…'}
+                      </p>
+                    </div>
+                    <div>
+                      <h2 className="type-h2">A compact scale for work.</h2>
+                      <p className="type-body">
+                        {selectedFont.description}. Fonts are loaded locally.
+                        The hub uses Nunito Sans; this comparison only changes
+                        the design system preview.
+                      </p>
+                      <a
+                        href={selectedFont.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        About the font <ArrowUpRight size={15} />
+                      </a>
+                    </div>
+                  </section>
+                  <section className="ds-section">
+                    <div className="ds-section-title">
+                      <h2 className="type-h2">Type scale</h2>
+                      <span>Desktop · size / line height in px</span>
+                    </div>
+                    <div className="ds-type-table">
+                      {types.map((type) => (
+                        <div className="ds-type-row" key={type.name}>
+                          <div className="ds-type-meta">
+                            <strong>{type.name}</strong>
+                            <code>
+                              {type.size} · {type.weight}
+                            </code>
+                            <span>{type.use}</span>
+                          </div>
+                          <p className={type.className}>
+                            {type.name === 'Display'
+                              ? 'Payments with clarity'
+                              : type.name === 'Reading text'
+                                ? 'Each step should clarify what happened and what comes next.'
+                                : 'A consistent experience'}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="ds-note">
+                      Display type is reserved for presentations. Page 20/28,
+                      section 16/24 and group 14/20. Supporting text does not
+                      carry important decisions.
+                    </p>
+                  </section>
+                  <section className="ds-section">
+                    <div className="ds-section-title">
+                      <h2 className="type-h2">Colors and roles</h2>
+                      <span>Shared tokens</span>
+                    </div>
+                    <div className="ds-color-grid">
+                      {colors.map((color) => (
+                        <div className="ds-color" key={color.token}>
+                          <div style={{ background: `var(${color.token})` }} />
+                          <strong>{color.name}</strong>
+                          <code>{color.value}</code>
+                          <span>{color.token}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="ds-note">
+                      The action blue draws on Clara's visual reference. This is
+                      the case foundation, not the company's official design
+                      system.
+                    </p>
+                  </section>
+                </>
+              )}
+              {(page === 'components' || selectedComponent) && (
+                <ComponentCatalog
+                  selected={page.split('/')[1]}
+                  onNavigate={navigate}
+                />
+              )}
+              {page === 'patterns' && (
+                <>
+                  <section className="ds-section">
+                    <h2 className="type-h2">Research callouts</h2>
+                    <Stack gap={8}>
+                      <Alert variant="note">
+                        <Lightbulb aria-hidden="true" />
+                        <AlertDescription>
+                          <p>
+                            <strong>My reading:</strong> keep interpretation
+                            distinct from the evidence it explains.
+                          </p>
+                        </AlertDescription>
+                      </Alert>
+                      <Alert variant="note">
+                        <Lightbulb aria-hidden="true" />
+                        <AlertDescription>
+                          <p>
+                            <strong>Hypothesis to test:</strong> a named next
+                            actor may clarify who needs to act.
+                          </p>
+                        </AlertDescription>
+                      </Alert>
+                      <code>
+                        {
+                          '<Alert variant="note"><Lightbulb aria-hidden /><AlertDescription>…</AlertDescription></Alert>'
+                        }
+                      </code>
+                      <p className="type-body">
+                        Static notes use role=note, not an assertive
+                        announcement. Use a short visible label, neutral surface
+                        and one related idea. In research Markdown, a blockquote
+                        renders this shared composition.
+                      </p>
+                    </Stack>
+                  </section>
+                  <section className="ds-section ds-section-first">
+                    <div className="ds-section-title">
+                      <h2 className="type-h2">Spacing</h2>
+                      <span>Scale 2 · 4 · 8 · 16 · 24</span>
+                    </div>
+                    <div className="ds-space-grid">
+                      {designSystem.spacing.map((space) => (
+                        <div key={space}>
+                          <span style={{ width: space, height: 48 }} />
+                          <strong>{space} px</strong>
+                          <code>space-{space}</code>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="ds-note">
+                      8 px between related elements, 16 px between groups and 24
+                      px between sections. Title and description are 4 px apart;
+                      the related action sits 8 px away.
+                    </p>
+                  </section>
+                  <section className="ds-section">
+                    <h2 className="type-h2">Surfaces and focus</h2>
+                    <div className="ds-two-columns ds-pattern-panels">
+                      <Card className="ds-demo-card">
+                        <CardContent>
+                          <h3 className="type-h3">Content</h3>
+                          <p className="type-body">
+                            Title and description are 4 px apart. A 16 px
+                            padding and radius define this group.
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <div className="ds-focus-panel">
+                        <h3 className="type-h3">Control</h3>
+                        <p className="type-body">
+                          Description 4 px from the title; action 8 px from the
+                          content. Control radius: 10 px.
+                        </p>
+                        <Button
+                          variant="outline"
+                          onClick={() => setDialog(true)}
+                        >
+                          Open example <ArrowUpRight size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </section>
+                  <section className="ds-section">
+                    <div className="ds-section-title">
+                      <h2 className="type-h2">Layers and shadows</h2>
+                      <span>White on white · Slate 100 border</span>
+                    </div>
+                    <div className="ds-elevation-grid">
+                      {Object.entries(designSystem.elevation).map(
+                        ([name, value]) => (
+                          <div
+                            key={name}
+                            className="ds-elevation-sample"
+                            style={{ boxShadow: value }}
+                          >
+                            <h3 className="type-h3">
+                              {name === 'none'
+                                ? 'Base'
+                                : name === 'card'
+                                  ? 'Card'
+                                  : 'Overlay'}
+                            </h3>
+                            <p className="type-caption">shadow-{name}</p>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </section>
+                  <section className="ds-section">
+                    <h2 className="type-h2">Composition rules</h2>
+                    <div className="ds-rule-list">
+                      {[
+                        [
+                          'One hierarchy per page',
+                          'Title, context, content and action. Display type is reserved for openings.',
+                        ],
+                        [
+                          'Always label statuses',
+                          'Color reinforces meaning; the label must communicate the outcome on its own.',
+                        ],
+                        [
+                          'Aligned numbers',
+                          'Currency amounts use tabular figures and align in lists.',
+                        ],
+                        [
+                          'Labeled evidence',
+                          'Demo, official source and reconstruction labels stay beside the material.',
+                        ],
+                        [
+                          'Unambiguous progress',
+                          'Internal approval, bank authorization and confirmed payment need distinct states.',
+                        ],
+                      ].map(([title, text]) => (
+                        <div key={title}>
+                          <Check size={18} />
+                          <div>
+                            <h3 className="type-h3">{title}</h3>
+                            <p className="type-body">{text}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </>
+              )}
+              {page === 'preview' && (
+                <>
+                  <div className="ds-context-tabs">
+                    <Tabs value={context} onValueChange={setContext}>
+                      <TabsList>
+                        <TabsTrigger value="doc">Documentation</TabsTrigger>
+                        <TabsTrigger value="slides">Presentation</TabsTrigger>
+                        <TabsTrigger value="product">Product</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                    <span>Composition preview · fictional data</span>
+                  </div>
+                  {context === 'doc' && (
+                    <section className="ds-document-preview">
+                      <p className="eyebrow">DOCUMENTATION / CURRENT JOURNEY</p>
+                      <h2 className="type-h1">Review and approval</h2>
+                      <p className="type-body">
+                        Before submitting, the finance team needs to review the
+                        recipient, amount and funding source.
+                      </p>
+                      <div className="ds-preview-reference">
+                        <EvidenceBadge kind="Official" />
+                        <span>
+                          Behavior described in Clara's documentation.
+                        </span>
+                      </div>
+                      <h3 className="type-h2">What needs to be clear</h3>
+                      <p className="type-body">
+                        Request approval and payment confirmation represent
+                        different stages of the operation.
+                      </p>
+                      <div className="ds-preview-callout">
+                        <WarningCircle size={19} />
+                        <p className="type-ui">
+                          Internal approval does not mean the payment has
+                          settled.
+                        </p>
+                      </div>
+                      <a href="/#/as-is">
+                        View hub documentation <ArrowUpRight size={15} />
+                      </a>
+                    </section>
+                  )}
+                  {context === 'slides' && (
+                    <section className="ds-slide-preview">
+                      <p className="eyebrow">01 / CONTEXT</p>
+                      <h2 className="type-display">
+                        The funds are held at a bank.
+                        <br />
+                        The work happens in Clara.
+                      </h2>
+                      <p className="type-body">
+                        An experience that preserves context and control when
+                        paying suppliers.
+                      </p>
+                      <div>
+                        <span>Open Finance</span>
+                        <span>Pix</span>
+                        <span>Business account</span>
+                      </div>
+                      <footer>NÁGELA CARVALHO / PRODUCT FINANCE CASE</footer>
+                    </section>
+                  )}
+                  {context === 'product' && (
+                    <section className="ds-workspace">
+                      <div className="ds-workspace-header">
+                        <div>
+                          <h2 className="type-h3">Payments</h2>
+                          <p className="type-caption">
+                            Proposal preview · fictional data
+                          </p>
+                        </div>
+                        <Button onClick={() => setDialog(true)}>
+                          New payment
+                        </Button>
+                      </div>
+                      <div className="ds-workspace-body">
+                        <div className="ds-workspace-list">
+                          <div className="ds-workspace-toolbar">
+                            <Input
+                              aria-label="Search suppliers in the preview"
+                              placeholder="Search suppliers"
+                              value={previewQuery}
+                              onChange={(e) => setPreviewQuery(e.target.value)}
+                            />
+                            <Button
+                              variant="outline"
+                              onClick={() => setPreviewQuery('')}
+                            >
+                              Clear search
+                            </Button>
+                          </div>
+                          <Table className="ds-workspace-table">
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Beneficiary</TableHead>
+                                <TableHead>Amount</TableHead>
+                                <TableHead>Status</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {[
+                                {
+                                  name: 'Example Supplier Ltd.',
+                                  value: '1.750,00',
+                                  state: payment,
+                                },
+                                {
+                                  name: 'Beta Services',
+                                  value: '320,00',
+                                  state: 'Paid' as PaymentState,
+                                },
+                                {
+                                  name: 'Gamma Distributors',
+                                  value: '890,00',
+                                  state: 'Processing' as PaymentState,
+                                },
+                              ]
+                                .filter((row) =>
+                                  row.name
+                                    .toLowerCase()
+                                    .includes(previewQuery.toLowerCase()),
+                                )
+                                .map((row, i) => (
+                                  <TableRow
+                                    key={row.name}
+                                    className={i === 0 ? 'selected' : ''}
+                                  >
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell>R$ {row.value}</TableCell>
+                                    <TableCell>
+                                      <PaymentStatus state={row.state} />
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                        <aside className="ds-workspace-detail">
+                          <div>
+                            <h3 className="type-h3">Example Supplier Ltd.</h3>
+                            <p className="type-caption">Detail selected</p>
+                          </div>
+                          <PaymentStatus state={payment} />
+                          <dl className="type-ui">
+                            <div>
+                              <dt>Amount</dt>
+                              <dd>R$ 1.750,00</dd>
+                            </div>
+                            <div>
+                              <dt>Method</dt>
+                              <dd>Pix</dd>
+                            </div>
+                            <div>
+                              <dt>Source</dt>
+                              <dd>Example account</dd>
+                            </div>
+                          </dl>
+                          <div
+                            className={`ds-payment-message ${payment === 'Failed' ? 'is-error' : payment === 'Paid' ? 'is-success' : payment === 'Pending approval' ? 'is-pending' : ''}`}
+                          >
+                            <WarningCircle size={16} />
+                            <div>
+                              <h3 className="type-ui">
+                                {payment === 'Paid'
+                                  ? 'Payment confirmed'
+                                  : payment === 'Failed'
+                                    ? 'Payment not completed'
+                                    : payment === 'Processing'
+                                      ? 'Awaiting confirmation'
+                                      : 'Awaiting approval'}
+                              </h3>
+                              <p>
+                                {payment === 'Paid'
+                                  ? 'Final outcome confirmed in the example.'
+                                  : payment === 'Failed'
+                                    ? 'Confirmed failure. Check the reason before retrying.'
+                                    : payment === 'Processing'
+                                      ? 'Outcome still unknown. Avoid duplicating the request.'
+                                      : 'Execution depends on internal approval.'}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="ds-status-controls">
+                            <p className="type-caption">Simulate state</p>
+                            <div>
+                              {(
+                                [
+                                  'Pending approval',
+                                  'Processing',
+                                  'Paid',
+                                  'Failed',
+                                ] as PaymentState[]
+                              ).map((state) => (
+                                <Button
+                                  size="sm"
+                                  key={state}
+                                  variant={
+                                    payment === state ? 'default' : 'outline'
+                                  }
+                                  onClick={() => setPayment(state)}
+                                >
+                                  {state === 'Pending approval'
+                                    ? 'Pending'
+                                    : state}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+                        </aside>
+                      </div>
+                    </section>
+                  )}
+                </>
+              )}
+              <div className="ds-contract-links">
+                <a href="/api/DS_CONTRACT.md" target="_blank">
+                  Markdown contract ↗
+                </a>
+                <a href="/api/design-system.json" target="_blank">
+                  API JSON ↗
+                </a>
+                <a href="/registry.json" target="_blank">
+                  Registry ↗
+                </a>
+              </div>
+              <footer className="ds-footer">
+                <span>Clara · Case design system</span>
+                <Button variant="ghost" asChild>
+                  <a href="/#/system">
+                    Back to hub <ArrowLeft size={16} />
+                  </a>
+                </Button>
+              </footer>
+            </main>
+          </ScrollArea>
+        </div>
+        <Sheet open={menu} onOpenChange={setMenu}>
+          <SheetContent side="left" className="ds-mobile-nav">
+            <SheetTitle className="sr-only">
+              Design system navigation
+            </SheetTitle>
+            <SheetDescription className="sr-only">
+              Foundations, components, patterns and previews
+            </SheetDescription>
+            {nav}
+          </SheetContent>
+        </Sheet>
+        <Dialog open={dialog} onOpenChange={setDialog}>
+          <DialogContent className="ds-example-dialog">
+            <DialogHeader>
+              <DialogTitle>A context and its action.</DialogTitle>
+              <DialogDescription>
+                Shared modal example. Use Tab to navigate and Escape to close.
+              </DialogDescription>
+            </DialogHeader>
+            <DemoField id="dialog-field" />
+            <div className="ds-dialog-footer">
+              <Button variant="outline" onClick={() => setDialog(false)}>
+                Close example
+              </Button>
+              <Button onClick={() => setDialog(false)}>
+                Finish preview <Check size={16} />
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <Toaster />
+      </div>
+    </TooltipProvider>
+  )
 }
