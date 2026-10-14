@@ -37,6 +37,13 @@ test('reduced motion presents the story immediately without entrance animations'
     'opacity',
     '1',
   )
+  const preview = page.locator('.showcase-preview img')
+  await expect(preview).toBeVisible()
+  const ratios = await preview.evaluate((image: HTMLImageElement) => ({
+    natural: image.naturalWidth / image.naturalHeight,
+    rendered: image.clientWidth / image.clientHeight,
+  }))
+  expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
   await page.getByRole('link', { name: 'Experience', exact: true }).click()
   await expect(page.locator('#story-experience')).toBeInViewport()
   expect(

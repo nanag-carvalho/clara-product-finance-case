@@ -121,6 +121,7 @@
 .showcase-preview img {
   display: block;
   width: 100%;
+  height: auto;
 }
 .showcase-hero-visual > p {
   margin-top: 16px;
@@ -1751,5 +1752,37 @@
   }
   .showcase-shell .showcase-coverage-heading h3 {
     font-size: 20px;
+  }
+}
+
+/* Keep reading actions and the two-row header usable at narrow phone widths. */
+@media (max-width: 650px) {
+  .showcase-shell [data-slot='button'][data-variant='link'] {
+    max-width: 100%;
+    height: auto;
+    min-height: 44px;
+    white-space: normal;
+    text-align: left;
+  }
+  .showcase-shell [data-variant='link'] .button-content {
+    min-width: 0;
+    white-space: normal;
+  }
+}
+@media (max-width: 360px) {
+  .showcase-header {
+    padding-inline: 16px;
+    gap: 8px;
+  }
+  .showcase-brand .clara-brand-wordmark {
+    width: 88px;
+    height: auto;
+  }
+  .showcase-brand .clara-brand-wordmark img {
+    width: 88px;
+    height: auto;
+  }
+  .showcase-header-actions a {
+    padding-inline: 6px;
   }
 }

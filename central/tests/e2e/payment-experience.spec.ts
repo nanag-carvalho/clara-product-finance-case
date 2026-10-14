@@ -248,6 +248,44 @@ test('mobile filters and selection remain usable without horizontal overflow', a
   expect(bounds?.height).toBeGreaterThanOrEqual(44)
   await paymentsLink.click()
   await expect(navigation).not.toBeVisible()
+  await page.setViewportSize({ width: 320, height: 720 })
+  for (const route of ['/#/overview', '/showcase.html']) {
+    await page.goto(route)
+    await page.locator('h1').first().waitFor()
+    expect(
+      await page
+        .locator('main')
+        .first()
+        .evaluate((element) => element.scrollWidth <= element.clientWidth),
+    ).toBe(true)
+  }
+  await page.goto('/#/sources')
+  const comparison = page
+    .getByRole('region', { name: 'Scrollable comparison table' })
+    .first()
+  await expect(comparison).toBeVisible()
+  expect(
+    await comparison.evaluate(
+      (element) => element.scrollWidth > element.clientWidth,
+    ),
+  ).toBe(true)
+  await comparison.evaluate((element) => {
+    element.scrollLeft = element.scrollWidth
+  })
+  expect(
+    await comparison.evaluate((element) => element.scrollLeft),
+  ).toBeGreaterThan(0)
+  await page
+    .getByRole('button', { name: 'Open navigation', exact: true })
+    .click()
+  await page
+    .getByRole('dialog', { name: 'Hub navigation', exact: true })
+    .getByRole('link', { name: 'Overview', exact: true })
+    .click()
+  await expect(
+    page.getByRole('dialog', { name: 'Hub navigation', exact: true }),
+  ).not.toBeVisible()
+  await page.setViewportSize({ width: 390, height: 844 })
   await populated(page)
   await page.getByRole('button', { name: 'Filters', exact: true }).click()
   await expect(

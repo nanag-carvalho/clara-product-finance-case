@@ -104,7 +104,21 @@ export default function ResearchMarkdown({
               {children}
             </a>
           ),
-        table: ({ children }) => <Table>{children}</Table>,
+        table: ({ children }) => (
+          <div className="research-table-block">
+            <p className="research-table-hint">
+              Swipe across to compare columns.
+            </p>
+            <div
+              className="research-table-scroll"
+              role="region"
+              aria-label="Scrollable comparison table"
+              tabIndex={0}
+            >
+              <Table>{children}</Table>
+            </div>
+          </div>
+        ),
         thead: ({ children }) => <TableHeader>{children}</TableHeader>,
         tbody: ({ children }) => <TableBody>{children}</TableBody>,
         tr: ({ children }) => <TableRow>{children}</TableRow>,
