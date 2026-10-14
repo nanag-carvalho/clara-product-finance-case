@@ -32,7 +32,7 @@
 .proto-brand{flex-wrap:nowrap;justify-content:space-between}.proto-collapse{flex-shrink:0;background:var(--background)}
 .proto-shell-collapsed{grid-template-columns:64px minmax(0,1fr)}
 .proto-shell-collapsed .proto-sidebar{padding:var(--space-8);gap:var(--space-16)}
-.proto-shell-collapsed .proto-brand{justify-content:flex-start;padding-left:var(--space-8);gap:var(--space-4)}
+.proto-shell-collapsed .proto-brand{justify-content:center;padding-left:0;gap:var(--space-4)}
 .proto-shell-collapsed .proto-collapse{position:absolute;right:-16px;top:56px;z-index:20;justify-content:center;box-shadow:var(--shadow-sm)}
 .proto-shell-collapsed .proto-navigation-scroll{padding-right:0}
 .proto-shell-collapsed nav button{justify-content:flex-start;padding-inline:var(--space-16);position:relative}
@@ -44,3 +44,5 @@
 .proto-collapse svg{width:16px;height:16px;flex-shrink:0}
 
 .proto-sidebar>.proto-brand{margin-right:calc(-1 * var(--space-8))}.proto-brand .proto-collapse{margin-left:auto}.proto-shell-collapsed .proto-sidebar>.proto-brand{margin-right:0}
+
+.proto-shell-collapsed .proto-brand .clara-brand-asset{width:32px;height:32px}.proto-shell-collapsed .proto-brand .clara-brand-asset img{height:32px}
