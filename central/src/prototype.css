@@ -31,7 +31,7 @@
 /* One page header and a collapsible navigation rail. */
 .proto-brand{flex-wrap:nowrap;justify-content:space-between}.proto-collapse{flex-shrink:0}
 .proto-shell-collapsed{grid-template-columns:64px minmax(0,1fr)}
-.proto-shell-collapsed .proto-sidebar{padding:var(--space-8);gap:var(--space-16)}
+.proto-shell-collapsed .proto-sidebar{padding:var(--space-16) var(--space-8) var(--space-8);gap:var(--space-16)}
 .proto-shell-collapsed .proto-brand{justify-content:center;padding-left:0;gap:var(--space-4)}
 .proto-shell-collapsed .proto-collapse{position:absolute;right:-16px;top:56px;z-index:20;background:var(--background);justify-content:center;box-shadow:var(--shadow-sm)}
 .proto-shell-collapsed .proto-navigation-scroll{padding-right:0}
