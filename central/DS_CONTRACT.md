@@ -117,4 +117,4 @@ Heading weights are registry tokens (`--weight-h1/h2/h3`), currently 700. Body r
 
 The proposed workspace has one page header containing title and related actions. Do not add a company/context bar above it or repeat company metadata in the sidebar. Sidebar supports expanded labels or an icon rail, preserving accessible names, selected state and tooltips. Collapse controls use the shared Button and explicit expanded state. Mobile navigation remains a Sheet with labels.
 
-Sidebar navigation aligns icons and labels to the left. The collapse control floats over the sidebar boundary, outside navigation flow, with a 16 px icon in a 32 px DS icon button. Tooltip triggers may override data-slot; navigation layout must target the semantic button element.
+Sidebar navigation aligns icons and labels to the left. The collapse control sits to the right of the logo when expanded and floats over the sidebar boundary only when collapsed, outside navigation flow, with a 16 px icon in a 32 px DS icon button. Tooltip triggers may override data-slot; navigation layout must target the semantic button element.
