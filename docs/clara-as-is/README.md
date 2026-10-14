@@ -534,13 +534,13 @@ My desired outcome is to complete eligible supplier payments with less active op
 
 | Opportunity and trigger | Evidence and confidence | User and business value to investigate | Scope and dependency |
 | --- | --- | --- | --- |
-| **O1 · Use the intended funds without managing a separate top-up task.** Trigger: a supplier needs payment and the money is at another bank. | Direct problem in the brief. Clara's public value proposition supports continuity in Accounts Payable. The demo establishes the payment entry point, not external initiation. | Reduce the work of organizing funding before paying; improve eligible payment completion through Clara. | Source choice, first connection, review and funding continuity for one Pix. Initiator, bank and PJ eligibility remain unverified. |
-| **O2 · Get the required decision without chasing or re-explaining the payment.** Trigger: a request is waiting for another person's authorization. | Approval configuration and pending tasks are observed/documented. Chasing, delays and their frequency are assumptions. Conta Simples and Ramp provide relevant workflow patterns. | Reduce coordination and improve the quality of approval decisions. | Decision context, named responsibility and a resumable approval request. Actual role overlap, escalation and notification needs require discovery. |
-| **O3 · Resolve an interrupted payment without losing context or paying twice.** Trigger: authorization stops, fails or returns an uncertain result. | Failure is required by the brief; statuses and failure causes are documented. Frequency and current recovery effort are unknown. Ramp and Wise provide bounded recovery/status references. | Reduce rework, duplicate attempts and avoidable support requests. | State-specific recovery and evidence of outcome. Depends on reliable status, reason codes, correlation and idempotency. |
+| **O1 · Use the intended funds without managing a separate top-up task.** Trigger: a supplier needs payment and the money is at another bank. | **A1:** preparatory funding is explicit in the brief; its effort is unmeasured. **A4/A6:** preserve validation and test review hierarchy. Clara's public value proposition supports continuity in Accounts Payable. The demo establishes the payment entry point, not external initiation. | Reduce the work of organizing funding before paying; improve eligible payment completion through Clara. | Source choice, first connection, review and funding continuity for one Pix. Initiator, bank and PJ eligibility remain unverified. |
+| **O2 · Get the required decision without chasing or re-explaining the payment.** Trigger: a request is waiting for another person's authorization. | **A3:** approval configuration and pending tasks are observed/documented. Chasing, delays and their frequency are assumptions. Conta Simples and Ramp provide relevant workflow patterns. | Reduce coordination and improve the quality of approval decisions. | Decision context, named responsibility and a resumable approval request. Actual role overlap, escalation and notification needs require discovery. |
+| **O3 · Resolve an interrupted payment without losing context or paying twice.** Trigger: authorization stops, fails or returns an uncertain result. | **A2/A5:** outcome labels and failure states exist; recovery details are not captured. Failure is required by the brief; statuses and failure causes are documented. Frequency and current recovery effort are unknown. Ramp and Wise provide bounded recovery/status references. | Reduce rework, duplicate attempts and avoidable support requests. | State-specific recovery and evidence of outcome. Depends on reliable status, reason codes, correlation and idempotency. |
 
 ### Why I select O1
 
-**I select O1: make external funding part of preparing a supplier payment in Clara.** It addresses the explicit obstacle in the brief and naturally includes first connection, consent, Pix and a failure. It gives me a focused decision to design well: which account will fund this payment, what the person is agreeing to, and how the task continues after authorization.
+**I select O1: prepare a supplier payment in Clara using funds held at an eligible external bank, without a separate manual top-up task.** It addresses the explicit obstacle in the brief and naturally includes first connection, consent, Pix and a failure. It gives me a focused decision to design well: which account will fund this payment, what the person is agreeing to, and how the task continues after authorization.
 
 | Selection criterion | O1 · funding continuity | O2 · decision coordination | O3 · recovery |
 | --- | --- | --- | --- |
@@ -553,9 +553,19 @@ This is a qualitative judgment, not a market-size estimate or a weighted score w
 
 For this case, O2 contributes the minimum company-approval state and O3 contributes the required recovery branch. I will not build a new approval engine, escalation system or exception center. Repeated suppliers and batch execution remain future extensions, outside this three-branch tree.
 
+> **My decision:** A1 is the explicit problem in the brief; A3 and A5 identify important controls and investigation gaps. I choose the funding task as the main slice because it connects the stated problem to a complete, bounded experience: prepare, review, obtain the required decisions, track and recover. This lets me show product reasoning, UX/UI, accessibility and service-state design without inventing a new approval operation. I am selecting a problem to address, not assuming the integration is already feasible.
+
+### Evidence behind the three branches
+
+| Branch | Audit → desk → need | Why it belongs in the tree |
+| --- | --- | --- |
+| O1 · Funding continuity | A1 establishes the preparation dependency. Mercury makes account identity visible; Wise separates funding and transfer progress. Need: use the intended funds while keeping the supplier task understandable. | Selected: directly answers the brief. Benchmark supports interaction questions, not external-payment feasibility. |
+| O2 · Decision coordination | A3 shows a queue and existing approval rules. Conta Simples and Ramp provide responsibility/history patterns. Need: know who must decide and with what context. | Keep the existing approval handoff in O1; broader coordination needs more evidence. |
+| O3 · Recovery | A2 differentiates outcomes through words; A5 leaves recovery unobserved. Cora/Nubank show explicit results; Ramp/Wise inform state and next-action questions. Need: know what happened before attempting recovery. | Keep one failure and one uncertain result in O1; an exception-management initiative would exceed the case. |
+
 ### Alternatives under O1
 
-**Service alternatives:** A pays the supplier directly from the external account; B initiates a top-up into Clara and then pays the supplier. Both require capability verification. B still has two money movements even if the interface keeps them in one payment task. A may remove the funding movement; neither alternative removes necessary bank authorization.
+**Service alternatives:** A is my preferred exploration: the eligible external account pays the supplier directly, removing the separate Clara top-up. B is a comparison: initiate a top-up into Clara and then pay the supplier. Both require capability verification. B still has two money movements even if the interface keeps them in one payment task. A may remove the funding movement; neither alternative removes necessary bank authorization.
 
 **Interaction alternatives:** compare a compact grouped form with a guided task that reveals external-source preparation when needed. Both keep the same recipient, amount, source information and approval policy. The choice of a wizard or dialog is a design decision to evaluate, not the opportunity itself. I will build one interaction direction in high fidelity and retain the other as a focused comparison.
 
@@ -611,6 +621,46 @@ I will keep data, service path and approval policy equivalent when comparing UI 
 **Later business metric:** unique eligible payment intents reaching authoritative supplier settlement divided by unique eligible intents started, within a defined observation window. Define eligibility before counting; retries remain the same intent. Segment first use versus repeat use and direct versus two-leg routes. Track active effort, end-to-end elapsed time, support demand and duplicate payments separately. I have no baseline for a numeric uplift target.
 
 The current prototype covers a fictional account and supplier. Its interaction log records events, not measured user comprehension or production settlement. Same-session close/resume is implemented; refresh and cross-device draft recovery remain engineering work. A pilot would require persistent request identity, authorization checks, status reconciliation and backend idempotency.
+
+## Proposed journey: one payment task, explicit service boundaries
+
+**Design intent:** start and track the supplier payment in Clara using money held at an eligible external bank. “No prefunding in Clara” does not mean “no funds required”: the source bank must be able to execute the payment. My proposal preserves the task across any required bank handoff.
+
+![Proposed journey · Preferred direct-payment exploration. Company approval and bank authorization remain separate; the bank experience is outside this proposal.](assets/proposed-payment-journey.svg)
+
+### Where Open Finance fits
+
+Payment initiation is the relevant Open Finance service: an initiator starts a payment debited at another institution. This is distinct from sharing balance or account data. A connection or permission to access data is not blanket payment authorization. The public framework supports this service concept; it does not establish Clara's eligibility, partner arrangement or support for these business accounts. [BCB: participant roles](https://www.bcb.gov.br/meubc/faqs/p/funcoes-das-instituicoes-participantes-do-open-finance), [BCB: Open Finance services and consent](https://www.bcb.gov.br/meubc/faqs/s/open-finance).
+
+For this exploration I assume a redirect to the account-holding bank when authorization is required. A no-redirection journey has its own account-linking and transaction requirements; it is not a shortcut I can claim by changing the UI. Business-account representation and any required bank signatories must be checked with the provider. [BCB: no-redirection framework, Instruction 759](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=759&tipo=Instru%C3%A7%C3%A3o+Normativa+BCB).
+
+### Journey to walk through before high fidelity
+
+| Moment and actor | Proposed experience in Clara | Service boundary / state | Audit and test |
+| --- | --- | --- | --- |
+| 1 · Requester starts | Start New payment, identify recipient and amount; choose the intended source without a separate funding errand. | Recipient validation and eligible source data must be available. Keep the draft if preparation is interrupted. | A1/A4 → H1/H4: correct source and recipient. |
+| 2 · Requester prepares an external source | Explain the purpose and identify the bank/account. Show connection preparation only when needed; retain payment details on return. | Provider-specific connection, consent and payment initiation are separate concerns. No credentials collected in Clara; no promise of a live balance without the relevant data access. | A1/A6 → H1/H2: why the handoff occurs and what it permits. |
+| 3 · Requester reviews | Group recipient, amount, debit account and direct money route; allow edits before requesting the required decision. | Material changes invalidate the previous review and may require new company approval or consent. | A4/A6 → H4: detect and correct a planted mismatch. |
+| 4 · Company approver decides | Preserve configured approval policy; show who acts next and whether the request is ready for bank authorization. | Internal approval does not establish bank authorization or settlement. Ordering and consent lifetime require integration validation. | A3 → H2: explain the action and next actor. |
+| 5 · Authorized bank representative authorizes | Name the destination and preserve a resumable request. On return, show the authoritative state. | Authentication, transaction authorization and bank signatories are controlled by the bank. A return URL is not proof of payment. | A1/A3/A5 → H2/H3: resume without assuming payment succeeded. |
+| 6 · Requester tracks the outcome | Distinguish processing, paid, definitive failure and unknown outcome. Show a receipt only after confirmed settlement; recovery preserves the request. | Check the same payment when unknown. Offer a retry only when the prior outcome and provider rules make it safe, with renewed approvals/authorization where required. | A2/A5 → H3: correct outcome and safe next action. |
+
+### Compare the money routes without hiding the difference
+
+| Route | Money movement | What the user gains / must understand |
+| --- | --- | --- |
+| A · Preferred, subject to eligibility | External bank → supplier | No prefunding in Clara. Clara organizes the task; the external bank debits the payment. |
+| B · Alternative to assess | External bank → Clara → supplier | The UI can connect the two legs, but the funding movement still exists. A successful top-up is not a paid supplier. If the second leg fails, show where the funds remain and the next valid action. |
+
+> **My reading:** continuity is the design promise I can explore. Removing the top-up is a service capability to verify. If the direct route is not supported, I must revise the proposal openly; I cannot silently substitute two transfers and claim the same outcome.
+
+### What the wireflow can establish
+
+**Iteration boundary:** the existing clickable wireflow starts with source connection, then asks for payment details. The journey above proposes starting from the payment intent and revealing source preparation in context. I will use that order as the next comparison, not describe the current wireflow as an implementation of every proposed step. Repeat-use connection skipping also needs an explicit variant. Approval, bank return, failure and unknown-result branches already provide a basis for the checks below.
+
+Walk through first use, a repeat payment with an already prepared source, interrupted authorization, and an unknown result. Record source comprehension, mismatch detection, the next actor, unnecessary re-entry and unsafe retries. Compare the earlier interaction with the revised one using the same task and route. Keep bank behavior as an explicit boundary, not a designed substitute for the bank's real screens.
+
+The wireflow tests whether people understand and can navigate the proposal. It cannot establish real bank compatibility, legal readiness, transfer timing or production settlement. Before high fidelity, resolve critical comprehension and recovery problems; before implementation, verify provider/PJ support, approval ordering, consent expiry, status reconciliation and idempotency. All sessions and outcomes are still to be recorded.
 
 ## Brazil constraints and feasible scope
 
@@ -685,6 +735,19 @@ I select O1: use the intended bank funds within the supplier-payment task. H1, H
 | **O2-H2 · decision context** | A contextual approval request provides enough information to decide without asking the requester to explain the payment again. | Give an approver representative requests; observe missing-information questions and source/amount comprehension. Missing essentials or obscured decisions challenge the hypothesis. |
 | **O3-H1 · outcome discrimination** | Distinguishing not authorized, confirmed failed and outcome unknown produces safer recovery choices than a generic error. | Test the states separately. Retrying an unknown result, treating an interrupted redirect as proof of no debit, or not finding the valid action challenges the hypothesis. |
 | **O3-H2 · remedy** | A supported failure reason with a specific remedy enables recovery while retaining correct information. | Test two provider-supported reason scenarios once available. An inappropriate remedy, repeated entry or reuse of invalid approval/consent challenges the hypothesis. |
+
+### Trace each hypothesis to evidence and a wireflow moment
+
+| Hypothesis | Audit origin | Benchmark mechanism to examine | Wireflow moment |
+| --- | --- | --- | --- |
+| O1-H1 | A1: separate funding task; A6: recognizable information | Mercury account identity; Wise funding semantics | Source choice and return from source preparation. |
+| O1-H2 | A3: approval policy; A2: distinct outcomes | Cora review/authentication separation; Mercury request-created vs Nubank payment-result | Review, company decision, bank handoff and result. |
+| O1-H4 | A4: existing inline validation; A6: hierarchy | Mercury field grouping; Nubank recipient review | Beneficiary lookup and pre-submission mismatch check. |
+| O1-H3 | A5: unobserved recovery; A2: outcome meaning | Ramp reasons/actions; Wise milestones | Interrupted authorization and unknown result. |
+| O2-H1 / O2-H2 | A3: queue visibility, missing decision-detail evidence | Ramp next-approver filters; Conta Simples history and decision context | Future coordination exploration; only the necessary approval handoff is in this wireflow. |
+| O3-H1 / O3-H2 | A2/A5: labels observed, recovery behavior unverified | Explicit Cora/Nubank results; provider-supported reasons | Future recovery exploration; one failure and uncertainty guardrail remain in O1. |
+
+These are evidence-linked design hypotheses, not established user pain or validated benchmark outcomes. A6 contributes shared hierarchy and accessibility criteria to every branch, rather than a separate redesign opportunity.
 
 O1-H2 tests comprehension at the selected payment's commitment boundaries; O2 tests coordination across people and requests. O1-H3 is the minimum safe failure branch; O3 would investigate a broader exception-resolution service. This distinction keeps the tree from turning into three overlapping delivery tracks.
 
