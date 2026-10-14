@@ -19,7 +19,8 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.tests.json",
     "verify": "npm run format:check && npm run typecheck && npm test && npm run build",
     "test:e2e": "playwright test",
-    "verify:full": "npm run verify && npm run test:e2e"
+    "verify:full": "npm run verify && npm run test:e2e",
+    "pretypecheck": "npm run sync:research && npm run ds:generate"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
