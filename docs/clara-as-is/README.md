@@ -511,98 +511,67 @@ In two days H1 tests the funding decision, H2 the meaning of commitment and H4 r
 
 Sources: [Mercury payment-link guide](https://support.mercury.com/hc/en-us/articles/44220096132116-How-to-create-and-send-a-payment-link-in-Mercury), [Nubank Pix guidance](https://blog.nubank.com.br/pix-tudo-sobre/), [Wise sending guide](https://wise.com/help/articles/2977959/how-do-i-send-money-with-wise), [Wise tracker](https://wise.com/help/articles/2452305/how-do-i-check-my-transfers-status), [Wise Platform status semantics](https://docs.wise.com/guides/product/send-money/tracking/transfer-statuses).
 
-## Opportunity defined by the brief
+## My direction
 
-> **Brief:** “Design how Clara could use Open Finance payment initiation so that a finance team can pay via Pix from Clara using the balance they hold at another bank, without leaving the flow.”
+The brief asks me to initiate a Pix from Clara using the balance held at another bank. I propose one continuous payment task: **external bank → supplier**, with the payment context preserved through preparation, approval and return.
 
-My task is to design and test how this works for the finance team. The money route is **external bank → supplier**, initiated from the Clara experience. This removes the separate prefunding task described in the brief.
+| What informed my choice | My design response |
+| --- | --- |
+| A1 · Funding Clara is a separate task in the brief. Mercury keeps account identity visible; Wise distinguishes funding from transfer progress. | Start with the supplier payment and choose its debit account in context. Prepare the account only when needed. |
+| A3 · Clara already has approval controls. Conta Simples distinguishes the requester from the approver. | Preserve company policy and name the next actor. Explain bank authorization at the point it is required. |
+| A4/A6 · Inline validation already helps; review hierarchy needs exploration. Nubank and Mercury emphasize payment details. | Group recipient, amount and source with adjacent editing. Compare a compact form with guided steps. |
+| A2/A5 · Outcomes differ, and recovery detail is still unobserved. Wise and Ramp provide useful status/action patterns. | Keep the request recognizable and offer recovery based on its confirmed state. |
 
-### What I want to improve
+> **My decision:** focus the design effort on continuity and informed action. I will preserve the existing controls while exploring clearer review, contextual guidance and recovery. The wireflow will help me decide which interaction structure supports this best.
 
-I want the manager to keep the supplier payment in context while choosing the debit account, checking the details and following the required decisions. My focus is on continuity, informed action and recovery across the journey.
+## Proposed flow
 
-“Without leaving the flow” is the experience requirement: preserve the payment intent, entered information and next action throughout. The authorization mechanism and any bank handoff must be verified with the initiation provider. If bank authorization requires a redirect, the return must restore the same payment and its next valid action.
+I start with recipient and amount, then reveal source preparation when needed. The existing wireflow starts with connection; this map defines the next iteration to compare. An eligible, already prepared account skips setup. Bank authorization remains provider-controlled.
 
-### How my audit informs the hypotheses
+**Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Open each diagram at full size to inspect its branches. Each stage also has a concise text description.
 
-| Audit evidence | Experience question within the brief | Hypothesis |
+### 1 · Prepare the payment and source
+
+![Userflow 1 · New payment → recipient and amount → eligible source → connection if needed → review. Side branches preserve input on invalid details, unsupported source or canceled connection.](assets/userflow-prepare.svg)
+
+**Actions:** New payment → enter Pix key and amount → find recipient → choose an eligible account → prepare the account if needed → review. Invalid details stay editable; an unavailable account or canceled connection returns to source selection with the payment draft intact.
+
+### 2 · Review and obtain the required decisions
+
+![Userflow 2 · Review → company approval → bank authorization → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
+
+**Actions:** review and edit → request company approval → authorized representative continues to the bank → return to check payment status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted bank return leads to a status check of the same payment.
+
+### 3 · Confirm the outcome or recover
+
+![Userflow 3 · Query the same payment: confirmed paid opens the receipt; processing or unknown stays checkable; confirmed failure allows only a provider-valid remedy and renewed review where needed.](assets/userflow-outcome.svg)
+
+**Outcomes:** confirmed paid → receipt; processing or unknown → check the same payment; definitive failure → show the reason and a supported remedy. A corrected request returns to review with renewed approvals where required. An unresolved outcome keeps repeat submission unavailable.
+
+> **Key decision:** retain the same payment identity through authorization and recovery. This is where continuity becomes both a usability and a duplicate-payment safeguard.
+
+## Hypotheses and validation
+
+I will compare interaction variants with the same recipient, amount, debit account and approval policy. These are planned formative checks; I will record participant roles and session count when they occur, or identify an expert walkthrough if recruitment is unavailable.
+
+| Hypothesis / flow moment | Task to test it | Revise the design if… |
 | --- | --- | --- |
-| A1 · Funding preparation comes before payment today | Can the person use the intended external balance as part of one payment task, without a manual Clara top-up? | H1 · source and task continuity |
-| A3 · Company approvals already exist; A2 · result words matter | Does the person understand connection, company approval, bank authorization and payment completion? | H2 · meaning of commitment |
-| A4 · Existing inline validation works; A6 · hierarchy needs evaluation | Can the person catch a wrong recipient, amount or source before commitment? | H4 · review correctness |
-| A5 · Recovery detail is unobserved; A2 · outcomes differ | Can the person resume an interruption and act safely when the outcome is unknown? | H3 · recovery and state comprehension |
+| **H1 · Source choice:** keeping the named account in payment context improves source selection. | Ask for a payment from Bank A while Bank B is also available; ask which account will be debited. | The person chooses the wrong source, expects a Clara top-up or leaves the task to identify the account. |
+| **H4 · Review:** grouping recipient, amount and source with adjacent editing helps catch mistakes. | Place one mismatch in the review; observe detection and correction. Reverse variant order where feasible. | They miss the mismatch, skip review or introduce another error while correcting it. |
+| **H2 · Commitment:** explicit actions clarify company approval, bank authorization and payment completion. | At approval and bank handoff, ask what the action permits and who acts next. | Connection is understood as blanket permission, or approval as payment already sent. |
+| **H3 · Recovery:** retaining the request and state-valid actions supports safe resumption. | Interrupt authorization; separately show an unknown outcome. Observe the next action. | They lose context, re-enter valid data or attempt another payment while the outcome is unknown. |
 
-The audit guides what I preserve, investigate and test across preparation, approvals and recovery.
+### What determines the next iteration
 
-### Alternatives I will explore
+**Experience measure:** active handling time for an equivalent, correctly completed task, with passive waiting recorded separately. Record errors, help and unnecessary navigation alongside completion; include failed and abandoned tasks in the findings.
 
-| Interaction decision | Variants within the same payment service | Evidence to decide |
-| --- | --- | --- |
-| Task structure | Compact grouped form versus guided steps | Correct completion, active effort, reorientation and assistance. |
-| Source preparation | Payment context visible before first connection versus source preparation first | Understanding of purpose, retained context and correct source identification. |
-| Review hierarchy | Compact summary versus grouped recipient / amount / source with adjacent editing | Mismatches detected, omissions and correction effort. |
-| Feedback and return | Concise next-action guidance and visible retained context | Correct next actor, understanding of outcome and safe recovery. |
+**Critical issues:** wrong source, missed payment details, approval mistaken for settlement, an unsafe repeat submission or an inaccessible essential action require revision before consolidating the flow.
 
-Keep recipient, amount, bank, approval policy and money route equivalent in comparisons. Test first use, repeat use, failure and unknown outcomes within that same service.
+**Later business check:** in a pilot, track unique eligible payment intents reaching confirmed settlement divided by eligible intents started, within a defined window. Retries remain the same intent; segment first and repeat use. A baseline is needed before setting an uplift target.
 
-> **My decision:** the opportunity comes from the brief. My contribution is to turn it into a coherent payment experience, justify the interaction choices with the audit and benchmark, and test whether people understand and can complete the task.
-
-### Service boundaries
-
-Clara can organize preparation, review, company controls and tracking. Initiator eligibility, supported business accounts, consent, bank signatories, authorization, status reconciliation and idempotency require provider validation. The wireflow evaluates comprehension; provider validation establishes the implementation requirements.
-
-## Experiment plan for the brief-defined experience
-
-I will run the tasks below, record observed issues and revise the flow before consolidating the design. Results will include participant roles and actual session count; if recruitment is unavailable, I will report an expert walkthrough and keep the user hypotheses open.
-
-### Tasks to run
-
-| Task | Observe before asking follow-up questions | Hypothesis and decision |
-| --- | --- | --- |
-| Prepare one supplier payment using Bank A, with Bank B also available. | Source choice, extra navigation, repeated information and active time. Then ask which account will be debited and what happens to the funds. | H1: revise if source or route is misunderstood. |
-| Review a request containing one mismatch against the task information. | Whether the mismatch is caught and corrected before commitment; do not tell the person where it is. | H4: compare equivalent proposal variants; reverse order where feasible to reduce learning effects. |
-| Request the required decision and continue toward bank authorization. | Whether the action's consequence is understood. Then ask who acts next and whether the supplier is paid. | H2: revise confident misinterpretations of permission or settlement. |
-| Return after interrupted authorization; separately inspect an unknown result. | State interpretation, fields re-entered, chosen recovery action and attempted new submission. | H3: any unsafe retry or loss of required context blocks consolidation. |
-
-I will keep data, service path and approval policy equivalent when comparing UI variants. The external-bank-to-supplier route stays fixed; alternatives concern interaction and information hierarchy. A demonstration of a simulated bank cannot measure real bank waiting or authentication effort.
-
-### How I will decide what to change
-
-**Primary experience measure:** active handling time for an equivalent, correctly completed task. Start when work on the intended payment begins, include preparatory funding and retries, and record passive waiting separately. Report individual observations and, when useful, the median; show failed and abandoned tasks alongside successful ones so a faster average cannot hide failures. A comparison with the existing operation requires observing it or explicitly labeling a reconstruction.
-
-**Comprehension and safety checks:** correct source, detected mismatch, understood commitment, correct next actor, and safe recovery. Record assistance and unnecessary navigation. A confident wrong-source or approval-as-settlement interpretation, unsafe repeat submission or inaccessible essential action is a critical issue to revise and recheck. Fewer clicks or faster completion do not compensate for these errors.
-
-**Later business metric:** unique eligible payment intents reaching authoritative supplier settlement divided by unique eligible intents started, within a defined observation window. Define eligibility before counting; retries remain the same intent. Segment first use versus repeat use and eligible source institutions. Track active effort, end-to-end elapsed time, support demand and duplicate payments separately. I have no baseline for a numeric uplift target.
+The next step is the clickable wireflow: compare source-first and payment-first entry, then explore review and recovery. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
 
 
-## Proposed journey: one payment task, explicit service boundaries
-
-**Design intent:** pay the supplier from an eligible external account, starting and tracking the task in Clara. Keep recipient, amount and debit account recognizable across preparation, decisions and return. The source account needs sufficient funds and valid authorization.
-
-![Proposed journey · Direct payment specified by the brief. Company approval and bank authorization remain separate; the bank experience is outside this proposal.](assets/proposed-payment-journey.svg)
-
-### Where Open Finance fits
-
-Payment initiation is the relevant Open Finance service: an initiator starts a payment debited at another institution. This is distinct from sharing balance or account data. A connection or permission to access data is not blanket payment authorization. The public framework supports this service concept; it does not establish Clara's eligibility, partner arrangement or support for these business accounts. [BCB: participant roles](https://www.bcb.gov.br/meubc/faqs/p/funcoes-das-instituicoes-participantes-do-open-finance), [BCB: Open Finance services and consent](https://www.bcb.gov.br/meubc/faqs/s/open-finance).
-
-For this exploration I assume a redirect to the account-holding bank when authorization is required. A no-redirection journey has its own account-linking and transaction requirements; it requires provider validation. Business-account representation and any required bank signatories must be checked with the provider. [BCB: no-redirection framework, Instruction 759](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=759&tipo=Instru%C3%A7%C3%A3o+Normativa+BCB).
-
-### Journey to walk through before high fidelity
-
-| Moment and actor | Proposed experience in Clara | Service boundary / state | Audit and test |
-| --- | --- | --- | --- |
-| 1 · Requester starts | Start New payment, identify recipient and amount; choose the intended source without a separate funding errand. | Recipient validation and eligible source data must be available. Keep the draft if preparation is interrupted. | A1/A4 → H1/H4: correct source and recipient. |
-| 2 · Requester prepares an external source | Explain the purpose and identify the bank/account. Show connection preparation only when needed; retain payment details on return. | Provider-specific connection, consent and payment initiation are separate concerns. No credentials collected in Clara; no promise of a live balance without the relevant data access. | A1/A6 → H1/H2: why the handoff occurs and what it permits. |
-| 3 · Requester reviews | Group recipient, amount, debit account and direct money route; allow edits before requesting the required decision. | Material changes invalidate the previous review and may require new company approval or consent. | A4/A6 → H4: detect and correct a planted mismatch. |
-| 4 · Company approver decides | Preserve configured approval policy; show who acts next and whether the request is ready for bank authorization. | Internal approval does not establish bank authorization or settlement. Ordering and consent lifetime require integration validation. | A3 → H2: explain the action and next actor. |
-| 5 · Authorized bank representative authorizes | Name the destination and preserve a resumable request. On return, show the authoritative state. | Authentication, transaction authorization and bank signatories are controlled by the bank. A return URL is not proof of payment. | A1/A3/A5 → H2/H3: resume without assuming payment succeeded. |
-| 6 · Requester tracks the outcome | Distinguish processing, paid, definitive failure and unknown outcome. Show a receipt only after confirmed settlement; recovery preserves the request. | Check the same payment when unknown. Offer a retry only when the prior outcome and provider rules make it safe, with renewed approvals/authorization where required. | A2/A5 → H3: correct outcome and safe next action. |
-
-### Next iteration
-
-The clickable wireflow currently starts with source connection. My next iteration starts with recipient and amount, then reveals account preparation when needed. I will compare these orders with the same task and add a repeat-use variant that skips valid setup.
-
-Before high fidelity, I will resolve comprehension and recovery issues using the tasks in Hypotheses and tests. Provider validation must establish business-account support, approval ordering, consent expiry and status reconciliation before implementation.
 
 ## Visual and interaction direction
 
@@ -672,31 +641,6 @@ On repeat use, recognize a source that is still eligible and prepared; do not as
 
 I will document accessibility checks as I run them. I will record the browser, assistive technology where used, task, issue and correction. An expert walkthrough is useful when recruitment is limited, but does not replace sessions with disabled users.
 
-## Userflow: actions, decisions and recovery
-
-This map describes the proposed interaction to implement and test. It follows one service: **external bank → supplier**, initiated in Clara. The bank boundary is explicit. The current clickable wireflow remains the earlier source-first iteration; this map defines the payment-intent-first revision.
-
-**Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Open each diagram at full size to inspect its branches. Each stage also has a concise text description.
-
-### 1 · Prepare the payment and source
-
-![Userflow 1 · New payment → recipient and amount → eligible source → connection if needed → review. Side branches preserve input on invalid details, unsupported source or canceled connection.](assets/userflow-prepare.svg)
-
-**Actions:** New payment → enter Pix key and amount → find recipient → choose an eligible account → prepare the account if needed → review. Invalid details stay editable; an unavailable account or canceled connection returns to source selection with the payment draft intact.
-
-### 2 · Review and obtain the required decisions
-
-![Userflow 2 · Review → company approval → bank authorization → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
-
-**Actions:** review and edit → request company approval → authorized representative continues to the bank → return to check payment status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted bank return leads to a status check of the same payment.
-
-### 3 · Confirm the outcome or recover
-
-![Userflow 3 · Query the same payment: confirmed paid opens the receipt; processing or unknown stays checkable; confirmed failure allows only a provider-valid remedy and renewed review where needed.](assets/userflow-outcome.svg)
-
-**Outcomes:** confirmed paid → receipt; processing or unknown → check the same payment; definitive failure → show the reason and a supported remedy. A corrected request returns to review with renewed approvals where required. An unresolved outcome keeps repeat submission unavailable.
-
-> **Key decision:** retain the same payment identity through authorization and recovery. This is where continuity becomes both a usability and a duplicate-payment safeguard.
 
 ## Brazil constraints and feasible scope
 
@@ -749,17 +693,6 @@ For Clara, the candidate value is easier completion of eligible supplier operati
 **Business job:** Make eligible supplier operations easier to complete and track within Clara's Accounts Payable workflow. I would evaluate completion and repeat use in a pilot, against an established baseline.
 
 The finance manager is the focal role. Internal and bank authorization responsibilities may be held by different people; I keep the handoff explicit and verify the actual role model before implementation.
-
-## Experience hypotheses for the brief
-
-I will test four aspects of the payment experience: choosing the source, understanding the action, checking the details and recovering after interruption.
-
-| Hypothesis | Expected improvement | Revise if… |
-| --- | --- | --- |
-| **H1 · Choose the source** | Showing the bank and account in payment context helps the manager select and identify the intended debit account. | They choose the wrong account, expect a Clara top-up or leave the task to identify the source. |
-| **H2 · Understand the action** | Explicit action labels help distinguish company approval, bank authorization and completed payment. | They interpret connection as blanket permission or approval as money already sent. |
-| **H4 · Catch incorrect details** | Grouping recipient, amount and source with adjacent editing helps the manager detect and correct a mismatch before submitting. | They miss the mismatch, skip review or introduce another error while correcting it. |
-| **H3 · Recover safely** | Retaining the request and showing state-valid actions helps the manager resume after interruption. | They re-enter valid information, lose the request or attempt another payment while its outcome is unknown. |
 
 
 ## Design and engineering contributions
