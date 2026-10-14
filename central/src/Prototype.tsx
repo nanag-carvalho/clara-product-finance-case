@@ -1147,7 +1147,7 @@ export default function Prototype({
           advanceSetup={advanceSetup}
         />
         <Sheet open={mobile} onOpenChange={setMobile}>
-          <SheetContent side="left">
+          <SheetContent side="left" className="proto-mobile-navigation">
             <SheetTitle className="sr-only">Product navigation</SheetTitle>
             <SheetDescription className="sr-only">
               Finance workspace sections

@@ -227,6 +227,27 @@ test('mobile filters and selection remain usable without horizontal overflow', a
     testInfo.project.name !== 'mobile',
     'Mobile-specific interaction layout',
   )
+  await page.goto('/prototype.html')
+  await page.getByRole('button', { name: 'Open product navigation' }).click()
+  const navigation = page.getByRole('dialog', {
+    name: 'Product navigation',
+    exact: true,
+  })
+  await navigation
+    .getByRole('button', { name: 'Digital account', exact: true })
+    .click()
+  await expect(navigation).toBeVisible()
+  await expect(
+    navigation.getByRole('button', { name: /Connected banks/ }),
+  ).toBeVisible()
+  await navigation
+    .getByRole('button', { name: 'Accounts payable', exact: true })
+    .click()
+  const paymentsLink = navigation.getByRole('button', { name: /^Payments/ })
+  const bounds = await paymentsLink.boundingBox()
+  expect(bounds?.height).toBeGreaterThanOrEqual(44)
+  await paymentsLink.click()
+  await expect(navigation).not.toBeVisible()
   await populated(page)
   await page.getByRole('button', { name: 'Filters', exact: true }).click()
   await expect(

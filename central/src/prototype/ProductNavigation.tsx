@@ -106,14 +106,9 @@ export function ProductNavigation({
                 aria-expanded={openNavGroup === group.label}
                 onClick={() => {
                   if (collapsed && !mobile) setCollapsed(false)
-                  const firstAvailable = group.items.find((item) => item.id)
-                  if (firstAvailable?.id) {
-                    setOpenNavGroup(group.label)
-                    navigate(firstAvailable.id)
-                  } else
-                    setOpenNavGroup((current) =>
-                      current === group.label ? '' : group.label,
-                    )
+                  setOpenNavGroup((current) =>
+                    current === group.label ? '' : group.label,
+                  )
                 }}
               >
                 <group.icon size={16} />
