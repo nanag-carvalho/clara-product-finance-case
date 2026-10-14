@@ -83,7 +83,7 @@ export default function Solution({
         </p>
         <Button variant="link" asChild>
           <a
-            href="/prototype.html?scenario=first"
+            href="/prototype.html?scenario=first&step=connection"
             target="_blank"
             rel="noreferrer"
           >

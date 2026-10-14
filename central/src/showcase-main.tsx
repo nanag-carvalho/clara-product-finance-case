@@ -28,6 +28,21 @@ function Showcase() {
   const [active, setActive] = useState('')
   const [image, setImage] = useState<{ file: string; alt: string } | null>(null)
   useEffect(() => {
+    let canceled = false
+    const target = window.location.hash.slice(1)
+    if (target)
+      void document.fonts.ready.then(() => {
+        if (!canceled)
+          document
+            .getElementById(target)
+            ?.scrollIntoView({ behavior: 'instant', block: 'start' })
+      })
+    return () => {
+      canceled = true
+    }
+  }, [])
+
+  useEffect(() => {
     let frame = 0
     const sections = Array.from(
       document.querySelectorAll<HTMLElement>('.story-chapters section'),
@@ -84,6 +99,18 @@ function Showcase() {
             <a
               key={id}
               href={`#story-${id}`}
+              onClick={async (event) => {
+                event.preventDefault()
+                await document.fonts.ready
+                history.replaceState(null, '', `#story-${id}`)
+                document.getElementById(`story-${id}`)?.scrollIntoView({
+                  behavior: matchMedia('(prefers-reduced-motion: reduce)')
+                    .matches
+                    ? 'instant'
+                    : 'smooth',
+                  block: 'start',
+                })
+              }}
               aria-current={active === `story-${id}` ? 'location' : undefined}
             >
               {label}

@@ -6,6 +6,7 @@ import {
 } from '@phosphor-icons/react'
 import { Button } from '@/design-system'
 import ResearchMarkdown from './ResearchMarkdown'
+import { caseImageDimensions } from './data/case-images'
 import './case-story.css'
 import {
   BusinessRationale,
@@ -117,6 +118,7 @@ export default function CaseStory({
           >
             <img
               src="/proposal/overview.png"
+              {...caseImageDimensions['/proposal/overview.png']}
               alt="Clara accounts payable overview with actionable payment queues"
             />
           </button>
@@ -329,6 +331,9 @@ export default function CaseStory({
                         >
                           <img
                             src={`/proposal/${decision.image}.png`}
+                            {...caseImageDimensions[
+                              `/proposal/${decision.image}.png`
+                            ]}
                             alt={decision.title}
                             loading="lazy"
                           />
@@ -386,24 +391,15 @@ export default function CaseStory({
               <section id="story-validation" tabIndex={-1}>
                 <p className="eyebrow">09 · VALIDATION AND NEXT STEPS</p>
                 <div className="showcase-chapter-heading">
-                  <h2>
-                    The journey is testable. Its impact still needs people.
-                  </h2>
+                  <h2>I followed the payment beyond the happy path.</h2>
                   <p>
-                    Building the journey made it possible to check whether the
-                    interactions behaved as intended, including approval,
-                    recovery and mobile controls. My next step would be to watch
-                    finance users complete the same tasks and understand where
-                    the experience still asks them to stop and think.
+                    Once the main journey worked, I explored the moments that
+                    could leave the finance team unsure: a rejection, an
+                    interrupted confirmation or an unknown result. The same job
+                    still matters—pay the supplier, preserve the work and know
+                    what happened.
                   </p>
                 </div>
-
-                <p className="showcase-editorial-note">
-                  I would compare active handling time for the same correctly
-                  completed task, alongside errors and unnecessary switching.
-                  Passive waiting would be recorded separately. These outcomes
-                  have not been measured with users yet.
-                </p>
                 <EvaluationGuide />
                 <details className="story-boundaries">
                   <summary>Scope and production dependencies</summary>

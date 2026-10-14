@@ -115,3 +115,75 @@ test('showcase reuses its hub tab without replacing the presentation', async ({
   await expect(page).toHaveURL(/showcase.html$/)
   await hub.close()
 })
+
+test('chapter navigation stays aligned when evidence images arrive late', async ({
+  page,
+}) => {
+  let releaseImages!: () => void
+  const imagesReady = new Promise<void>((resolve) => {
+    releaseImages = resolve
+  })
+  await page.route('**/*.png', async (route) => {
+    await imagesReady
+    await route.continue()
+  })
+  await page.goto('/showcase.html', { waitUntil: 'domcontentloaded' })
+  await page.getByRole('link', { name: 'Making it work', exact: true }).click()
+  releaseImages()
+  await page.waitForLoadState('networkidle')
+  await expect(page.locator('#story-foundation')).toBeInViewport()
+  await expect(
+    page.getByRole('link', { name: 'Making it work', exact: true }),
+  ).toHaveAttribute('aria-current', 'location')
+})
+
+test('case links open first connection and the scenario explorer in the prototype', async ({
+  page,
+  context,
+}) => {
+  await page.goto('/showcase.html#story-experience')
+  const opened = context.waitForEvent('page')
+  await page
+    .getByRole('link', { name: 'Try first connection', exact: true })
+    .click()
+  const prototype = await opened
+  await expect(
+    prototype.getByRole('heading', {
+      name: 'Which account will fund this Pix?',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await prototype
+    .getByRole('button', { name: 'Connect Example Bank A', exact: true })
+    .click()
+  await prototype
+    .getByRole('button', {
+      name: 'Continue after bank confirmation',
+      exact: true,
+    })
+    .click()
+  await prototype
+    .getByRole('button', { name: 'Confirm with device', exact: true })
+    .click()
+  await expect(
+    prototype.getByRole('heading', { name: 'Review the payment', exact: true }),
+  ).toBeVisible()
+  await page.bringToFront()
+  await page
+    .getByRole('link', { name: 'Explore the 12 scenarios', exact: true })
+    .click()
+  await expect(
+    prototype.getByRole('heading', {
+      name: 'Explore the prototype',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await prototype.keyboard.press('Escape')
+  await expect(
+    prototype.getByRole('button', {
+      name: 'Explore prototype scenarios',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await prototype.close()
+})

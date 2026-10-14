@@ -790,6 +790,35 @@ The DS is shared source within this repository, imported through its public Type
 
 Type checks, registry checks and builds verify covered code and DS constraints. Browser tests exercise selected interactions; domain tests cover rules such as permissions and uncertain outcomes. These checks support regression detection. They do not prove usability, accessibility conformance or production readiness, and visual review found problems that passed the automated suite.
 
+### Scenario coverage: what a reviewer can inspect
+
+The prototype contains **12 named scenarios**, connected to **4 experience hypotheses**, across preparation, company decisions, authorization, outcomes and recovery. The case has four complementary surfaces: the visual showcase, detailed hub, interactive prototype and live DS catalog. They let a reviewer inspect the reasoning, behavior and implementation at different depths.
+
+[Open the scenario explorer](/prototype.html?explore=scenarios). The floating **Scenarios** button in the prototype reopens it at any time. Each scenario loads a saved state and names the hypothesis and behavior to observe. Empty/populated workspace controls and the Pix Copia e Cola example support further exploration; they are not counted as additional financial scenarios.
+
+| Situation | User job and risk | Behavior to inspect | Hypothesis / measure to observe |
+| --- | --- | --- | --- |
+| First connection | Prepare a source while keeping the supplier request | Choose an unconnected bank, confirm connection and return to review | H1 · source-choice accuracy; retained details |
+| Connected account | Prepare a repeat supplier payment | Recognize the available source and review recipient/amount | H1/H4 · source and review accuracy |
+| Company approval pending | Know who must make the company decision | Review the request without interpreting approval as money moved | H2 · correctly identify next actor and state |
+| Approved, awaiting authorization | Release an approved payment | Complete payment-specific device confirmation | H2 · distinguish approval from authorization |
+| Completed payment | Verify the supplier payment outcome | Find confirmation, details and history | H2 · outcome comprehension |
+| Rejected request | Correct the issue without repeating preparation | Find the reason, edit saved details and request review again | H3/H4 · recovery completion and correction errors |
+| Canceled device confirmation | Resume interrupted authorization | Keep the request and existing approval | H3 · recovery without duplicate requests |
+| Expired connection | Restore the funding source | Reconnect without losing payment context | H1/H3 · retained details and successful resumption |
+| Insufficient funds | Resolve a source-balance problem | Read the cause and review another source | H3 · correct recovery choice |
+| Bank limit exceeded | Distinguish a limit from a balance problem | Recognize the specific cause before retrying | H3 · error comprehension |
+| Confirmed service failure | Recover when no transfer completed | Use the explicit retry route | H3 · recovery completion without unnecessary recreation |
+| Unknown payment result | Avoid paying twice while awaiting confirmation | Check the existing request before another attempt | H2/H3 · duplicate attempts and state comprehension |
+
+Across tasks, I would measure **active handling time for a correctly completed task**, record passive waiting separately and note errors, unnecessary switching and lost context. The brief motivates reducing preparation effort; these scenarios make that hypothesis testable, but do not establish a measured reduction.
+
+### Automated coverage and participant evaluation
+
+There are **39 domain/registry tests** and **14 browser test cases**. The browser suite executes applicable cases on desktop and mobile, totaling **27 runs**, with one mobile-only case skipped on desktop. It covers payment entry through approval and authorization, individual/bulk decisions, correction, unknown-result recovery, mobile filters/selection, showcase navigation, live DS controls, image inspection, destination-tab reuse and first-connection/scenario links.
+
+The 12 product scenarios are not 12 automated end-to-end tests: some are inspectable demo states, while the browser suite covers selected journeys and regressions. Automated checks verify expected transitions and interactions. Participant sessions would evaluate comprehension, effort and recovery in the finance user’s actual context. I would ask the finance manager to prepare and track a supplier payment, and the assigned approver to review the company decision, using the same tasks and success criteria across variants.
+
 ## Prototype implementation and comparison
 
 ### What the prototype demonstrates

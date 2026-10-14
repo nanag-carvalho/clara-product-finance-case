@@ -360,7 +360,21 @@ export default function Prototype({
       'scenario',
     )
     const option = scenarioOptions.find((item) => item.id === scenarioId)
-    if (option) launchScenario(option)
+    if (option) {
+      launchScenario(option)
+      // Connection deep links prepare the same fictional draft through normal rules.
+      if (
+        option.id === 'first' &&
+        new URLSearchParams(window.location.search).get('step') === 'connection'
+      ) {
+        send({ type: 'LOOKUP' })
+        send({ type: 'REVIEW' })
+      }
+    } else if (
+      new URLSearchParams(window.location.search).get('explore') === 'scenarios'
+    ) {
+      setControls(true)
+    }
   }, [])
   const payFrom = (bank: string) => {
     setView('payments')

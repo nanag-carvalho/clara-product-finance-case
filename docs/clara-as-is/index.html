@@ -1021,6 +1021,97 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <p>The DS is shared source within this repository, imported through its public TypeScript API. The generated manifest and registry expose its contract and installation metadata; they are not a remote banking service. <a href="https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/ARCHITECTURE_DECISIONS.md">Architecture decisions</a> explain the implementation tradeoffs. Local deployment copies, dependencies and QA captures stay outside Git; the repository keeps source, evidence and reproducible checks.</p>
 <h3 id="what-the-checks-establish">What the checks establish</h3>
 <p>Type checks, registry checks and builds verify covered code and DS constraints. Browser tests exercise selected interactions; domain tests cover rules such as permissions and uncertain outcomes. These checks support regression detection. They do not prove usability, accessibility conformance or production readiness, and visual review found problems that passed the automated suite.</p>
+<h3 id="scenario-coverage-what-a-reviewer-can-inspect">Scenario coverage: what a reviewer can inspect</h3>
+<p>The prototype contains <strong>12 named scenarios</strong>, connected to <strong>4 experience hypotheses</strong>, across preparation, company decisions, authorization, outcomes and recovery. The case has four complementary surfaces: the visual showcase, detailed hub, interactive prototype and live DS catalog. They let a reviewer inspect the reasoning, behavior and implementation at different depths.</p>
+<p><a href="/prototype.html?explore=scenarios">Open the scenario explorer</a>. The floating <strong>Scenarios</strong> button in the prototype reopens it at any time. Each scenario loads a saved state and names the hypothesis and behavior to observe. Empty/populated workspace controls and the Pix Copia e Cola example support further exploration; they are not counted as additional financial scenarios.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>User job and risk</th>
+<th>Behavior to inspect</th>
+<th>Hypothesis / measure to observe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First connection</td>
+<td>Prepare a source while keeping the supplier request</td>
+<td>Choose an unconnected bank, confirm connection and return to review</td>
+<td>H1 · source-choice accuracy; retained details</td>
+</tr>
+<tr>
+<td>Connected account</td>
+<td>Prepare a repeat supplier payment</td>
+<td>Recognize the available source and review recipient/amount</td>
+<td>H1/H4 · source and review accuracy</td>
+</tr>
+<tr>
+<td>Company approval pending</td>
+<td>Know who must make the company decision</td>
+<td>Review the request without interpreting approval as money moved</td>
+<td>H2 · correctly identify next actor and state</td>
+</tr>
+<tr>
+<td>Approved, awaiting authorization</td>
+<td>Release an approved payment</td>
+<td>Complete payment-specific device confirmation</td>
+<td>H2 · distinguish approval from authorization</td>
+</tr>
+<tr>
+<td>Completed payment</td>
+<td>Verify the supplier payment outcome</td>
+<td>Find confirmation, details and history</td>
+<td>H2 · outcome comprehension</td>
+</tr>
+<tr>
+<td>Rejected request</td>
+<td>Correct the issue without repeating preparation</td>
+<td>Find the reason, edit saved details and request review again</td>
+<td>H3/H4 · recovery completion and correction errors</td>
+</tr>
+<tr>
+<td>Canceled device confirmation</td>
+<td>Resume interrupted authorization</td>
+<td>Keep the request and existing approval</td>
+<td>H3 · recovery without duplicate requests</td>
+</tr>
+<tr>
+<td>Expired connection</td>
+<td>Restore the funding source</td>
+<td>Reconnect without losing payment context</td>
+<td>H1/H3 · retained details and successful resumption</td>
+</tr>
+<tr>
+<td>Insufficient funds</td>
+<td>Resolve a source-balance problem</td>
+<td>Read the cause and review another source</td>
+<td>H3 · correct recovery choice</td>
+</tr>
+<tr>
+<td>Bank limit exceeded</td>
+<td>Distinguish a limit from a balance problem</td>
+<td>Recognize the specific cause before retrying</td>
+<td>H3 · error comprehension</td>
+</tr>
+<tr>
+<td>Confirmed service failure</td>
+<td>Recover when no transfer completed</td>
+<td>Use the explicit retry route</td>
+<td>H3 · recovery completion without unnecessary recreation</td>
+</tr>
+<tr>
+<td>Unknown payment result</td>
+<td>Avoid paying twice while awaiting confirmation</td>
+<td>Check the existing request before another attempt</td>
+<td>H2/H3 · duplicate attempts and state comprehension</td>
+</tr>
+</tbody>
+</table>
+<p>Across tasks, I would measure <strong>active handling time for a correctly completed task</strong>, record passive waiting separately and note errors, unnecessary switching and lost context. The brief motivates reducing preparation effort; these scenarios make that hypothesis testable, but do not establish a measured reduction.</p>
+<h3 id="automated-coverage-and-participant-evaluation">Automated coverage and participant evaluation</h3>
+<p>There are <strong>39 domain/registry tests</strong> and <strong>14 browser test cases</strong>. The browser suite executes applicable cases on desktop and mobile, totaling <strong>27 runs</strong>, with one mobile-only case skipped on desktop. It covers payment entry through approval and authorization, individual/bulk decisions, correction, unknown-result recovery, mobile filters/selection, showcase navigation, live DS controls, image inspection, destination-tab reuse and first-connection/scenario links.</p>
+<p>The 12 product scenarios are not 12 automated end-to-end tests: some are inspectable demo states, while the browser suite covers selected journeys and regressions. Automated checks verify expected transitions and interactions. Participant sessions would evaluate comprehension, effort and recovery in the finance user’s actual context. I would ask the finance manager to prepare and track a supplier payment, and the assigned approver to review the company decision, using the same tasks and success criteria across variants.</p>
 <h2 id="prototype-implementation-and-comparison">Prototype implementation and comparison</h2>
 <h3 id="what-the-prototype-demonstrates">What the prototype demonstrates</h3>
 <p>The proposed Overview and Payments sit under Accounts payable. Connected banks sits under Digital account. Existing Inbox and unrelated modules remain visible as context. Approval review is reached from payment queues; individual requests carry their progress and history.</p>

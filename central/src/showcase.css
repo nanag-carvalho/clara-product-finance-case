@@ -1436,6 +1436,8 @@
   .story-decision-visual {
   margin: 0;
   min-width: 0;
+  grid-column: auto;
+  grid-row: auto;
 }
 .showcase-screen-scroll {
   max-height: 380px;
@@ -1636,4 +1638,118 @@
 .showcase-image-caption:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
+}
+
+/* One payment branches into expected states and recovery; counts explain scope. */
+.showcase-coverage-panel {
+  margin-block: 24px;
+}
+.showcase-coverage-heading {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.showcase-coverage-heading > span {
+  color: var(--primary);
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1;
+}
+.showcase-shell .showcase-coverage-heading h4 {
+  font-size: 20px;
+  margin: 0;
+}
+.showcase-shell .showcase-coverage-heading p {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+.showcase-coverage-path {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 16px;
+  margin-block: 24px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--primary);
+  font-size: 14px;
+}
+.showcase-scenario-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 24px;
+}
+.showcase-scenario-branches > div {
+  padding-left: 16px;
+  border-left: 2px solid var(--primary);
+}
+.showcase-scenario-branches > div:last-child {
+  border-color: var(--muted-foreground);
+}
+.showcase-scenario-branches h4 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.showcase-shell .showcase-scenario-branches p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.showcase-scenario-branches ul {
+  padding-left: 16px;
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 14px;
+  line-height: 1.8;
+  list-style: disc;
+}
+.showcase-check-summary {
+  margin-block: 32px;
+  padding-left: 20px;
+  border-left: 2px solid var(--border);
+}
+.showcase-check-summary h4 {
+  margin: 0 0 12px;
+}
+@media (max-width: 650px) {
+  .showcase-scenario-branches {
+    grid-template-columns: 1fr;
+  }
+  .showcase-coverage-heading {
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .showcase-coverage-heading > span {
+    font-size: 48px;
+  }
+}
+
+.showcase-explore-instructions {
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.showcase-explore-instructions h4 {
+  margin: 0 0 12px;
+}
+.showcase-explore-instructions ol {
+  list-style: decimal;
+  padding-left: 20px;
+  margin: 0 0 20px;
+  line-height: 1.7;
+}
+.showcase-explore-instructions li {
+  padding-left: 4px;
+  margin-block: 6px;
+}
+
+.showcase-shell .showcase-evaluation > p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-block: 24px;
 }

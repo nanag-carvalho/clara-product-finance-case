@@ -10,6 +10,7 @@ import {
   TableCell,
 } from '@/design-system'
 import ReactMarkdown from 'react-markdown'
+import { caseImageDimensions } from './data/case-images'
 import remarkGfm from 'remark-gfm'
 import { ArrowUpRight, ArrowSquareOut, Lightbulb } from '@phosphor-icons/react'
 
@@ -71,7 +72,12 @@ export default function ResearchMarkdown({
                   <image href={url} width={size[0]} height={size[1]} />
                 </svg>
               ) : (
-                <img src={url} alt={alt || ''} loading="lazy" />
+                <img
+                  src={url}
+                  alt={alt || ''}
+                  loading="lazy"
+                  {...caseImageDimensions[url]}
+                />
               )}
               <span>
                 {alt} <ArrowUpRight size={14} />

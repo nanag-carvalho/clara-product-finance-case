@@ -63,7 +63,7 @@ Open `/prototype.html`. Overview and Payments sit under Accounts payable; Connec
 
 Pix input recognizes key types and static Copia e Cola, with explicit recipient lookup and a simulated QR camera. The case has no bank API, real camera, authentication or Pix execution. Automatic policy and multiple approval layers are recognized but not simulated.
 
-At mobile width, payments use stacked rows and the Wizard uses one content scroll, an expandable history and fixed actions. Run `npm test` for payment-state invariants; build includes TypeScript, DS rules and registry checks. The deployment uses a separate prepared source copy; the original Git checkout is not committed or pushed by the publishing workflow.
+At mobile width, payments use stacked rows and the Wizard uses one content scroll, an expandable history and fixed actions. Run `npm test` for payment-state invariants; build includes TypeScript, DS rules and registry checks. The production release uploads the verified static build through Vercel Build Output API v3. Local release metadata stays under the ignored `publishing/` directory; source changes are committed separately to this repository.
 
 ## Design engineering implementation
 
@@ -122,4 +122,4 @@ npm run verify:full
 
 The showcase summarizes the story; the hub carries the detailed decision trace and AI work log. Named same-origin targets keep the presentation open while reusing hub, prototype and catalog tabs. Browser checks cover chapter navigation, image inspection, live component behavior and tab reuse on desktop and mobile.
 
-Local release copies and visual QA captures are ignored by Git. Publish the verified build only after `npm run verify:full`; production is a simulated case, not a banking integration.
+Local release copies and visual QA captures are ignored by Git. Set `DS_REGISTRY_ORIGIN=https://clara-finance-case.vercel.app` when running `npm run verify:full`, then publish that verified build; production is a simulated case, not a banking integration.

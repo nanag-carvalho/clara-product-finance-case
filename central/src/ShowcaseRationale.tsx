@@ -1,3 +1,4 @@
+import { scenarioOptions } from './prototype/scenarios'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { ArrowRight, ArrowUpRight } from '@phosphor-icons/react'
@@ -317,6 +318,106 @@ export function SharedSystemProof() {
 export function EvaluationGuide() {
   return (
     <div className="showcase-evaluation">
+      <div className="showcase-coverage-panel showcase-panel showcase-panel-soft">
+        <div className="showcase-coverage-heading">
+          <span>{scenarioOptions.length}</span>
+          <div>
+            <h4>Situations around one supplier payment</h4>
+            <p>
+              From preparing the request to knowing what happened to the money.
+            </p>
+          </div>
+        </div>
+        <div className="showcase-coverage-path" aria-hidden="true">
+          <span>Prepare</span>
+          <ArrowRight size={16} />
+          <span>Decide</span>
+          <ArrowRight size={16} />
+          <span>Confirm</span>
+        </div>
+        <div className="showcase-scenario-branches">
+          <div>
+            <h4>
+              The expected flow <Badge variant="outline">5 scenarios</Badge>
+            </h4>
+            <p>
+              Establish the source, get the decision and confirm the outcome.
+            </p>
+            <ul>
+              <li>First bank connection</li>
+              <li>Payment from a connected account</li>
+              <li>Company approval pending</li>
+              <li>Payment authorization</li>
+              <li>Payment completed</li>
+            </ul>
+          </div>
+          <div>
+            <h4>
+              When the flow breaks <Badge variant="outline">7 scenarios</Badge>
+            </h4>
+            <p>Explain what happened and preserve a clear way to continue.</p>
+            <ul>
+              <li>Request rejected</li>
+              <li>Device confirmation canceled</li>
+              <li>Bank connection expired</li>
+              <li>Insufficient funds</li>
+              <li>Bank limit exceeded</li>
+              <li>Confirmed service failure</li>
+              <li>Payment result unknown</li>
+            </ul>
+          </div>
+        </div>
+        <aside
+          className="showcase-explore-instructions"
+          aria-label="How to explore the prototype"
+        >
+          <h4>Try a situation</h4>
+          <ol>
+            <li>
+              Open the <strong>Scenarios</strong> explorer.
+            </li>
+            <li>Choose a situation to load its saved state.</li>
+            <li>
+              Follow the next action. Use the floating{' '}
+              <strong>Scenarios</strong> button to switch.
+            </li>
+          </ol>
+          <Button asChild>
+            <a
+              href="/prototype.html?explore=scenarios"
+              target="clara-case-prototype"
+            >
+              Explore the 12 scenarios <ArrowUpRight size={16} />
+            </a>
+          </Button>
+        </aside>
+      </div>
+      <div className="showcase-check-summary">
+        <h4>What I checked in code</h4>
+        <p>
+          <strong>39 domain and registry tests</strong> check rules and
+          contracts. <strong>14 browser test cases</strong> exercise the
+          interface on desktop and mobile, including entry, approval,
+          authorization and recovery.
+        </p>
+        <p className="story-caption">
+          27 applicable runs; one mobile-only case skipped on desktop. User
+          comprehension and effort still need participant evaluation.
+        </p>
+      </div>
+      <p>
+        I would then observe whether people choose the right source (H1),
+        identify the next actor (H2), recover without duplicates (H3) and review
+        the right details (H4). Active handling time connects these observations
+        to the original effort-reduction goal.
+      </p>
+      <a
+        className="showcase-detail-link"
+        href="/#/process"
+        target="clara-case-hub"
+      >
+        See coverage, tasks and evaluation measures <ArrowUpRight size={16} />
+      </a>
       <details className="story-boundaries">
         <summary>Run the checks with the source checkout</summary>
         <pre className="showcase-code">
@@ -356,7 +457,10 @@ export function JourneyEntry() {
         </li>
       </ol>
       <Button variant="outline" asChild>
-        <a href="/prototype.html?scenario=first" target="clara-case-prototype">
+        <a
+          href="/prototype.html?scenario=first&step=connection"
+          target="clara-case-prototype"
+        >
           Try first connection <ArrowUpRight size={16} />
         </a>
       </Button>
