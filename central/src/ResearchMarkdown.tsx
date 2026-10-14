@@ -3,8 +3,10 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { ArrowUpRight, ExternalLink, Lightbulb } from 'lucide-react'
 
-export default function ResearchMarkdown({body,onImage}:{body:string;onImage:(file:string,alt:string)=>void}) {
+export default function ResearchMarkdown({body,onImage,promoteHeadings=false}:{body:string;onImage:(file:string,alt:string)=>void;promoteHeadings?:boolean}) {
   return <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+    h3:({children})=>promoteHeadings?<h2 className="research-subheading">{children}</h2>:<h3>{children}</h3>,
+    h4:({children})=>promoteHeadings?<h3>{children}</h3>:<h4>{children}</h4>,
     blockquote:({children})=><Alert variant="note" className="research-callout"><Lightbulb aria-hidden="true"/><AlertDescription>{children}</AlertDescription></Alert>,
     img:({src,alt})=>{
       const [file,fragment] = String(src).split('#')

@@ -136,3 +136,7 @@ Use the registered `Alert variant="note"` through `@/design-system` for static a
 - A6: dense summary/list composition motivates proximity, hierarchy, predictable action placement and accessible labels. Contrast, keyboard support and responsiveness must be tested; screenshots alone do not establish failures.
 
 Contract checks prove token/API consistency, not usability. Review at the target viewport and 200% zoom; check focus order, labels, error announcements and reduced motion. In task sessions check source comprehension, decision consequence, review mismatches and safe recovery. Do not claim a WCAG pass or a measured improvement from a successful build.
+
+### Documentation heading hierarchy
+
+The page header owns the page title. When the opening research section repeats that subject, render its body directly with `Reader omitLeadHeading`; retain its source heading for standalone documentation and search. Promote nested headings one level in that opening section to preserve h1 → h2 → h3 semantics. Keep headings that introduce a distinct section or journey stage. Avoid introductory sentences that only restate the heading.

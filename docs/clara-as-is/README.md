@@ -530,8 +530,6 @@ Sources: [Mercury payment-link guide](https://support.mercury.com/hc/en-us/artic
 
 ## Opportunity defined by the brief
 
-The brief sets the opportunity:
-
 > **Brief:** “Design how Clara could use Open Finance payment initiation so that a finance team can pay via Pix from Clara using the balance they hold at another bank, without leaving the flow.”
 
 My task is to design and test how this works for the finance team. The money route is **external bank → supplier**, initiated from the Clara experience. Prefunding Clara describes the current friction; it is not an alternative solution to this brief.
