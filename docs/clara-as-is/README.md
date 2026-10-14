@@ -1,4 +1,4 @@
-# Clara — initial analysis of the brief and current payment flow
+# Clara — from external-bank funds to a supplier payment
 
 For this Design Engineer case in Product Finance, I started with the brief and available references to understand the operation before defining a solution. The challenge is to let a finance team pay suppliers through Clara using funds held at another bank while preserving approvals and traceability. The brief defines Open Finance payment initiation as the opportunity. My hypotheses concern the experience of completing that task, alongside existing approval and tracking controls.
 
@@ -10,7 +10,7 @@ The brief describes a finance manager at a Brazilian company with 200 employees,
 
 The evaluation asks for problem framing and a metric, Pix and Open Finance context, first connection and consent, a payment and at least one failure scenario in high fidelity. It also asks for explored alternatives, reused components, a design system contribution and a record of AI use, including mistakes and time spent. The presentation allows approximately 30 minutes for the walkthrough and 15 for discussion.
 
-Source: the private brief I received during the interview process. These requirements describe the evaluation; this document records my initial analysis.
+Source: the private brief I received during the interview process. These requirements guide the case. The showcase presents the narrative; this hub holds the evidence, alternatives, implementation details and limits behind it.
 
 ## Product context and the brief
 
@@ -143,16 +143,14 @@ The benchmark informs interaction mechanisms for these hypotheses. All four belo
 
 ## Audit-driven interface decisions
 
-| Finding | Design commitment | Shared API / contract | Validation before claiming improvement |
-| --- | --- | --- | --- |
-| A2 · status meaning | Separate request, approval, processing, reversal and settlement in words; color is supporting information. | PaymentStatus, Badge, Timeline; visibility and semantic consistency | Ask whether funds moved and who acts next at each state. |
-| A3 · decision context | Keep amount, recipient and responsible actor near the decision; preserve company approval rules. | ReviewSummary, Button; recognition and error prevention | Correct interpretation of actor and consequence; no bypass of approval. |
-| A4 · validation | Keep labels, adjacent errors and entered values; distinguish lookup feedback from payment outcome. | Field, InputGroup, Alert, Button loading; prevention and feedback | Keyboard completion, error association, mismatch detection and retained data. |
-| A5 · uncertain outcome | Preserve request identity; verify its status before offering resubmission. | PaymentStatus, Timeline, Alert; recovery contract plus service state model | No duplicate intent in uncertain-result scenarios; backend idempotency remains required. |
-| A6 · hierarchy | Use semantic headings, smaller gaps within groups and consistent action placement. | PageHeader, Stack, Inline; proximity and type roles | Check scanning at the target viewport and 200% zoom; compare task comprehension. |
-| A6 · recognition | Give icon-only actions accessible names and discoverable explanations; use visible labels for consequential choices. | Button, Tooltip; recognition and focus rules | Keyboard focus order, visible focus and accessible names; do not treat a tooltip as the only label. |
+| Audit finding | Shared design rule | Applied pattern |
+| --- | --- | --- |
+| A2 · Ambiguous status | Approval, processing and settlement have distinct labels; color supports the meaning. | PaymentStatus, Badge, Timeline |
+| A3/A4 · Decision and validation context | Keep recipient, amount and source together. Errors stay beside their fields; correction retains unrelated values. | ReviewSummary, Field, InputGroup, Alert |
+| A5 · Uncertain outcome | Preserve the request and offer a status check before another submission. | Wizard and service state model |
+| A6 · Hierarchy and recognition | Group related information, label consequential actions and preserve visible focus. | PageHeader, Stack, Button |
 
-> **My decision:** I carry these audit findings into shared components so behavior, hierarchy and feedback stay consistent across the experience. The registry checks implementation consistency; task and accessibility reviews evaluate the result.
+The DS carries reusable presentation and interaction rules. Payment permissions and duplicate-submission guards belong to the state model and, in production, the backend.
 
 ## Payments as the entry point
 
@@ -346,13 +344,45 @@ Sources: [Reconstruction gallery](reconstrucoes.html), [Payment approval guide](
 
 ## AI work log
 
-I started with the brief and six screenshots I captured in the demo. I used Codex to support analysis organization, official-source research, image collection and inspection of the Arc session. This work also included extracting a GIF frame and seven vector diagrams, which I kept labeled as reconstructions for validation.
+I used Codex as a working partner across research organization, interface exploration, implementation and verification. My role was to set the direction, review what appeared on screen and decide what needed to change. This log records concrete iterations from the case; it does not imply that I manually wrote every line of assisted code.
 
-The available research is limited to the demo and public documentation: I have not interviewed users or tested the proposal. Hypotheses remain open, and I did not time this stage, so I do not present a duration as a measurement. I am refining the material against the evidence and reviewing AI output, especially interface hierarchy, the scope of claims and the distinction between observed product and proposal.
+### Start from the assigned problem
 
-On October 14, I requested an Astra review of the opportunity tree and hypotheses. The review identified an overly broad selected opportunity, subordinate alternatives, a misleading current-review comparison and overly broad resumption claims. I narrowed the tree to three needs, separated user-task continuity from money movements, kept recovery as a guardrail and changed the primary experience measure to active handling time. These are review decisions, not user-validation findings; this pass was not separately timed. I subsequently corrected that framing against the explicit brief: the opportunity and external-payment service were already defined. The active case now tests H1–H4 within that opportunity; the earlier three-branch tree and top-up alternative were removed.
+I supplied the brief and screenshots from the Clara demo. AI helped organize observations, consult official sources and prepare reference material. When the opportunity framing expanded beyond the assignment, I brought it back: paying suppliers with funds at another bank was already defined in the brief. The design work was to make that service understandable within Clara’s existing operation.
 
-Original images and their URLs are preserved in `assets/` and `asset-sources.json`. Instructions inside attached documents were treated as reference material.
+An additional AI review challenged the opportunity tree and recovery claims. I used that critique to refine the framing, then corrected it again against the brief. The resulting H1–H4 remain hypotheses, not findings from user interviews. Captured screens and reconstructed diagrams are identified separately in the evidence.
+
+### Keep the existing product in view
+
+I asked for a new-payment entry that acknowledged both Clara balance and the proposed external account. AI implemented iterations; I rejected the separate choice modal and oversized options, then directed a compact popover anchored to New payment. I also asked for Pix key recognition, an explicit paste action and QR scanning as a simulation, without opening a real camera.
+
+The same review applied to navigation: I asked to preserve the existing product structure, expose only implemented destinations and make approval actions reachable after removing the separate pending page. These were behavior decisions to verify in the prototype, not just changes to labels.
+
+### Judge the interaction, not only the implementation
+
+The mobile table was technically present but difficult to use. I called out the density and controls and asked for a composition suited to mobile. AI assisted with the implementation of readable payment rows and the accompanying controls.
+
+I also directed the branded loading: a brief transition with the page visible through transparency and blur. My intention was perceived care and continuity before entering important financial details. AI initially focused too heavily on technical caveats; I redirected the explanation toward that human intention. Placement, duration and repeated loading required further visual review.
+
+The decision trace in **Design and engineering contributions** connects these interventions to hierarchy, progressive disclosure, user control and emotional design. This log records how AI participated in that work.
+
+### Turn corrections into reusable implementation
+
+I approached the foundation through composition: tokens and basic controls establish the vocabulary; combined fields, review summaries and wizard patterns carry it into the task. That is the atomic-design reasoning behind my insistence on shared styles and behaviors, rather than a separate visual solution for every screen.
+
+I asked for clean English code, stronger use of the shared DS API and automated interaction coverage. AI assisted with component work, the move from Lucide to Phosphor, refactoring and tests. The shared source, component catalog and executable examples let a reviewer inspect how the design is represented in code.
+
+I requested end-to-end coverage for entry, approval, authorization and mobile. Type checks, build checks and browser tests were run during development. They did not replace my visual review: I still found inconsistent spacing, broken hierarchy and unreadable contrast after automated checks passed. Passing tests establish only the behavior they cover.
+
+### Direct the showcase as a designed experience
+
+I provided my Mercado Livre case as a reference for storytelling and presentation. Early AI versions accumulated unrelated cards, diagrams and text. I asked for a separate showcase, a clearer narrative, selective dark surfaces and larger alternating screenshots. I then reviewed specific details: shared image captions, the relationship between live components and their code, and the placement of AI notes beside each chapter.
+
+Those corrections shaped both the page and the way this work is presented. AI produced implementations; I assessed whether they communicated the intended story and asked for revisions when they did not.
+
+### Evidence and limits
+
+The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. I did not track time consistently, so I cannot report measured time spent or savings. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
 
 ## Desk research: three relevant references
 
@@ -486,7 +516,7 @@ Source: [Ramp — managing bills and payments](https://support.ramp.com/managing
 | Distinguish task completion from money movement | Mercury request-created result versus Nubank transfer-completed result | H2: correctly explain whether funds moved. |
 | Return to a findable item after leaving the task | Ramp queue and filters | H2/H3: locate the request and identify the next action. |
 
-These are design mechanisms to test, not evidence of measured gains. Wise's sending and tracking guides remain useful for service-state semantics, but the public PDF I inspected contains explanatory material rather than detailed flow screenshots. I have not presented it as visual proof. External-bank authorization, unknown outcomes and failure recovery still need direct evidence; the wireflow marks these service boundaries explicitly.
+These are design mechanisms to test, not evidence of measured gains. Wise's sending and tracking guides remain useful for service-state semantics, but the public PDF I inspected contains explanatory material rather than detailed flow screenshots. I have not presented it as visual proof. External-bank authorization, unknown outcomes and failure recovery still need direct evidence; the prototype marks these service boundaries explicitly.
 
 ### What the current proposal needs to improve
 
@@ -528,11 +558,11 @@ The brief asks me to initiate a Pix from Clara using the balance held at another
 | A4/A6 · Inline validation already helps; review hierarchy needs exploration. Nubank and Mercury emphasize payment details. | Group recipient, amount and source with adjacent editing. Compare a compact form with guided steps. |
 | A2/A5 · Outcomes differ, and recovery detail is still unobserved. Wise and Ramp provide useful status/action patterns. | Keep the request recognizable and offer recovery based on its confirmed state. |
 
-> **My decision:** focus the design effort on continuity and informed action. I will preserve the existing controls while exploring clearer review, contextual guidance and recovery. The wireflow will help me decide which interaction structure supports this best.
+> **My decision:** bring the source into the payment task while preserving company control. I implemented this as a source popover, a guided payment flow and a saved request with progress and history. The following decisions explain the structure; the prototype makes it inspectable.
 
 ## Proposed flow
 
-The wireflow starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Bank authorization remains provider-controlled.
+New payment first offers Clara balance or the proposed business-bank source. The implemented external-bank route starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Eligible payment authorization uses the linked device within Clara; first-time linking includes bank confirmation.
 
 **Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Open each diagram at full size to inspect its branches. Each stage also has a concise text description.
 
@@ -544,9 +574,9 @@ The wireflow starts with recipient and amount, then reveals source preparation w
 
 ### 2 · Review and obtain the required decisions
 
-![Userflow 2 · Review → company approval → bank authorization → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
+![Userflow 2 · Review → company approval → device authorization in Clara → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
 
-**Actions:** review and edit → request company approval → authorized representative continues to the bank → return to check payment status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted bank return leads to a status check of the same payment.
+**Actions:** review and edit → save request → wait for the named company approver → authorization becomes available after approval → authorized representative confirms on the linked device → check payment status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted confirmation preserves the request; uncertain submission leads to a status check of the same payment.
 
 ### 3 · Confirm the outcome or recover
 
@@ -556,15 +586,23 @@ The wireflow starts with recipient and amount, then reveals source preparation w
 
 > **Key decision:** retain the same payment identity through authorization and recovery. This is where continuity becomes both a usability and a duplicate-payment safeguard.
 
+### Roles, approval policy and operational scale
+
+The company context is approximately 200 collaborators. Even if all have platform access, payment permissions and approval responsibility depend on their assigned roles. The brief describes dozens of supplier payments per week; employee count alone cannot establish the number of approvers or concurrent payments.
+
+Clara already supports rules by amount, payment method, requester role, location and group, with automatic approval/rejection and up to five review layers. I preserve that mechanism. The main test scenario uses a configured supplier-payment review assigned to Carlos; this is an illustrative policy, not a claim about the company’s actual configuration. All required company decisions must finish before payment-specific authorization. [Clara approval configuration](https://ajuda.clara.com/hc/pt-br/articles/41962086294291-Como-crio-um-fluxo-de-aprova%C3%A7%C3%A3o-de-pagamentos-na-Clara), [Clara user roles](https://ajuda.clara.com/hc/pt-br/articles/6210232061203-Quais-s%C3%A3o-os-n%C3%ADveis-de-usu%C3%A1rios).
+
+For scale, I organize work as independent requests: queues by state, named responsible actors, searchable rows, transaction references and retained drafts. A queue banner explains the selected group rather than adding a banner for every request. New payment preserves existing work; a service response updates its own request. I would evaluate queue interpretation, recovery and effort across repeated payments. Rules with automatic or multiple reviews belong in validation variants; the case focuses on the same initiation service rather than building a new policy editor or batch processor.
+
 ## Hypotheses and validation
 
-I will compare interaction variants with the same recipient, amount, debit account and approval policy. These are planned formative checks; I will record participant roles and session count when they occur, or identify an expert walkthrough if recruitment is unavailable.
+For this interview case, I use the following questions to inspect simulated scenarios with the same recipient, amount, debit account and approval policy. They define what the proposal should make understandable; they are not participant findings.
 
 | Hypothesis / flow moment | Task to test it | Revise the design if… |
 | --- | --- | --- |
 | **H1 · Source choice:** keeping the named account in payment context improves source selection. | Ask for a payment from Bank A while Bank B is also available; ask which account will be debited. | The person chooses the wrong source, expects a Clara top-up or leaves the task to identify the account. |
 | **H4 · Review:** grouping recipient, amount and source with adjacent editing helps catch mistakes. | Place one mismatch in the review; observe detection and correction. Reverse variant order where feasible. | They miss the mismatch, skip review or introduce another error while correcting it. |
-| **H2 · Commitment:** explicit actions clarify company approval, bank authorization and payment completion. | At approval and bank handoff, ask what the action permits and who acts next. | Connection is understood as blanket permission, or approval as payment already sent. |
+| **H2 · Commitment:** explicit actions clarify company approval, bank authorization and payment completion. | At approval and device authorization, ask what the action permits and who acts next. | Connection is understood as blanket permission, or approval as payment already sent. |
 | **H3 · Recovery:** retaining the request and state-valid actions supports safe resumption. | Interrupt authorization; separately show an unknown outcome. Observe the next action. | They lose context, re-enter valid data or attempt another payment while the outcome is unknown. |
 
 ### What determines the next iteration
@@ -575,82 +613,55 @@ I will compare interaction variants with the same recipient, amount, debit accou
 
 **Later business check:** in a pilot, track unique eligible payment intents reaching confirmed settlement divided by eligible intents started, within a defined window. Retries remain the same intent; segment first and repeat use. A baseline is needed before setting an uplift target.
 
-The clickable wireflow now implements payment-first entry. I will test source comprehension, review and recovery before consolidating the interaction. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
+The interactive prototype is the single implementation used for exploration and presentation. After source-route selection, it starts with payment details and uses the shared DS wizard. The scenario walkthrough exposes source comprehension, review and recovery for discussion. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
 
 
 
 ## Visual and interaction direction
 
-I want the payment experience to feel contemporary, precise and approachable. Visual design is part of that work: typography, rhythm, surfaces, iconography and motion should make the task feel coherent and help people understand what they can do next. I use recognizable financial-product references, then adapt them to the finance manager's task and Clara's shared DS.
+| Design decision | Purpose |
+| --- | --- |
+| Nunito Sans; 20/28 page title, 16/24 section, 14/20 UI, 12/16 supporting text | A compact hierarchy for a working financial tool. |
+| Spacing of 2, 4, 8, 16 and 24 px | Related content sits closer than separate decisions. Container gaps avoid accumulated margins. |
+| 32 px default controls; 40 px large controls | Consistent alignment and predictable actions across forms and toolbars. |
+| Neutral Slate surfaces; blue actions and selection | Keep attention on the task. Status also uses text and meaningful icons. |
+| Restrained borders and elevation | Distinguish workspace, task and overlay without wrapping every item in a card. |
+| Shared loading and restrained transitions | Explain state changes; respect reduced motion. Animation never determines payment success. |
 
-### References I will use at each moment
+Mercury informs grouped inputs and account identity; Nubank informs review and results; Apple Wallet informs setup sequencing. Detailed visual references remain in Desk research. These choices are local case decisions, not Clara's official DS or measured usability improvements.
 
-| Moment / hypothesis | Reference | My adaptation for Clara | What I will evaluate |
-| --- | --- | --- | --- |
-| Start and enter details · H1/H4 | Mercury supplied request screens: grouped fields, clear stages and contextual account identity. | One focused work area, persistent payment context and a clear primary action. Supporting documents stay secondary. | Visual hierarchy, completion, unnecessary navigation and omissions. |
-| Choose and prepare the source · H1/H2 | Mercury account selector and Wise's documented funding semantics. | Account name and identifier together; explain the permission beside the action. Distinguish an eligible source from a connected source. | Correct debit-account identification and understanding of the handoff. |
-| Validate and review · H4 | Nubank's official tutorial frames and GOV.UK check-answers pattern. | Recipient, amount and source become the visual priority. Place Edit beside the information it changes; preserve unrelated values. | Mismatch detection, correction effort and keyboard access. |
-| Company decision · H2 | Conta Simples approval documentation and Ramp queue/filter captures. | Show the responsible actor and what is waiting. Preserve existing policy; emphasize the decision without implying that approval settles the Pix. | Correct next actor and consequence, including differing requester/approver roles. |
-| Authorization and return · H2/H3 | Historical Cora review/authentication frames and WAI multi-page-form guidance. | A clearly named bank boundary, retained request and a recognizable return state. The bank's UI is outside my visual proposal. | Orientation and retained context after interruption. |
-| Result and recovery · H3 | Nubank/Cora result frames, Wise documented status semantics and GOV.UK confirmation guidance. | A specific outcome, amount, recipient, source and next valid action. A receipt belongs to confirmed payment; pending states remain visibly pending. | Outcome comprehension and safe recovery. |
+### Why use the branded transition
 
-The screenshots and product sources are collected in Desk research. Here I translate those references into decisions for Clara. For review and confirmation, I also use the [GOV.UK check-answers pattern](https://design-system.service.gov.uk/patterns/check-answers/) and [confirmation guidance](https://design-system.service.gov.uk/patterns/confirmation-pages/).
+I use a short branded transition to create a sense of care and confidence when the user enters a financial task. The pause signals a change in attention: the next step asks them to check recipient, amount and funding source. Translucency and light blur keep the workspace recognizable while bringing the payment into focus.
 
-### Aesthetic decisions with a UX purpose
+The familiar brand symbol and restrained motion make the passage feel less abrupt and monotonous. Repeating this feedback at meaningful moments gives the product a coherent character and can support perceived security and reassurance. This is an intentional emotional layer of the experience, alongside its functional clarity; reduced motion preserves the same orientation.
 
-| My visual decision | UX / psychology rationale | DS application and validation |
-| --- | --- | --- |
-| Stronger headings, calm body text and prominent payment values | Visual hierarchy helps establish reading order and what deserves attention at the decision. | Nunito Sans with distinct semantic weights; neutral Slate text. Check scanning, legibility and 200% zoom. |
-| Compact spacing within a decision, more separation between decisions | Gestalt proximity makes related items read as a group. | 2/4/8 within labels, feedback and controls; 16/24 between groups. Keep recipient data together and Edit beside its target. |
-| White surfaces, light borders and restrained elevation | Clear visual boundaries establish grouping; restrained layering separates workspace, task and temporary overlays. | Shared Card/Sheet/Wizard tokens. Avoid adding a card around every field or code block. Check whether layers clarify context. |
-| Consistent action location, shape and state | Consistency and recognition help people predict what an action will do without relearning each screen. | 32 px md / 40 px lg controls, shared radius scale and visible focus. Explicit verbs at consequential actions. |
-| Limited accent color and meaningful icons | Contrast directs attention; text and icon meaning must carry state independently of color. | Primary action gets emphasis; error, pending and paid use distinct words. Verify contrast and accessible names. |
-| Refined motion that connects states | Feedback and spatial continuity can explain what changed while maintaining a sense of control. | Reuse motion rules below; observe disorientation, distraction and skipped review. |
+## A design system that AI can use
 
-> **My design reading:** aesthetic quality is a deliberate part of this proposal. I want it to communicate care and make the workflow feel coherent. The aesthetic–usability effect describes how attractiveness can influence perceived usability; I will therefore assess visual confidence and task performance separately. I will evaluate both the visual quality and successful completion of the task.
+I created an executable design foundation so AI-assisted implementation can reuse decisions instead of inventing styles for every screen. Human-readable guidance explains intent; machine-readable tokens, component metadata and checks constrain implementation.
 
-Conceptual references: [NN/g: proximity](https://www.nngroup.com/articles/gestalt-proximity/), [NN/g: visual design principles](https://www.nngroup.com/articles/principles-visual-design/), [NN/g: aesthetic–usability effect](https://www.nngroup.com/articles/aesthetic-usability-effect/). I use these concepts to define design choices and observable checks.
+| Foundation | What it gives the implementation |
+| --- | --- |
+| Public API · `@/design-system` | One supported import path for components and patterns. |
+| Registry · `src/design-system/registry.ts` | Tokens, component roles, variants and source locations in one maintained definition. |
+| Generated CSS, JSON manifest and shadcn registry | The same foundation available to code and tooling, without independently maintained copies. |
+| `DS_CONTRACT.md` | Rules for hierarchy, spacing, semantics, state feedback and composition. |
+| Component documentation | Working previews, usage examples and source code for inspection before reuse. |
+| `ds:check` and build | Detect stale generated artifacts and covered import/token violations. They do not judge the entire UX. |
 
-### Motion and microinteractions to prototype
+**Working rule:** reuse an existing pattern; add a registered variant when needed; extend the component only when the requirement is reusable; generate and check; inspect the result. I retain responsibility for scope, hierarchy and behavior. AI use does not replace design review.
 
-The timings below are starting tokens for the prototype. Service progress always follows real state; animation never determines payment success.
+**Case contribution:** Wizard for guided tasks and progress; InputGroup for explicit field actions and mobile composition; ReviewSummary for recipient, amount and source; Brand loading and flow illustrations for state feedback. Compact upload and correction/history compositions support the same payment task. These are local case contributions, not changes to Clara's production library.
 
-| Trigger | Proposed feedback | Accessibility / service rule | Hypothesis |
-| --- | --- | --- | --- |
-| Choose an account | Selected outline and checkmark update; source summary follows in place, around 120 ms. | Text and selected semantics persist with motion disabled. No automatic submission. | H1 |
-| Find recipient | Button enters loading state immediately; reserve the result area to prevent layout shift. Show verified identity or an adjacent actionable error. | Announce completion once; preserve input and prevent repeated in-flight lookup. Distinguish lookup failure from invalid input. | H4 |
-| Continue / Back | A restrained 160–200 ms transition between related panels, with stable action placement. | Move focus to the new heading; Back retains values. Reduced motion uses immediate state change. | H1/H2 |
-| Correct an error | Associate the message with its field; clear it when the value is revalidated. | No shaking, color-only messages or clearing unrelated fields. On submission, focus the first error or linked error summary. | H4 |
-| Request approval / authorize | Button spinner and explicit action label; next state identifies the responsible actor. | In-flight double activation cannot create another request. Internal approval is not a paid state. | H2/H3 |
-| Return from bank | Restore payment identity; show checking, pending or confirmed outcome. | A callback does not trigger a success animation. Unknown remains checkable on the same request. | H3 |
-| Confirm settlement | A short checkmark transition, then stable amount, recipient and receipt actions. | No sound required, no flashing; reduced-motion view has the same content. | H2/H3 |
+### How the foundation is shared
 
-Accessibility baseline: [WAI multi-page forms](https://www.w3.org/WAI/tutorials/forms/multi-page/), [GOV.UK error messages](https://design-system.service.gov.uk/components/error-message/), [W3C animation from interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html). I will test keyboard order, focus return, labels, errors, live announcements, zoom and reduced motion. I also include the AAA animation criterion in my design checks.
+The hub, prototype, showcase and component catalog import the same local source through `@/design-system`. This is a shared code API, not a remotely hosted design-system service. The registry generates the artifacts used by tooling; the payment lifecycle remains domain code outside the visual components.
 
-### Progress and completion as light gamification
-
-I will compare a labeled step sequence with a small completion checklist. Both keep the same actions and information. I will retain the checklist only if it improves orientation without duplicating progress or encouraging skipped review.
-
-On repeat use, recognize a source that is still eligible and prepared; do not ask for already valid setup again. Keep permission expiry and payment-specific authorization explicit. Avoid points, streaks, countdown pressure or confetti before settlement. For bank processing of unknown duration, show the current state and a way to check for updates.
-
-**Test:** can the person say what is complete, what remains and whether funds moved? If the milestone makes them skip review or mistake approval for settlement, revise it. [WAI progress guidance](https://www.w3.org/WAI/tutorials/forms/multi-page/) and [GOV.UK task status](https://design-system.service.gov.uk/components/task-list/) support orientation patterns; the proposed motivational treatment is my interpretation.
-
-### Accessibility as acceptance criteria
-
-| Decision | Concrete check before presenting | Reference |
-| --- | --- | --- |
-| Review and correction | Recipient, amount and source can be checked and corrected before commitment; the action states its consequence. | [WCAG 3.3.4: financial error prevention](https://www.w3.org/WAI/WCAG22/Understanding/error-prevention-legal-financial-data.html) |
-| Retained context | Back, cancel and resume preserve valid information; necessary security revalidation is explained. | [WCAG 3.3.7: redundant entry](https://www.w3.org/WAI/WCAG22/Understanding/redundant-entry.html) |
-| Dynamic feedback | Loading, validation and returned results have programmatic announcements; routine updates do not steal focus or repeat incessantly. | [WCAG 4.1.3: status messages](https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html) |
-| Keyboard and focus | Complete preparation, editing and recovery with the keyboard; visible focus follows the task and returns to its trigger when a dialog closes. | [WCAG 2.2 quick reference](https://www.w3.org/WAI/WCAG22/quickref/) |
-| Visual and cognitive access | Labels remain visible, errors use text and not color alone, zoom/reflow preserves actions, contrast and target sizes are checked. Motion respects reduced-motion preference. | [WCAG 2.2 quick reference](https://www.w3.org/WAI/WCAG22/quickref/) |
-
-I will document accessibility checks as I run them. I will record the browser, assistive technology where used, task, issue and correction. An expert walkthrough is useful when recruitment is limited, but does not replace sessions with disabled users.
-
+To inspect reuse, open the catalog's Button examples, compare its variants with the live showcase example, then inspect the code and contract. For behavior, explore the prototype scenarios. Automated checks cover specified rules and interactions; visual review still determines whether the composition communicates the right hierarchy.
 
 ## Brazil constraints and feasible scope
 
-I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I will use a bank-redirection journey as the conservative prototype assumption, and keep company approvals separate from bank authorization. [Central Bank: Open Finance customer journey](https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado), [Central Bank: payment initiation](https://www.bcb.gov.br/detalhenoticia/568/noticia).
+I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I propose payment initiation without redirection after account and device linking. First use confirms the link at the bank; subsequent eligible payments are authorized in Clara with the device security mechanism. Company approval remains a separate decision. [Central Bank: Open Finance customer journey](https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado), [Central Bank: payment initiation](https://www.bcb.gov.br/detalhenoticia/568/noticia).
 
 Before a production implementation, the authorized initiator or partner, participating banks, PJ account eligibility, authorized representatives, bank approval layers, limits and current journey specifications would need confirmation. I document these as implementation dependencies. Bank selection should reflect verified eligibility, not imply that every bank or business account is supported. I have not established Clara's authorization or partner setup for this feature. The normative pages for Resolution 406 and Instruction 760 did not expose their full text in the research tool; their current applicability remains a verification task rather than a settled design claim.
 
@@ -660,13 +671,13 @@ For accessibility I will check keyboard access, visible focus, labels, textual e
 
 **In scope:** one supplier, BRL, one Pix payment, two fictional source choices with one account connected in the task, first connection, payment-specific authorization, existing company approvals, result tracking and one main recovery scenario. Bank options use fictional data; production options require verified eligibility.
 
-**Out of scope:** batch execution, recurring or automatic Pix, FX, a full bank-management module, no-redirection promises, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.
+**Out of scope:** batch execution, recurring or automatic Pix, FX, a full bank-management module, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.
 
 ### Account preparation and payment initiation
 
 Open Finance has journeys with bank redirection and a separate framework for payment initiation without redirection. The latter separates account linking from transactions; the initial linking confirmation takes place at the account-holding institution. Relevant sources are [BCB Resolution 406](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&tipo=Resolu%C3%A7%C3%A3o+BCB) and [BCB Instruction 760](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=760&tipo=Instru%C3%A7%C3%A3o+Normativa+BCB). Their indexed summaries support this distinction; the full normative text, current applicability and PJ integration remain verification tasks.
 
-The wireflow explores account preparation as its own task and as an in-payment step. It currently retains bank authorization for payments. Offering subsequent payments without redirection would require confirming provider support, device binding, authentication, consent controls and business signatory requirements. Saving a source alone does not establish those capabilities.
+I choose the no-redirection direction because the brief asks for continuity and the manager pays suppliers repeatedly. The prototype uses two shared wizards: prepare the account and device, then create and authorize the Pix. This is a conditional proposal: the public material I consulted includes restricted PF/mobile rollout, which does not establish availability for the PJ/desktop scenario. Verify the provider, supported accounts, signatories, device mechanism and current rollout before committing to implementation. [Open Finance Brasil: JSR pilot](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/1449754670).
 
 ## Two-day delivery plan
 
@@ -681,7 +692,7 @@ Friday's presentation should make my judgment visible: what I observed, how I tr
 
 ## Discovery: empathy map and user voice
 
-I focus on the finance manager in the brief: a company with 200 employees, two traditional banks and dozens of supplier payments each week. The employee count describes the organization; it does not establish 200 payment users. Requester, company approver and bank-authorized representative are responsibilities whose overlap remains unknown.
+I focus on the finance manager in the brief: a company with approximately 200 collaborators, two traditional banks and dozens of supplier payments each week. The employee count describes the organization; it does not establish 200 payment users. Requester, company approver and bank-authorized representative are responsibilities whose overlap remains unknown.
 
 My working scenario is a supplier payment with funds at another bank. I add a company decision and an interrupted authorization as test conditions, rather than observed details of a particular customer's routine.
 
@@ -709,43 +720,94 @@ The finance manager is the focal role. Internal and bank authorization responsib
 
 ## Design and engineering contributions
 
-I organized the case around a traceable sequence: brief → product context → observed journey → provisional user understanding → desk research → opportunity → hypotheses → proposed experience. This lets me explain why a screen or interaction belongs in the flow, rather than presenting UI without its reasoning.
+### My contribution: connecting intention to behavior
 
-For design craft, I established compact typography, proximity rules, a neutral palette, control sizes, radii and restrained surface elevation. I revised component examples and shared patterns against that foundation. The independent DS documentation exposes working examples, source code and a contract so the same decisions can carry from the case hub into the proposal.
+The central thread of this case is how I turned a financial task into design decisions that could be implemented and inspected. I worked across the operation, interaction, visual language and component architecture. AI assisted with exploration and code; I set the criteria and kept challenging the result until the composition and behavior reflected the intended experience.
 
-For implementation continuity, I built the hub in React and TypeScript, with a public component API, a token/component registry and generated manifests. Build checks cover generated artifacts, registered components, selected import boundaries and token rules. The repository includes a reproducible npm build and CI verification. I pair these consistency checks with accessibility and flow reviews.
+Three moments make that connection visible. I moved source choice next to New payment because its placement should explain its purpose. I directed a short branded transition because entering financial details should feel considered and continuous. And I challenged the mobile table because rendering the same information was not enough if the person could not comfortably use it. Each decision required changes to both presentation and behavior.
 
-I use a local reusable foundation to prototype and review the experience within two days. The prototype uses fictional data and controlled service responses; production integration requirements are recorded in Brief and scope.
 
-My work is visible in the framing, scope decisions, research synthesis, interface critique, component rules and review of AI output. The AI work log records what was assisted and what remains unverified. User validation and business results will be added only when they exist.
+### From the existing operation to the new source
 
-## Low-fidelity wireflow and motion exploration
+I kept the opportunity defined by the brief: initiate a supplier Pix in Clara using funds at another bank. I reviewed the demo and references before changing the journey, then retained the existing Clara-balance route and company-control context. The external-bank proposal adds an option to that operation.
 
-The task starts with recipient and amount, followed by account choice, preparation when needed, review, company approval and bank authorization. I removed repeated summaries and explanatory panels so the participant can act on the information relevant to each decision.
+### Decisions that changed the interface
 
-**Accounts** provides a separate setup journey: select bank → review purpose → confirm at bank → account ready. Payments reuses those accounts; connecting during a payment also makes the account available in Accounts. This state lasts for the browser session.
+| Decision | Alternative considered | Why I changed it |
+| --- | --- | --- |
+| Source choice anchored to New payment | A separate choice modal | The popover keeps this short decision close to the action that started it. |
+| One Pix field with explicit actions | Asking the person to classify each key | Recognize the input format, keep paste and simulated scan intentional, and show recipient details before review. |
+| Readable payment rows on mobile | A compressed desktop table | Preserve filters and selection behavior while giving the information enough room. |
+| Saved request with progress and history | Treating approval as completion | Show who acts next and distinguish company approval from payment authorization. |
+| Correction preserves the request | Restarting the task | Keep valid details, expose the reason and obtain a fresh review after changes. |
 
-**Session controls** contain the facilitator setup: first or repeat connection, confirmed success, insufficient funds and unknown outcome. Keep the panel closed during the task. For H4, set a mismatched amount before asking the participant to review it against the task brief.
+### The design reasoning behind my interventions
 
-The wireflow preserves details when closed and reopened in the same session. An interrupted authorization retains the request; an unknown result offers a status check of that same payment. A confirmed failure returns to review and requires fresh approval. Restart clears the task; reloading clears session progress.
+My instructions covered more than visual polish. I directed how the interface should organize attention, reveal choices and communicate state. The principles below describe the reasoning behind concrete requests I made during iteration.
 
-Bank panels represent the external service boundary, and the approval step identifies the approver role. Lookup and result delays are illustrative. Shared DS controls provide loading feedback, heading focus and reduced-motion support. Usability findings remain to be recorded.
+| What I directed | Design reasoning | What changed |
+| --- | --- | --- |
+| Keep only one sidebar group expanded; select the available destination on entry | Progressive disclosure and recognition reduce the need to search through unavailable routes | Navigation exposes the current group and takes the person to an implemented destination. |
+| Preserve the existing navigation and Clara-balance option | Familiarity and consistency with the existing product | The proposal fits the current operation instead of presenting an isolated replacement. |
+| Put source choices in a compact popover beside New payment | Proximity connects the choice to its trigger; restrained emphasis protects hierarchy | The separate modal and oversized choices were replaced with an anchored entry. |
+| Recognize Pix formats, but keep paste and scan intentional | Recognition reduces classification work; explicit actions preserve user control | The unified field and simulated scanner share validation while keeping the initiating action clear. |
+| Give recipient identity and amount the right space; remove redundant explanations | Visual hierarchy, grouping and minimalist presentation | Review information became more compact and relevant details received stronger emphasis. |
+| Distinguish filter and approval icons, and make hover visible | Consistent meaning and visible interaction feedback | Icon choices and surface contrast were revised rather than relying on labels alone. |
+| Use a short branded transition with the workspace still visible | Emotional design: perceived care, reassurance and continuity during a consequential task | I directed the full-screen composition, transparency, blur and shorter duration after repeated loading felt slow. |
+| Introduce the feature in the sidebar without taking over the workspace | Contextual discovery and an invitation to try the new route | The banner moved into the sidebar; its copy, illustration and CTA were iterated for clarity and density. Adoption remains a hypothesis. |
+
+The prototype brings these intentions together so the evaluator can inspect the composition, try the interactions and follow the reasoning behind them.
+
+### From visual principles to technical constraints
+
+I directed the library styling and composition as part of the solution: typography, spacing, semantic color, component states and icon meaning needed to work together. I requested the Phosphor migration, challenged inconsistent image captions and button treatment, and asked why a shared DS API was not producing more consistent code. Reuse was an implementation requirement, not just a catalog to display.
+
+The component layer should preserve those decisions across the hub, prototype and showcase. The behavioral layer must also remain coherent: a mobile payment row can differ from a desktop table without changing selection rules; company approval cannot silently become payment authorization. I asked for automated coverage of those interactions alongside visual and heuristic review.
+
+### Design decisions carried into code
+
+I requested a shared DS API and clean English code so the implementation could express reusable decisions. Wizard, InputGroup and ReviewSummary organize the task; brand feedback, upload and state compositions support it. React and TypeScript implement simulated state transitions. Payment lifecycle rules and queue selectors are separate from the UI; desktop and mobile share selection behavior.
+
+AI assisted with implementation and checks. My contribution includes framing, visual and interaction direction, reviewing the actual result, and deciding which corrections should become shared patterns. The work log below records specific interventions rather than attributing all generated code to manual implementation.
+
+### How to inspect the implementation
+
+I wanted the repository to expose the reasoning behind the interface. A reviewer can follow a visual decision into a shared component, then see how that component behaves in a payment task and how the behavior is checked.
+
+[Explore the GitHub repository](https://github.com/nanag-carvalho/clara-product-finance-case). Start with the [application guide](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/README.md), then follow the boundary that interests you:
+
+| Decision | Where it lives | Why I asked for this boundary |
+| --- | --- | --- |
+| Share design decisions across surfaces | [DS registry](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/src/design-system/registry.ts) and [public contract](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/DS_CONTRACT.md) | Tokens, variants and component APIs should carry the same hierarchy into the hub, prototype and showcase. |
+| Compose patterns from smaller controls | [Shared components](https://github.com/nanag-carvalho/clara-product-finance-case/tree/main/central/src/components/shared) | Wizard, InputGroup and ReviewSummary express reusable interaction decisions instead of repeating screen-specific styling. |
+| Keep financial rules outside presentation | [Payment domain](https://github.com/nanag-carvalho/clara-product-finance-case/tree/main/central/src/prototype) | Approval, authorization and uncertain outcomes need explicit transitions. Changing the mobile layout must not change these rules. |
+| Make the story inspectable | [Showcase narrative](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/src/CaseStory.tsx) | The visual case links decisions to working artifacts; the hub keeps the detailed evidence and AI log. |
+| Check behavior through the interface | [Browser tests](https://github.com/nanag-carvalho/clara-product-finance-case/tree/main/central/tests/e2e) and [CI](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/.github/workflows/build.yml) | Entry, approval, authorization, recovery and mobile controls need regression coverage alongside visual review. |
+
+The DS is shared source within this repository, imported through its public TypeScript API. The generated manifest and registry expose its contract and installation metadata; they are not a remote banking service. [Architecture decisions](https://github.com/nanag-carvalho/clara-product-finance-case/blob/main/central/ARCHITECTURE_DECISIONS.md) explain the implementation tradeoffs. Local deployment copies, dependencies and QA captures stay outside Git; the repository keeps source, evidence and reproducible checks.
+
+### What the checks establish
+
+Type checks, registry checks and builds verify covered code and DS constraints. Browser tests exercise selected interactions; domain tests cover rules such as permissions and uncertain outcomes. These checks support regression detection. They do not prove usability, accessibility conformance or production readiness, and visual review found problems that passed the automated suite.
 
 ## Prototype implementation and comparison
 
-I built an interactive proposed workspace with its own sidebar and header, connecting Overview, Payments, Approvals, Accounts and Activity. The opportunity is defined by the brief: initiate a Pix from Clara using funds at another bank. This first iteration provides the baseline for the refined test plan. The surrounding views expose the source, responsible actor and payment outcome rather than placing the feature in an isolated form.
+### What the prototype demonstrates
 
-The active prototype follows the brief: external account → supplier, initiated from Clara. Eligibility and initiator capability remain implementation dependencies. Earlier top-up exploration has been removed from the case navigation and trial controls.
+The proposed Overview and Payments sit under Accounts payable. Connected banks sits under Digital account. Existing Inbox and unrelated modules remain visible as context. Approval review is reached from payment queues; individual requests carry their progress and history.
 
-The first connection is separate from payment authorization. A request goes through one illustrative company approval before a bank-authorized representative confirms the transaction in a simulated bank handoff. On return, the draft and approval remain available.
-
-The prototype includes beneficiary lookup against a fictional fixture, amount validation, review, company approval, bank authorization, processing, confirmed failure, unknown outcome and a final receipt example. Test controls select the next response. Unknown outcomes only allow querying the same payment intent.
-
-| Hypothesis | Implemented surface | Available evidence |
+| Brief requirement | Demonstration | Boundary |
 | --- | --- | --- |
-| H1 | Named source and route; both money paths are service alternatives | Prototype task comparison; active time still requires a user test record |
-| H2 | Review, company approval, bank handoff and next-actor copy | Explain each stage and debited account during a walkthrough |
-| H3 | Authorization cancellation, confirmed failure and unknown-outcome recovery | Interaction log plus tests of state transitions and duplicate-send guards |
-| H4 | Grouped source, recipient, amount and related action using the DS | Visual and comprehension review; user observations still to collect |
+| First connection and consent | Account selection, permission explanation, bank confirmation boundary and device setup | Bank/provider and PJ eligibility are dependencies |
+| Supplier payment | Recipient fixture, amount, source, review, company decision and device confirmation | No real Pix execution; dynamic charge resolution remains |
+| Failure and recovery | Rejection/correction, canceled confirmation, expired link, balance/limit/service failure and unknown result | Responses are simulated |
+| Reused components and DS contribution | Shared UI API, Wizard, flow states, Brand loading and compact upload | Accessibility conformance is not established |
+| AI use | Work log records assistance and corrections | Time was not measured |
 
-The local log records prototype events and can be exported from Test controls. It is not a user-validation result. Automated tests cover review prerequisites, approval gating, cancellation recovery, direct confirmation, top-up versus supplier settlement, unknown-result guards and stale responses. Bank and payment responses are simulated; production duplicate prevention still requires a backend contract.
+### How to explore
+
+Open **Scenarios** in the prototype. Each example opens the relevant request and labels its category and hypothesis. Filters and selection operate on fictional records; batch approval records decisions without authorizing a batch payment. Unknown results keep the same intent available for status checking.
+
+### What remains a hypothesis
+
+H1 concerns choosing the funding source in context; active handling time is the primary experience measure across the task. H2 concerns understanding responsibility and the next decision; H3 concerns recovery; H4 concerns review clarity. No user outcomes are measured. Automatic approval and multiple approval layers are recognized policy cases but are not simulated in the current prototype. New payment preserves the existing Clara-balance route alongside the proposed external-bank source. A unified Pix field recognizes keys and static Copia e Cola; QR scanning is a labeled camera simulation with the same decoded-code validation path. Recipient resolution remains fictional. Alternatives and unmeasured effort should be explained candidly in the walkthrough.

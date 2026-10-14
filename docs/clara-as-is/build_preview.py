@@ -1,6 +1,8 @@
 """Render the local Markdown documentation and reconstruction gallery as HTML."""
 from pathlib import Path
 import re
+from urllib.parse import urlsplit, unquote
+from html import unescape
 import xml.etree.ElementTree as ET
 
 from PIL import Image
@@ -30,7 +32,8 @@ def dimensions(match):
     alt, src = match.groups()
     if src.startswith("https://"):
         return f'<img alt="{alt}" src="{src}" loading="lazy">'
-    path = ROOT / src
+    asset_path = unquote(urlsplit(unescape(src)).path)
+    path = (ROOT.parents[1] / "central/public" / asset_path.lstrip("/")) if asset_path.startswith("/") else ROOT / asset_path
     assert path.exists(), path
     if path.suffix == ".svg":
         node = ET.parse(path).getroot()
