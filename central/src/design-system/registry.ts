@@ -42,7 +42,7 @@ export const designSystem = {
     {"name": "Item", "file": "src/components/ui/item.tsx", "kind": "ui", "role": "Content row", "usedIn": "Catalog and proposal", "variants": ["default", "outline", "muted"]},
     {"name": "Popover", "file": "src/components/ui/popover.tsx", "kind": "ui", "role": "Anchored content", "usedIn": "Catalog and proposal", "variants": []},
     {"name": "Command", "file": "src/components/ui/command.tsx", "kind": "ui", "role": "Search and keyboard selection", "usedIn": "Catalog and proposal", "variants": []},
-    {"name": "Alert", "file": "src/components/ui/alert.tsx", "kind": "ui", "role": "Persistent feedback", "usedIn": "Catalog and proposal", "variants": ["default", "destructive"]},
+    {"name": "Alert", "file": "src/components/ui/alert.tsx", "kind": "ui", "role": "Persistent feedback", "usedIn": "Catalog, proposal and research callouts", "variants": ["default", "destructive", "note"]},
     {"name": "AlertDialog", "file": "src/components/ui/alert-dialog.tsx", "kind": "ui", "role": "Action confirmation", "usedIn": "Catalog and proposal", "variants": []},
     {"name": "Field", "file": "src/components/ui/field.tsx", "kind": "ui", "role": "Label, entrada, ajuda e erro", "usedIn": "Catalog and proposal", "variants": []},
     {"name": "Label", "file": "src/components/ui/label.tsx", "kind": "ui", "role": "Visible field name", "usedIn": "Catalog and proposal", "variants": []},
@@ -94,6 +94,7 @@ export const designSystem = {
   ],
   documentation: {
     InputGroup: {description:"Groups a field, icon and action with consistent spacing.",guidance:"A decorative icon does not replace the label. Keep 8 px between icon and text; use a named action to clear the value."},
+    Alert: {description:"Persistent feedback or an authored research note.",guidance:"Use note with role=note for My reading and Hypothesis to test callouts. Keep the label visible; the decorative lightbulb is not evidence or a warning. Use default/destructive for operational feedback."},
     Banner: {description:"Presents contextual information and its next step.",guidance:"Composition inspired by the demo overview banner. This component is a case proposal; use Alert or Dialog for critical errors or confirmation."},
     Chip: {description:"Represents active filters or compact selections.",guidance:"Use to filter or remove a selection. To communicate an outcome, use Badge or PaymentStatus."},
     Button: {description:"Triggers a task. Choose its appearance according to the action priority.",guidance:"One primary action per group. The link variant preserves the distinction between navigation and action."},

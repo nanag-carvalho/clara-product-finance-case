@@ -122,3 +122,17 @@ Sidebar navigation aligns icons and labels to the left. The collapse control sit
 ## Wizard
 
 Wizard is a controlled multi-step task pattern composed from Dialog, ScrollArea and Button. Dialog is the presentation container; the service state machine owns validation, permissions, back transitions and submission. Consumers must preserve a dismissed task, distinguish unknown from failed outcomes and never treat progress as payment success. Public API: open, onOpenChange, title, steps, current, context, onBack, footerNote, closeLabel, actions and children. The component announces the current phase and moves focus to its heading. See PAYMENT_WIZARD_CONTRACT.md for payment-specific requirements.
+
+## Research callouts and audit traceability
+
+Use the registered `Alert variant="note"` through `@/design-system` for static author interpretations and hypotheses. It defaults to `role="note"`, not a live alert. Compose a decorative 16 px Lightbulb and AlertDescription; keep a visible **My reading** or **Hypothesis to test** label. Neutral Slate surface, control radius, 16 px padding, 8 px icon/content gap, no shadow. Keep one related idea in each note. Markdown blockquotes in the case reader use this composition; evidence remains in the surrounding prose. The Patterns page shows both examples and their API.
+
+### Why these rules exist in this case
+
+- A2: Paid/Reversed share a green treatment in the demo. Preserve explicit outcome text and define predictable semantic roles; never infer settlement from color or an animation.
+- A3: the queue exposes decisions, but approval detail is uncaptured. Preserve company policy and put responsible actor and consequence beside the action. Do not invent a missing review defect.
+- A4: inline invalid-key validation already exists. Reuse this strength: label, associated error, retained input and controlled submission. Do not remove validation to reduce clicks.
+- A5: uncertain-result recovery is an evidence gap with a consequential risk. A DS can express state, but status reconciliation and idempotency require service logic.
+- A6: dense summary/list composition motivates proximity, hierarchy, predictable action placement and accessible labels. Contrast, keyboard support and responsiveness must be tested; screenshots alone do not establish failures.
+
+Contract checks prove token/API consistency, not usability. Review at the target viewport and 200% zoom; check focus order, labels, error announcements and reduced motion. In task sessions check source comprehension, decision consequence, review mismatches and safe recovery. Do not claim a WCAG pass or a measured improvement from a successful build.

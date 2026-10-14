@@ -12,25 +12,36 @@ The evaluation asks for problem framing and a metric, Pix and Open Finance conte
 
 Source: the private brief I received during the interview process. These requirements describe the evaluation; this document records my initial analysis.
 
-## Product, value proposition and opportunity
+## Product context and the brief
 
-Clara brings together corporate cards, expense management and accounts payable. Its public communication presents spending control and financial operations in one place as part of its value proposition. Accounts Payable describes a journey from invoice capture to approval, payment and reconciliation. I used these references to understand how the challenge connects to the product, without presenting commercial claims as measured results from this case.
+### What Clara brings together
 
-My reading is that the finance team's value lies in executing and tracking payments with company rules and supplier context in one place. The brief exposes a break in that continuity: the work is organized in Clara, but the funds remain at two banks, requiring a top-up before payment.
+Clara positions its platform around company spending: corporate cards, expense control, supplier payments and a digital account. The value proposition connects transactions with the information and controls needed to manage them. Its Brazilian product pages also promote payment automation, ERP integration and cash-management options. These are public product claims, not results measured in this case. Sources reviewed October 14, 2026: [Clara product overview](https://www.clara.com/pt-br) and [Accounts Payable](https://www.clara.com/pt-br/produtos/contas-a-pagar).
 
-The opportunity I select is using the intended bank funds within the supplier-payment task, without organizing funding as a separate piece of work. Source choice and review are the focus; approval and recovery remain required parts of the flow. This could reduce operational effort and make Clara more useful in everyday accounts payable, but I still need to validate whether it increases adoption and repeat use. I do not have internal abandonment, revenue or transaction-volume data to quantify the opportunity.
+### The work behind the product
 
-| Business and experience hypothesis | Signal I would track | How I would investigate |
+| Financial job | Product context | What matters for this case |
 | --- | --- | --- |
-| If a separate top-up makes payment harder, integrating an external source could improve completion | Unique settled eligible payment intents / unique eligible intents started; abandonment by stage | Compare current and proposed task flows, then instrument a pilot |
-| If source and authorizations are clear, requesters and approvers could decide with fewer doubts | Source comprehension; selection errors; help requests | Test review and approval with different company roles |
-| If returning from the bank preserves context and outcome, recovery could require less rework | Successful resumptions; active recovery time; duplicate attempts | Simulate return, refused authorization and unknown outcomes |
-| If external funds fit the routine, Clara could concentrate more supplier operations | Repeat-use companies; eligible payment frequency and volume | Evaluate recurring usage in a pilot, accounting for seasonality and company profile |
+| Organize company spending | Cards and expense records connect transactions to business context. | A supplier payment belongs to a wider financial routine. |
+| Decide what can be paid | Requests and configured approval rules structure company decisions. | Speed must preserve authority and review quality. |
+| Execute and follow the money | Payments and the digital account support money movement and its records. | The source, outcome and next action must remain understandable. |
+| Close the operational loop | Records and integrations support financial follow-up. | A visible success state must correspond to a traceable outcome. |
 
-My primary experience measure is active handling time for a correctly completed eligible payment, including preparatory funding and separating passive waiting. I would report failures alongside time, and track unique eligible payment-intent completion as a later business metric. Targets require a baseline first. Guardrails would cover duplicate payments, incorrect funding sources and execution without required authorizations.
+> **My reading:** Clara's relevance depends on how these jobs connect. A payment interface has to support the decision before sending and the explanation afterwards. Making the screen cleaner is useful only when it helps that work.
 
-The brief guides the scope: first connection and consent, a Pix payment and at least one failure recovery in high fidelity. I will compare direct external-account payment with a Clara-initiated top-up before choosing a path. The presentation should make alternatives, business-account dependencies, reused components, the DS contribution and AI use visible. The initial prototype covers one payment; the persona's weekly volume remains a criterion for assessing the flow's evolution.
-Sources: [Product overview](https://www.clara.com/pt-br), [Accounts Payable](https://www.clara.com/pt-br/produtos/contas-a-pagar).
+### Positioning and ambition
+
+The public portfolio places Clara beyond an isolated payment screen: cards, controls, payments and account services share the same financial workspace. I read this as an ambition to support more of the company's spending routine. The breadth of the offer establishes the positioning; it does not reveal the internal roadmap or explain which historical decisions produced it.
+
+There is a business tension worth investigating: the product promotes account usage and cash-management services, while the brief describes a customer whose funds remain at other banks. Serving that routine could matter for payment usage, but I do not yet know the economics, eligibility or effect on account balances. I would need internal evidence before treating any of these as a business result.
+
+### How the brief connects
+
+The brief places a finance manager in a Brazilian company with 200 employees, two traditional banks and dozens of weekly supplier payments. Funding Clara before paying introduces a preparatory task outside the payment workspace. This is the stated problem to investigate, not a measured abandonment rate. The company size describes the operating context, not 200 payment users.
+
+The case asks me to consider Pix and Open Finance, first connection and consent, a payment and a failure, alongside alternatives and a reusable design contribution. I will use those requirements to examine the existing journey. The questions at this stage are where work is interrupted, which controls already help, and what evidence is needed to assess a change.
+
+> **My reading:** the product context sets the evaluation criteria: operational effort, control, continuity and traceability. The audit and benchmark should explain where intervention is justified before I choose an opportunity.
 
 ## Current journey and evidence coverage
 
@@ -47,13 +58,101 @@ I separated the journey by evidence source: the top-up comes from the brief and 
 | Approve a request | Written guide and visible tabs | Approver detail and decision history |
 | Process and track | Processing in demo; official Pix receipt panel | Failure detail, receipt PDF and decision history |
 
+## Critical audit of the current experience
+
+I reviewed the supplied demo screens and the official flow references in this document. This is a heuristic audit, not an observed usability study. I distinguish a problem stated in the brief, a risk visible in the interface and a state I have not captured. Priority here means relevance to the brief and possible consequence, not measured frequency or a numerical severity score.
+
+### A1 · Funding interrupts the payment task
+
+**Evidence — brief:** the manager transfers funds from another bank to Clara before paying. The demo shows account and payment surfaces, but does not show this whole round trip.
+
+**My assessment:** the preparation crosses environments and asks the person to resume a task. That creates a plausible memory and coordination cost; I have not measured lost data, time or abandonment. This is the strongest problem evidence because it is explicit in the brief.
+
+**Benchmark cross-check:** Mercury keeps account identity in its request/review screens; Wise documents funding and transfer tracking separately. They help examine continuity and source clarity, but neither proves Clara can initiate a Brazilian external-bank payment.
+
+> **Hypothesis to test · A1:** keeping the intended source recognizable across preparation and review may reduce reorientation. I would compare correct completion and active handling time, including preparatory funding. This feeds O1; service eligibility remains a separate question.
+
+### A2 · Outcome labels carry more meaning than their shared color
+
+**Evidence — Payments demo:** Paid and Reversed have green badges. Their text is different. The screen already provides statuses, search and receipt access.
+
+**My assessment:** a quick scan by color may group a completed payment with a returned one. That is a visibility risk, not proof that people confuse them or that the screen fails accessibility. I would retain explicit labels and test how people interpret the outcomes.
+
+**Benchmark cross-check:** Nubank's tutorial and Cora's historical animation pair an explicit result with amount, recipient and receipt access. Mercury instead confirms a request was created. The contrast is useful: completing a request and completing a transfer are different outcomes.
+
+> **Hypothesis to test · A2:** distinct textual outcomes, supported by consistent semantic treatment and transaction detail, may help a person explain whether money moved and what to do next. This informs H2/H3; a new color palette alone would not establish the gain.
+
+### A3 · A queue supports action, but decision context still needs inspection
+
+**Evidence — Tasks demo and approval guide:** the queue exposes requester, amount, waiting time and an Approve action. The guide describes reviewing payment details and configured approvers. The individual approval detail is not captured.
+
+**My assessment:** the queue makes pending work visible, which I would preserve. Repeated overdue labels may offer limited prioritization, but I cannot conclude that urgency rules are missing. Nor can I infer that the visible Approve action bypasses review.
+
+**Benchmark cross-check:** Ramp exposes next-approver filtering; Conta Simples documents decision reasons and who acted and when. These support questions about responsibility and decision quality, rather than a justification for replacing Clara's approval engine.
+
+> **Hypothesis to test · A3:** a clear next actor and a concise decision summary may reduce uncertainty about who acts and whether approval releases funds. This feeds O2 and the H2 guardrail in the selected flow. I would first inspect the existing detail and ask a participant to explain the pending state.
+
+### A4 · Existing validation is a foundation to preserve
+
+**Evidence — official entry/error frames:** the form groups financial information and supporting documents; an invalid key has adjacent error text and prevents review.
+
+**My assessment:** this already supports error prevention. The missing evidence is what happens after a valid lookup and how recipient identity, amount and source appear in review. Missing screenshots are not missing product features.
+
+**Benchmark cross-check:** Mercury groups required and optional fields and shows local upload progress. Nubank exposes interpreted recipient details before the Pix action. Cora separates review from transaction authentication, although its visual reference is historical.
+
+> **Hypothesis to test · A4:** adjacent feedback and a review hierarchy emphasizing recipient, amount and source may help people detect a mismatch without rereading explanatory blocks. This informs H4. I would keep Clara's existing validation behavior and measure errors caught, not simply clicks removed.
+
+### A5 · Failure labels do not establish the recovery experience
+
+**Evidence — Payments demo and official status documentation:** failure and processing states exist. A failure-detail screen and the uncertain-outcome recovery path have not been captured.
+
+**My assessment:** I cannot claim Clara loses context or encourages duplicates. I can identify a consequential question: how does someone distinguish a definitive failure from an outcome that has not yet been confirmed?
+
+**Benchmark cross-check:** Ramp documents reasons and available actions; Wise distinguishes funding and transfer milestones. Neither provides a direct visual precedent for every Pix failure in this case.
+
+> **Hypothesis to test · A5:** preserving the request and offering a state-specific next action may support recovery without repeated entry or duplicate intent. This feeds O3 and H3. Unknown outcomes need status verification before a new submission can be considered safe.
+
+### A6 · Dense information needs hierarchy, not a cosmetic reset
+
+**Evidence — supplied Summary, Tasks and Payments screens:** several summaries, statuses and actions compete within broad tables; some actions are icon-only. The Summary capture also shows horizontal overflow. Capture size and demo data may affect that layout.
+
+**My assessment:** these are reasons to check scanning, responsive layout and action recognition. They do not establish insufficient contrast, absent tooltips, keyboard failure or poor real-world performance. I have not tested those behaviors in the authenticated product.
+
+**Benchmark cross-check:** Ramp uses restrained list hierarchy and Mercury groups task fields. I would borrow their grouping principles while retaining familiar payment vocabulary and the existing company's controls.
+
+> **My reading · A6:** the DS can make spacing, text roles, status treatment and interaction states predictable across my proposal. It cannot fix a funding dependency or make an unclear process understandable by itself. My visual direction is a case design choice; its value must be demonstrated through task comprehension and consistency.
+
+### From audit to the opportunity tree
+
+| Audit evidence | Need to investigate | Opportunity branch | Boundary |
+| --- | --- | --- | --- |
+| A1: explicit preparatory funding task; A4: review needs inspection | Use intended funds while retaining payment context | O1 · Funding continuity | External initiation and PJ eligibility are unverified. |
+| A3: pending work and existing approval rules | Understand and obtain the required decision | O2 · Decision coordination | Chasing and delays are not measured. |
+| A2/A5: different outcomes and incomplete recovery evidence | Understand the result and recover safely | O3 · Recovery | No claim of a confirmed recovery defect. |
+| A6 plus A2/A4 | Recognize actions, states and related information | Shared DS quality criteria | Consistency supports all branches; it is not a fourth opportunity. |
+
+I use the benchmark to challenge possible mechanisms, not to rank products by appearance. The opportunity evaluation weighs these needs against the brief and feasibility; experiments then test whether the proposed interaction changes address them.
+
+## Audit-driven interface decisions
+
+| Finding | Design commitment | Shared API / contract | Validation before claiming improvement |
+| --- | --- | --- | --- |
+| A2 · status meaning | Separate request, approval, processing, reversal and settlement in words; color is supporting information. | PaymentStatus, Badge, Timeline; visibility and semantic consistency | Ask whether funds moved and who acts next at each state. |
+| A3 · decision context | Keep amount, recipient and responsible actor near the decision; preserve company approval rules. | ReviewSummary, Button; recognition and error prevention | Correct interpretation of actor and consequence; no bypass of approval. |
+| A4 · validation | Keep labels, adjacent errors and entered values; distinguish lookup feedback from payment outcome. | Field, InputGroup, Alert, Button loading; prevention and feedback | Keyboard completion, error association, mismatch detection and retained data. |
+| A5 · uncertain outcome | Preserve request identity; verify its status before offering resubmission. | PaymentStatus, Timeline, Alert; recovery contract plus service state model | No duplicate intent in uncertain-result scenarios; backend idempotency remains required. |
+| A6 · hierarchy | Use semantic headings, smaller gaps within groups and consistent action placement. | PageHeader, Stack, Inline; proximity and type roles | Check scanning at the target viewport and 200% zoom; compare task comprehension. |
+| A6 · recognition | Give icon-only actions accessible names and discoverable explanations; use visible labels for consequential choices. | Button, Tooltip; recognition and focus rules | Keyboard focus order, visible focus and accessible names; do not treat a tooltip as the only label. |
+
+> **My reading:** the justification for the DS is repeatable behavior and understandable hierarchy. Nunito Sans, compact dimensions and radii express my visual direction; they are not evidence that Clara's typography or styling is wrong. Build and registry checks establish implementation consistency, while task testing and accessibility checks establish whether that consistency helps people.
+
 ## Payments as the entry point
 
 **Demo screenshot.** The screen brings together Balance, Processing and Pending approval; Overview, Pending approval and Scheduled tabs; beneficiary search, filters and receipt download. Each row shows request date, beneficiary, document, amount, method, status and attachment.
 
 The screenshot includes Pending, Paid, Reversed, Rejected and Failed. Paid and Reversed share the same green: the text distinguishes the outcome, but color does not distinguish settlement from a return. The monetary approval summary and tab count represent different measures, so the screenshot alone cannot establish an inconsistency.
 
-**My design hypothesis:** starting the new flow from New payment could preserve accounts-payable context. The funding account would also need to appear in review and detail, so both requester and approver know where the funds will come from. The current screenshot has no bank-source column.
+> **Hypothesis to test:** starting the new flow from New payment could preserve accounts-payable context. The funding account would also need to appear in review and detail, so both requester and approver know where the funds will come from. The current screenshot has no bank-source column.
 
 ![Payments as the entry point](assets/06-pagamentos.png)
 
@@ -122,7 +221,7 @@ Sources: [Approval configuration guide](https://ajuda.clara.com/hc/pt-br/article
 
 The documentation describes completed payment, reversal, scheduling, pending approval, rejection, cancellation, validation and failure. Failure causes include balance, limits, beneficiary details, account restrictions and security. The current guide also instructs users to check the debit in the Clara account statement.
 
-**My reading for the proposal:** an external-bank debit needs visible confirmation and source traceability. The Clara statement alone does not represent that debit. The list should distinguish internal approval, bank authorization, processing and final outcome.
+> **My reading for the proposal:** an external-bank debit needs visible confirmation and source traceability. The Clara statement alone does not represent that debit. The list should distinguish internal approval, bank authorization, processing and final outcome.
 
 ### Processing observed in the demo
 
@@ -340,13 +439,13 @@ These three additional supplied Mobbin captures complete the attachment sequence
 
 ![Mercury — optional attachment and Back/Review actions before upload. Supplied Mobbin capture.](assets/benchmark/mercury-attachment-empty.png)
 
-**My reading:** optional content sits after the required decision fields, with navigation at the end of the form. For H4, I will keep supporting information secondary to recipient, amount and source. Attachments remain outside the core experiment.
+> **My reading:** optional content sits after the required decision fields, with navigation at the end of the form. For H4, I will keep supporting information secondary to recipient, amount and source. Attachments remain outside the core experiment.
 
 ![Mercury — upload in progress with filename, progress and cancel control. Supplied Mobbin capture.](assets/benchmark/mercury-upload-progress.png)
 
 ![Mercury — completed upload preserves the filename and changes the status indicator. Supplied Mobbin capture.](assets/benchmark/mercury-upload-complete.png)
 
-**My reading:** feedback changes beside the object being processed, without replacing the task. I will apply that principle to recipient lookup and service responses: retain context, announce the state and prevent repeated submission. An upload completion check is not evidence that a financial transaction completed.
+> **My reading:** feedback changes beside the object being processed, without replacing the task. I will apply that principle to recipient lookup and service responses: retain context, announce the state and prevent repeated submission. An upload completion check is not evidence that a financial transaction completed.
 
 ### Visual evidence: Nubank Pix, from entry to receipt
 
@@ -370,11 +469,11 @@ Official help-center images, collected October 14, 2026; visible example dates a
 
 ![Ramp — saved view, visible filter and bill statuses in the work queue. Official help-center image.](assets/benchmark/ramp-saved-views.png)
 
-**My reading:** a task can return to a recognizable queue. For H2/H3, closing the guided payment should leave a findable request with its current state. Saved custom views are a future reference, not part of this two-day scope.
+> **My reading:** a task can return to a recognizable queue. For H2/H3, closing the guided payment should leave a findable request with its current state. Saved custom views are a future reference, not part of this two-day scope.
 
 ![Ramp — applied status filters and a menu including Next approver. Official help-center image.](assets/benchmark/ramp-filters.png)
 
-**My reading:** status and responsibility can help locate work without rereading every row. I will test a named next actor in the payment detail before considering advanced filters.
+> **My reading:** status and responsibility can help locate work without rereading every row. I will test a named next actor in the payment detail before considering advanced filters.
 
 Source: [Ramp — managing bills and payments](https://support.ramp.com/managing-bills-and-payments-on-bill-pay/).
 

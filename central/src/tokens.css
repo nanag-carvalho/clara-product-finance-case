@@ -259,3 +259,11 @@ body {font-family:var(--font-sans);font-size:var(--text-ui);font-weight:400;font
 .ds-wizard-footer{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);padding-top:var(--space-8);border-top:1px solid var(--border)}
 
 .ds-wizard-actions{display:flex;align-items:center;gap:var(--space-8)}
+
+/* Research note composition: the registered Alert note variant. */
+.research-callout{margin-block:var(--space-16);column-gap:var(--space-8)}
+.research-callout [data-slot=alert-description]{color:var(--slate-600);gap:var(--space-4)}
+.prose .research-callout p{margin:0}
+.research-callout strong{color:var(--slate-800);font-weight:var(--weight-h3)}
+
+[data-slot=alert][role=note]{column-gap:var(--space-8)}
