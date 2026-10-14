@@ -118,3 +118,7 @@ Heading weights are registry tokens (`--weight-h1/h2/h3`), currently 700. Body r
 The proposed workspace has one page header containing title and related actions. Do not add a company/context bar above it or repeat company metadata in the sidebar. Sidebar supports expanded labels or an icon rail, preserving accessible names, selected state and tooltips. Collapse controls use the shared Button and explicit expanded state. Mobile navigation remains a Sheet with labels.
 
 Sidebar navigation aligns icons and labels to the left. The collapse control sits to the right of the logo when expanded and floats over the sidebar boundary only when collapsed, outside navigation flow, with a 16 px icon in a 32 px DS icon button. Tooltip triggers may override data-slot; navigation layout must target the semantic button element.
+
+## Wizard
+
+Wizard is a controlled multi-step task pattern composed from Dialog, ScrollArea and Button. Dialog is the presentation container; the service state machine owns validation, permissions, back transitions and submission. Consumers must preserve a dismissed task, distinguish unknown from failed outcomes and never treat progress as payment success. Public API: open, onOpenChange, title, steps, current, context, onBack, footerNote, closeLabel, actions and children. The component announces the current phase and moves focus to its heading. See PAYMENT_WIZARD_CONTRACT.md for payment-specific requirements.

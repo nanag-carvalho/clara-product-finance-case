@@ -42,6 +42,7 @@ const artifacts=[
   ['public/registry.json',JSON.stringify(registry,null,2)+'\n'],
   ['public/api/design-system.json',JSON.stringify(api,null,2)+'\n'],
   ['public/api/DS_CONTRACT.md',contract],
+  ['public/api/PAYMENT_WIZARD_CONTRACT.md',await readFile(path.join(root,'PAYMENT_WIZARD_CONTRACT.md'),'utf8')],
 ]
 let failures=0
 for(const [file,content] of artifacts){const full=path.join(root,file);if(checking){const current=await readFile(full,'utf8').catch(()=>null);if(current!==content){console.error(`Desatualizado: ${file}`);failures++}}else{await mkdir(path.dirname(full),{recursive:true});await writeFile(full,content)}}

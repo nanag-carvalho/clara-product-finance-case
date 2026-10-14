@@ -55,3 +55,5 @@ export * from '@/components/ui/pressable'
 
 export * from '@/components/ui/input-group'
 export * from '@/components/shared/banner'
+
+export * from '@/components/shared/wizard'

@@ -46,3 +46,5 @@
 .proto-sidebar>.proto-brand{margin-right:calc(-1 * var(--space-8))}.proto-brand .proto-collapse{margin-left:auto}.proto-shell-collapsed .proto-sidebar>.proto-brand{margin-right:0}
 
 .proto-shell-collapsed .proto-brand .clara-brand-asset{width:32px;height:32px}.proto-shell-collapsed .proto-brand .clara-brand-asset img{height:32px}
+
+.proto-route{display:flex;align-items:center;flex-wrap:wrap;gap:var(--space-8);padding:var(--space-8);border-radius:var(--radius-control);background:var(--slate-50);font-size:var(--text-caption)}.proto-route strong{margin-left:auto}.proto-route svg{flex-shrink:0}
