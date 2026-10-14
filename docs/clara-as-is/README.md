@@ -18,7 +18,7 @@ Clara brings together corporate cards, expense management and accounts payable. 
 
 My reading is that the finance team's value lies in executing and tracking payments with company rules and supplier context in one place. The brief exposes a break in that continuity: the work is organized in Clara, but the funds remain at two banks, requiring a top-up before payment.
 
-The opportunity I want to explore is using those funds within Payments while keeping the source, approvals and outcome clear. This could reduce operational effort and make Clara more useful in everyday accounts payable, but I still need to validate whether it increases adoption and repeat use. I do not have internal abandonment, revenue or transaction-volume data to quantify the opportunity.
+The opportunity I want to explore is preparing and resuming an externally funded supplier payment with source, approvals and outcome clear within Payments. This could reduce operational effort and make Clara more useful in everyday accounts payable, but I still need to validate whether it increases adoption and repeat use. I do not have internal abandonment, revenue or transaction-volume data to quantify the opportunity.
 
 | Business and experience hypothesis | Signal I would track | How I would investigate |
 | --- | --- | --- |
@@ -220,7 +220,7 @@ Sources: [Public releases](https://www.clara.com/pt-br/recursos/lancamentos), [P
 4. Separate company approval, bank authorization and execution confirmation. A connection must not imply unrestricted authorization.
 5. Preserve context on return and handle an uncertain outcome without encouraging duplicate payment.
 
-Before consolidating high fidelity, I need to confirm the business-account journey and the approval rules of the selected banks. The Central Bank describes consent, authentication at the account-holding institution and return to the initiator. Regulation also covers journeys without redirection, but does not establish availability for this combination of business account, bank and device.
+I can consolidate the Clara-side interaction as a proposal while marking the bank journey as an assumption. Before production, I need to confirm the business-account journey and approval rules of the selected banks. The Central Bank describes consent, authentication at the account-holding institution and return to the initiator. Regulation also covers journeys without redirection, but does not establish availability for this combination of business account, bank and device.
 Sources: [Central Bank: Open Finance journey](https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado), [Central Bank: Resolution 406](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&tipo=Resolu%C3%A7%C3%A3o+BCB).
 
 ## State coverage and reconstructions for validation
@@ -316,29 +316,45 @@ I keep O1 and the existing hypothesis IDs. I sharpen the mechanisms rather than 
 
 | ID | Refined hypothesis | Controlled comparison | What I observe | Evidence that challenges it |
 | --- | --- | --- | --- | --- |
-| O1-H1 · service path | Paying directly from eligible external funds reduces active effort compared with top-up then payment, without increasing source errors. | Same supplier and amount on A/B, with equivalent review content. Counterbalance order if multiple sessions are possible. | Completion, active time, switching and identified debited account. | Source confusion or no reduction in effort; bank eligibility blocks A. |
+| O1-H1 · source decision | A named source with its route supports the correct funding decision without searching another view. | Same supplier and amount with named source versus the previous summary. Keep the payment path constant; compare A/B separately as service alternatives. | Completion, active time, switching and identified debited account. | Source confusion or unnecessary navigation. Service eligibility is assessed separately. |
 | O1-H2 · next action | A concise status naming the responsible actor and action lets the person distinguish company approval, bank authorization and payment completion. | At the same service state, compare the current explanation-heavy version with a concise actor/action version. | Ask who acts next and whether funds have moved; record unprompted answers. | Approval is still interpreted as payment, or the next actor remains unclear. |
 | O1-H3 · recovery | A retained request with distinct actions for definitive failure and uncertain outcome supports resumption without repeated entry or duplicate intent. | Use separate interruption and unknown-outcome tasks. Preserve the same transaction data. | Re-entered fields, chosen recovery action and intention to submit again. | Lost context, unsafe retry or an unclear current state. |
 | O1-H4 · decision clarity | Emphasized amount and verified recipient, a named source account and adjacent field feedback help detect a planted review mismatch with less rereading than repeated explanatory alerts. | Compare the current review with a compact decision-focused version; keep the service path and data constant. Include one intentionally incorrect amount or recipient in the test task. | Whether the mismatch is caught before requesting approval, details identified and rereading/hesitation. | More missed mismatches or faster completion caused by skipping review. |
 
-In two days I prioritize H2 and H4 as experience experiments within the selected flow; H3 is a required recovery check. H1 remains the service-path comparison, conditional on feasibility. If sessions are unavailable, I report a heuristic evaluation and an experiment plan, not validated hypotheses. I use formative observations rather than inventing targets such as a 30% improvement.
+In two days I prioritize H2 and H4 as experience experiments within the selected flow; H3 is a required recovery check. H1 tests the source decision; the service-path comparison is separately conditional on feasibility. If sessions are unavailable, I report a heuristic evaluation and an experiment plan, not validated hypotheses. I use formative observations rather than inventing targets such as a 30% improvement.
 
 Sources: [Mercury payment-link guide](https://support.mercury.com/hc/en-us/articles/44220096132116-How-to-create-and-send-a-payment-link-in-Mercury), [Nubank Pix guidance](https://blog.nubank.com.br/pix-tudo-sobre/), [Wise sending guide](https://wise.com/help/articles/2977959/how-do-i-send-money-with-wise), [Wise tracker](https://wise.com/help/articles/2452305/how-do-i-check-my-transfers-status), [Wise Platform status semantics](https://docs.wise.com/guides/product/send-money/tracking/transfer-statuses).
 
 ## Opportunity evaluation and selected focus
 
-I organized four candidate opportunities around completing eligible supplier payments with less active effort and intact controls. The tree is a synthesis of the brief, desk research and my interpretation; its branches are not interview findings.
+My desired outcome is to complete eligible supplier payments with less active operational work while preserving company controls. I reframed the opportunities as user needs within Clara, rather than selecting a banking integration as the opportunity.
 
-| Opportunity | Evidence and brief fit | Learning value within two days | Main dependency | Decision |
-| --- | --- | --- | --- | --- |
-| Use external funds without a separate top-up task | Directly addresses the problem in the brief | Compare two concrete funding paths | Eligible PJ bank journey and initiator capability | Selected for the prototype |
-| Understand who must authorize and what happens next | Supported by existing approval rules and the new bank dependency | Test review comprehension | Bank signatories and company permissions | Required within the selected flow |
-| Recover without re-entering details or duplicating payment | Failure is explicitly required by the brief | Test one recovery branch | Reliable payment status and duplicate prevention | Required within the selected flow |
-| Handle many supplier payments at once | Weekly volume in the brief; Clara documents batch Pix | Valuable but adds consent and partial-result complexity | Batch support and authorization limits | Defer |
+| Branch | User need and evidence | What I can design in Clara | Dependency and scope decision |
+| --- | --- | --- | --- |
+| O1 · Prepare a payment that is ready to execute | Brief: separate funding task; demo: beneficiary, value, approval and status are scattered across views. | Source decision, verified recipient, focused review, next responsible actor and a resumable request. | Selected. One Pix to one supplier; eligibility and authoritative data remain service dependencies. |
+| O2 · Know which payment needs my action | Demo: Tasks and Payments expose pending work, statuses and waiting age. | Priority, actionable state and movement from list to payment detail. | Supporting navigation in O1. A full prioritization engine is deferred; urgency logic needs evidence. |
+| O3 · Resolve an exception without starting over | Brief explicitly requires a failure scenario; the demo shows failed/rejected statuses without observed recovery details. | Retained context, distinct retry/query actions, reason and transaction history. | One recovery branch within O1. Backend reconciliation and duplicate prevention are mandatory dependencies. |
+| O4 · Repeat supplier work with less setup | Brief: dozens of payments weekly; Clara documents batch capability. | Reuse confirmed recipient/source context for eligible repeat work. | Deferred. Batch, saved beneficiaries and account policies would expand scope and permissions. |
 
-I selected external funding in the payment context because it directly addresses the stated friction and gives me a focused way to investigate first connection, review, authorization and recovery. I am prioritizing learning against the brief, not claiming that the business opportunity has been quantified.
+**Selected opportunity: help the finance manager prepare and resume an externally funded supplier payment with the context needed to make the next decision.** I own the proposed experience from Payments entry to review, internal approval, bank-handoff preparation, return and outcome detail. The external bank remains a clearly bounded touchpoint.
 
-The solution alternatives are direct payment from an external account and a Clara-initiated top-up followed by payment. I will compare both before consolidating the design. Direct payment is a candidate, not a confirmed capability of Clara. If feasibility blocks it, the top-up alternative still needs transparent movement tracking and recovery.
+This fits Clara's public emphasis on centralized supplier payments and transaction visibility. It also gives me a coherent end-to-end design case: evidence synthesis, task framing, prioritization, interaction alternatives, UI hierarchy, shared components, a service-state contract and validation. The selection is grounded in user/business value and a feasible delivery surface, not in maximizing visual screen count.
+
+Direct external payment and top-up then pay are **service alternatives under O1**, not separate user opportunities. I retain the comparison and document dependencies, but do not make an unverified initiation capability the evidence of my design's value. Path A is conditional; Path B must still distinguish confirmed funding from supplier payment.
+
+### Control boundary and customization limits
+
+| Surface | Evidence of control | Proposal or dependency |
+| --- | --- | --- |
+| Payments list, fields, review and navigation | Observed Clara surfaces; review detail partially documented. | I can propose layout, grouping, validation, source context and explicit actions. A proposal is not proof of deployable configuration. |
+| Company approvals | Existing rules and approval configuration documented. | Reuse the configured policy and show its actor/status; do not bypass it or invent a new permission model. |
+| Entry to the bank | Product can prepare the handoff in this proposal. | Verify eligible banks, provider capabilities, consent content and safe redirect/callback handling. |
+| Bank authentication and authorization | External institution controls the experience. | Show a bounded handoff storyboard, not a proposed bank redesign. No assumption about changing its screens, MFA or signatories. |
+| Return, status and recovery | Clara can present correlated service results if integration supplies them. | Preserve request identity, reconcile each money leg and offer only valid actions. Real-time data and reason codes require provider support. |
+
+Clara's current public legal footer describes its authorized issuance roles and indirect Pix participation; this does not establish an initiation capability for this proposal. I need confirmation of the authorized initiation service or partner before production. No public material reviewed establishes how much an external bank flow can be customized.
+
+Sources: [Clara Accounts Payable and legal footer](https://www.clara.com/pt-br/produtos/contas-a-pagar), the private brief summarized above, and the observed/demo evidence in Current journey.
 
 ## Experiment plan for the selected opportunity
 
@@ -377,67 +393,56 @@ Friday's presentation should make my judgment visible: what I observed, why I se
 
 ## Discovery: empathy map and user voice
 
-I am using an empathy map to organize what I need to understand about the finance manager beyond the brief's company profile. This is a provisional map, not interview evidence. The user voice is represented by the scenario in the brief and questions to investigate; I have not collected verbatim quotes.
+I use the brief's 200-employee company as an operating context, not a population of 200 payment users. The focal user is the finance manager preparing dozens of supplier payments each week across two banks. The requester, internal approver and bank-authorized representative are responsibility lenses; I have not established how many people hold them or whether some roles overlap.
 
-| Dimension | Working interpretation | Evidence level | What I need to hear or observe |
-| --- | --- | --- | --- |
-| Does | Moves funds from a bank to Clara before paying suppliers | Explicitly described in the brief | Walk me through the most recent payment: where did you leave Clara and why? |
-| Thinks | Needs to know which balance funds the payment and whether approvals are complete | Design inference | What do you check before submitting, approving and considering a payment finished? |
-| Feels | May be uncertain after leaving Clara or when a payment has no clear outcome | Unvalidated assumption | At what point do you become unsure, and what do you do next? |
-| Says | No direct quotes collected | Research gap | How would you describe the hardest part of paying suppliers in your own words? |
-| Pain | Separate funding step; possible repeated entry or status checking | Funding step from brief; other pains unvalidated | What takes active work, what is waiting, and which workarounds do you use? |
-| Gain | Pay the intended supplier from the intended account with clear control and outcome | Proposed need to validate | What would make you trust this flow enough to use it again? |
+My practical scenario is one supplier payment due today, funds at a traditional bank, company approval required and an interruption before completion. This lets me inspect decisions and handoffs within a bounded task.
 
-I will keep a short evidence log: role, task context, observation or exact quote if collected, source, date and the design decision it affects. If no user sessions fit the two-day window, these questions and gaps remain visible; a heuristic review does not become a user interview.
+| Task lens | Evidence or assumption | Practical need to validate | Design implication within Clara | Test prompt |
+| --- | --- | --- | --- | --- |
+| Does: prepares the supplier payment | Brief: finance manager switches to a bank for top-up; demo: Payments lists beneficiary, value and status. | Keep supplier and amount while choosing the funding source. | A payment draft with named source and verified recipient. | Prepare this supplier payment using Bank A. What would be debited? |
+| Thinks: checks whether the request is ready | Inference; approval workflows are documented. | Notice missing or incorrect information before commitment. | Decision-focused review; adjacent validation; amount and recipient emphasis. | Something in this request is incorrect. What would you change? |
+| Feels: needs confidence at a handoff | Assumption to investigate, not a collected emotion. | Know what will happen outside Clara and how to resume. | Clear bank destination, retained draft and a return state. | You return without authorizing. What happened and what would you do? |
+| Says: explains the current state | No direct user quotes collected. | Describe who acts next without decoding system terms. | Named responsible actor and a status tied to an action. | Has the supplier been paid? Who needs to act now? |
+| Pain: repeated coordination | Separate funding is in the brief; repeated checking and re-entry remain assumptions. | Distinguish active work from waiting on another person or bank. | Pending task visible in Payments; resume the same request. | Close the task and find where to continue. |
+| Gain: accountable completion | Proposed need inferred from the job. | Evidence of the debited account and confirmed outcome. | Payment detail, source, event history and receipt. | Show what proves the supplier payment is complete. |
 
-To bring the business perspective into my decisions, I use the brief and Clara's public value proposition to connect design decisions to candidate outcomes: eligible payment completion, adoption and repeat use. Approval and exception needs come from documented behavior; bank eligibility and authorization remain implementation dependencies. These are candidate business outcomes to validate.
+For each observation I will record role, task, evidence or exact quote, and the decision it changes. For two days, these prompts support a focused walkthrough or a small formative test if participants are available. The map does not invent interviews or feelings.
+
+The business lens is continuity of Accounts Payable: customers can organize and complete eligible supplier work in Clara. Completion and repeat use are candidate outcomes; incorrect source, duplicate payment and missing authorization are guardrails.
 
 ## Jobs to be done and decision traceability
 
-**Primary job, inferred from the brief:** When I need to pay a supplier and the money is held at another bank, I need to use the intended funds within my payment workflow and preserve required approvals, so I can pay the correct recipient and understand the outcome without managing a separate funding task.
+**Primary job, inferred from the brief:** When a supplier payment is due and the funds are at another bank, help me prepare the correct request, get the required decisions and resume until I know the outcome, so I can complete the work without rebuilding its context between systems.
 
-The emotional dimension I would validate is confidence about source and outcome. The organizational dimension is accountability: requester, company approver and bank-authorized representative may be different people. I should not design those roles as interchangeable.
+**Business job:** Make eligible supplier operations easier to complete and track within Clara's Accounts Payable workflow. Completion and repeat use need a baseline and pilot; the case does not claim measured commercial impact.
 
-**Candidate business job:** When a customer already organizes supplier payments in Clara but funds them elsewhere, help that customer complete eligible operations through Clara with intact controls, so Accounts Payable becomes useful more consistently. This is a business hypothesis, not a confirmed internal objective.
-
-| Opportunity or requirement | Job fragment | Hypothesis | Experiment | Decision criterion |
+| Job fragment | Selected need | Hypothesis | Design artifact | Check |
 | --- | --- | --- | --- | --- |
-| Selected opportunity: external funding in context | Use the intended funds without a separate funding task | O1-H1: source selection in the payment flow reduces avoidable switching | Compare direct external payment and initiated top-up | Correct source comprehension and successful completion without critical errors |
-| Requirement: clear authority and next step | Preserve approvals and know who must act | O1-H2: explicit actors and stages reduce confusion | Requester/approver explain review and next authorization | Distinguish company approval, bank authorization and settlement |
-| Requirement: safe recovery | Know the outcome before trying again | O1-H3: retained context and specific states support safe resumption | Interrupted authorization, confirmed failure and unknown outcome | Resume without re-entry or duplicate-payment intent |
-| Deferred opportunity: supplier volume | Repeat the job across many suppliers | Future hypothesis: batching reduces repetitive work | Deferred until individual flow and bank support are understood | Outside the two-day prototype |
+| Use the intended funds | Decide the source in payment context | O1-H1 | Named source account and visible route | Identify the debited account without prompting. |
+| Request the right decision | Know the next responsible actor | O1-H2 | Review, approval state and bank handoff | Distinguish company approval, bank authorization and money movement. |
+| Resume interrupted work | Keep the request and resolve its state | O1-H3 | List entry, return detail and recovery action | Resume without repeated input or duplicate intent. |
+| Confirm the right supplier and amount | Catch a mistake before commitment | O1-H4 | Decision-focused review and field feedback | Detect a planted mismatch and correct it. |
 
-These criteria are diagnostic for design iteration. I have no baseline or completed experiment from which to claim reduced time, higher adoption or commercial impact. I will revise the job and opportunity tree if user evidence contradicts the assumptions.
+The finance manager is the focal role. Internal and bank authorization responsibilities may be held by different people; I keep the handoff explicit and verify the actual role model before implementation.
 
 ## Hypothesis portfolio by opportunity
 
-I am recording multiple hypotheses for each candidate opportunity, while keeping the proposal and prototype focused on **O1: external funding within the payment context**. O2 and O3 surface needs that O1 must respect; I am not building separate approval or recovery products. O4 remains deferred.
+I keep one selected opportunity, O1, with four falsifiable experience hypotheses. O2 and O3 support its navigation and exception handling; O4 is deferred.
 
-| Candidate opportunity | Hypothesis | What could support or challenge it | Prototype scope |
+| Opportunity | Hypothesis | Experiment or evidence needed | Scope |
 | --- | --- | --- | --- |
-| O1 — external funding in context | O1-H1: presenting the source during payment creation could remove avoidable switching compared with a separate top-up task | Path comparison; completion, correct source and active effort | Selected |
-| O1 — external funding in context | O1-H2: separating company approval from bank authorization could make the next actor and step understandable | Requester/approver explain who acts next and whether funds moved | Selected |
-| O1 — external funding in context | O1-H3: a preserved draft and explicit outcome could support recovery without a duplicate attempt | Authorization interruption and unknown-outcome task | Selected |
-| O1 — external funding in context | O1-H4: grouping source, recipient and amount with the related action could reduce review omissions | Locate and explain the three details; identify the next action | Selected |
-| O2 — understand authority and next steps | O2-H1: showing the next responsible person could reduce status-checking effort | Observe how the team currently follows up on approvals | Candidate; no separate prototype |
-| O2 — understand authority and next steps | O2-H2: explaining each approver's scope could reduce confusion between company and bank permissions | Compare comprehension across requester and signatory roles | Candidate; dependency considered in O1 |
-| O3 — recover with context | O3-H1: retaining payment data after interruption could reduce repeated entry | Observe resumption and fields re-entered | Candidate; requirement considered in O1 |
-| O3 — recover with context | O3-H2: different actions for confirmed failure and unknown outcome could discourage unsafe retries | Ask what the person would do in each state | Candidate; requirement considered in O1 |
-| O4 — supplier volume | O4-H1: reusing a verified source across eligible batch items could reduce repetitive setup | Batch task study after bank eligibility is established | Deferred |
-| O4 — supplier volume | O4-H2: item-level results could make partial failures easier to reconcile | Partial-result comprehension and recovery task | Deferred |
+| O1 · ready-to-execute payment | H1: a named source with its payment route helps users select and identify the correct debited account without searching another view. | Same payment task; record source mistakes and navigation. Compare A/B as a separate service-feasibility/effort question. | Selected |
+| O1 · ready-to-execute payment | H2: an actionable state naming the responsible actor makes the next decision clear without repeated service explanations. | Ask who acts next and whether funds have moved at approval, bank return and completion. | Selected |
+| O1 · ready-to-execute payment | H3: a retained request and state-specific actions support resumption without re-entry or duplicate intent. | Close/resume, interrupted authorization and unknown-result tasks. | Selected |
+| O1 · ready-to-execute payment | H4: emphasized recipient/amount, adjacent validation and a named source help detect a review mismatch with less rereading. | Compare the current review with a concise version; keep data/path constant and plant one mismatch. | Selected |
+| O2 · actionable queue | Showing actor and blocker could help locate the next item requiring action. | Observe current triage and urgency criteria. | Supporting list; prioritization deferred |
+| O2 · actionable queue | Distinguishing active work from external waiting could reduce repeated status checking. | Observe follow-up behavior before adding notifications. | Candidate |
+| O3 · exception resolution | Supported failure reasons could make the remedy easier to choose. | Map provider reason codes and test comprehension. | One failure in O1 |
+| O3 · exception resolution | Correlated event history could reduce uncertainty after a handoff. | Inspect bank-return/status tasks with the same request. | Supporting detail in O1 |
+| O4 · repeat work | Reusing confirmed data could reduce repeated setup without source mistakes. | Validate permissions, supplier maintenance and repeat-task behavior. | Deferred |
+| O4 · repeat work | Item-level batch results could make partial completion easier to reconcile. | Batch eligibility and partial-result study. | Deferred |
 
-### Selected opportunity: UX and UI experiments
-
-| Hypothesis | Design variable | Experiment and measure | What I would change based on evidence |
-| --- | --- | --- | --- |
-| O1-H1 | Direct external payment versus initiated top-up | Same supplier task on both paths; completion, correct source, active time and avoidable navigation | Choose a feasible money path and its entry point |
-| O1-H2 | Review content, actor labels and authorization sequence | Explain source, next actor and current state without prompting; log each correct/incorrect answer | Revise review copy, role distinctions and transitions |
-| O1-H3 | Retained context and recovery actions | Return from interrupted authorization; inspect unknown outcome; log re-entry and duplicate-payment intent | Revise return state, status detail and safe next action |
-| O1-H4 | Proximity, hierarchy and action placement using the DS | Locate source, recipient, amount and next action in review; record omissions and hesitation | Adjust grouping, emphasis and related actions without changing the DS scale |
-
-I will log observations per task and distinguish a participant's answer from my interpretation. Source mistakes, confusing approval with settlement, lost drafts and duplicate intent are critical issues. I will address them before consolidating the flow. These are formative checks, not evidence of a statistically measured uplift.
-
-The two-day delivery still covers one coherent O1 flow. Four hypotheses guide different aspects of that same experience; they do not require four features or four independent prototypes.
+I prioritize H2 and H4 for the two-day experience comparison. H3 is a recovery guardrail, and H1 checks the source decision. My architecture comparison stays conditional on provider support; it does not replace testing the experience I can design.
 
 ## Design and engineering contributions
 

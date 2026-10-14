@@ -12,7 +12,7 @@ The Origin images supplied for this case inform the contained, sequential presen
 | --- | --- | --- |
 | Payments lists amount, method, status and attachments. The captured screens do not expose a complete initiation flow. | Keep the list and open a focused task with visible source and recipient. | O1-H4: correctly identify recipient, amount and debited account; record hesitation and omissions. |
 | Tasks shows an approval action and waiting age. Details of the full approval process remain an evidence gap. | Separate requester, company approver and bank-authorized representative by service state. | O1-H2: identify the next actor and explain whether money has moved. |
-| Account and Payments expose different balances and statuses. | Carry the money route across phases; Path B retains separate funding and payment outcomes. | O1-H1: compare source comprehension, completion and active effort on A and B. |
+| Account and Payments expose different balances and statuses. | Carry the money route across phases; Path B retains separate funding and payment outcomes. | O1-H1: check the intended source and debited-account comprehension; assess A/B effort as a separate conditional service comparison. |
 | List screenshots expose failed/rejected states, but recovery details are not observed. | Keep the request, query uncertain results and retry only after a definitive failure. | O1-H3: recover without intending a duplicate payment. |
 
 These are testable design gains, not measured results. A wizard alone does not prove improvement over the existing product.
