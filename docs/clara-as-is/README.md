@@ -286,7 +286,7 @@ Source: [Ramp bill lifecycle and original images](https://support.ramp.com/bill-
 
 ## Interaction benchmark: Mercury, Nubank and Wise
 
-I refined the interaction benchmark after comparing the Mercury screenshots supplied for this case with official Nubank and Wise guidance. This complements the three competitor references; it does not expand the feature scope. The evidence types matter: I inspected Mercury screenshots, while the Nubank and Wise flows below are documented behavior, not authenticated interface observations.
+I refined the interaction benchmark after comparing the Mercury screenshots supplied for this case with official Nubank and Wise guidance. This complements the three competitor references; it does not expand the feature scope. The evidence types matter: I inspected supplied Mercury screenshots, official Ramp documentation images and frames from an official Nubank tutorial. Wise remains a documented behavior reference; I have not verified its current interface.
 
 | Reference and evidence | What I can support | Interpretation for my proposal | Limit |
 | --- | --- | --- | --- |
@@ -303,6 +303,62 @@ I refined the interaction benchmark after comparing the Mercury screenshots supp
 ![Mercury result: payment request created, then a next action. Supplied Mobbin reference; capture date unknown.](/references/mercury/result.png)
 
 The screenshots show a broader task workspace rather than an isolated small modal. I should compare the container against task length and navigation needs instead of treating a dialog as the improvement itself. Their useful pattern is the structure: form → review → explicit outcome. I am not importing their payment rails, brand treatment or optional features into this Pix scope.
+
+### Visual evidence: task feedback in Mercury
+
+These three additional supplied Mobbin captures complete the attachment sequence. Capture date is unknown; the images retain the original attribution. Click any image to enlarge it.
+
+![Mercury — optional attachment and Back/Review actions before upload. Supplied Mobbin capture.](assets/benchmark/mercury-attachment-empty.png)
+
+**My reading:** optional content sits after the required decision fields, with navigation at the end of the form. For H4, I will keep supporting information secondary to recipient, amount and source. Attachments remain outside the core experiment.
+
+![Mercury — upload in progress with filename, progress and cancel control. Supplied Mobbin capture.](assets/benchmark/mercury-upload-progress.png)
+
+![Mercury — completed upload preserves the filename and changes the status indicator. Supplied Mobbin capture.](assets/benchmark/mercury-upload-complete.png)
+
+**My reading:** feedback changes beside the object being processed, without replacing the task. I will apply that principle to recipient lookup and service responses: retain context, announce the state and prevent repeated submission. An upload completion check is not evidence that a financial transaction completed.
+
+### Visual evidence: Nubank Pix, from entry to receipt
+
+I captured the following frames from Nubank's verified YouTube channel, **“Como fazer um Pix usando áudio e texto?”**, published May 22, 2025, inspected October 14, 2026. This is a public demonstration of a conversational Pix experience, not a session in the current app. The review screen itself describes the experience as being tested.
+
+![Nubank — Pix entry and adjacent instruction, official tutorial at 00:30.](assets/benchmark/nubank-entry-0030.jpg)
+
+[Watch the entry at 00:30](https://www.youtube.com/watch?v=e7qt92GdEWo&t=30s). **My reading:** instruction appears next to the input. For H4, guidance belongs near the field that needs it. I will not add conversational AI to this case.
+
+![Nubank — recipient, amount and bank details grouped before the Pix action, official tutorial at 00:40.](assets/benchmark/nubank-review-0040.jpg)
+
+[Watch review at 00:40](https://www.youtube.com/watch?v=e7qt92GdEWo&t=40s). **My reading:** interpreted input is exposed for checking before commitment. H4 should test whether a person catches a wrong amount or recipient; a shorter flow alone does not establish safer review.
+
+![Nubank — transfer completed with recipient, value and access to the receipt, official tutorial at 00:50.](assets/benchmark/nubank-result-0050.jpg)
+
+[Watch the result at 00:50](https://www.youtube.com/watch?v=e7qt92GdEWo&t=50s). **My reading:** the result names the outcome and retains transaction context. For H2/H3, Clara needs equally precise distinctions between approval, processing, uncertainty and settlement. The completion treatment must only appear after confirmed success. Personal Pix does not establish corporate approval or external-bank capabilities.
+
+### Visual evidence: returning to work in Ramp
+
+Official help-center images, collected October 14, 2026; visible example dates are from 2024. The red callouts are part of Ramp's source image. They document an interface example, not a verified latest release.
+
+![Ramp — saved view, visible filter and bill statuses in the work queue. Official help-center image.](assets/benchmark/ramp-saved-views.png)
+
+**My reading:** a task can return to a recognizable queue. For H2/H3, closing the guided payment should leave a findable request with its current state. Saved custom views are a future reference, not part of this two-day scope.
+
+![Ramp — applied status filters and a menu including Next approver. Official help-center image.](assets/benchmark/ramp-filters.png)
+
+**My reading:** status and responsibility can help locate work without rereading every row. I will test a named next actor in the payment detail before considering advanced filters.
+
+Source: [Ramp — managing bills and payments](https://support.ramp.com/managing-bills-and-payments-on-bill-pay/).
+
+### What this evidence supports — and what remains open
+
+| Decision to explore | Visual anchor | Hypothesis / check |
+| --- | --- | --- |
+| Keep guidance beside the decision | Nubank entry; Mercury grouped form | H4: fewer rereads without missed errors. |
+| Keep source identity visible during preparation and review | Mercury selected account in the existing request/review captures | H1: identify the account that will be debited. |
+| Preserve the object while its state changes | Mercury upload sequence | H3: retain payment context during lookup and recovery. |
+| Distinguish task completion from money movement | Mercury request-created result versus Nubank transfer-completed result | H2: correctly explain whether funds moved. |
+| Return to a findable item after leaving the task | Ramp queue and filters | H2/H3: locate the request and identify the next action. |
+
+These are design mechanisms to test, not evidence of measured gains. Wise's sending and tracking guides remain useful for service-state semantics, but the public PDF I inspected contains explanatory material rather than detailed flow screenshots. I have not presented it as visual proof. External-bank authorization, unknown outcomes and failure recovery still need direct evidence; the wireflow marks these service boundaries explicitly.
 
 ### What the current proposal needs to improve
 

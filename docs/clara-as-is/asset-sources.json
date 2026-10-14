@@ -121,5 +121,61 @@
     "origin": "Screenshot from the authorized Arc demo session",
     "transformation": "Demo content crop; browser sidebar excluded",
     "collected_at": "2026-10-13"
+  },
+  {
+    "file": "benchmark/nubank-result-0050.jpg",
+    "origin": "Frame captured from verified Nubank YouTube tutorial; published 2025-05-22",
+    "source_url": "https://www.youtube.com/watch?v=e7qt92GdEWo&t=50s",
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/ramp-filters.png",
+    "origin": "Official Ramp help-center image; example dates 2024",
+    "source_url": "https://support.ramp.com/managing-bills-and-payments-on-bill-pay/",
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/mercury-attachment-empty.png",
+    "origin": "User-supplied Mobbin screenshot; Mercury payment request; capture date unknown",
+    "source_url": null,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/mercury-upload-complete.png",
+    "origin": "User-supplied Mobbin screenshot; Mercury payment request; capture date unknown",
+    "source_url": null,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/mercury-upload-progress.png",
+    "origin": "User-supplied Mobbin screenshot; Mercury payment request; capture date unknown",
+    "source_url": null,
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/nubank-review-0040.jpg",
+    "origin": "Frame captured from verified Nubank YouTube tutorial; published 2025-05-22",
+    "source_url": "https://www.youtube.com/watch?v=e7qt92GdEWo&t=40s",
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/nubank-entry-0030.jpg",
+    "origin": "Frame captured from verified Nubank YouTube tutorial; published 2025-05-22",
+    "source_url": "https://www.youtube.com/watch?v=e7qt92GdEWo&t=30s",
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
+  },
+  {
+    "file": "benchmark/ramp-saved-views.png",
+    "origin": "Official Ramp help-center image; example dates 2024",
+    "source_url": "https://support.ramp.com/managing-bills-and-payments-on-bill-pay/",
+    "collected_at": "2026-10-14",
+    "evidence_type": "External benchmark; not observed Clara UI"
   }
 ]
