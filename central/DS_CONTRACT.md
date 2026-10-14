@@ -61,7 +61,7 @@ Primitives and patterns are implemented on individual pages. Availability derive
 
 Reference: [Carbon — Typography / productive type set](https://www.carbondesignsystem.com/building-blocks/foundations/typography/type-sets). Carbon distinguishes productive interfaces, with a 14 px base and fixed headings, from expressive pages. This case applies that principle to work screens while retaining its own tokens.
 
-Applied scale: page 20/28; section 16/24; group 14/20; reading 14/20; UI 14/20; supporting text 12/16. Heading weight 600 is a case decision. Display 32/40 stays in presentations. Do not attribute these tokens to OpenAI or Clara's official DS.
+Applied scale: page 20/28; section 16/24; group 14/20; reading 14/20; UI 14/20; supporting text 12/16. Heading weight 700 is a case decision. Display 32/40 stays in presentations. Do not attribute these tokens to OpenAI or Clara's official DS.
 
 Page headers contain a functional title, optional description 4 px away, primary and secondary actions, and a kebab menu when needed. Avoid a top bar repeating the documentation name. Do not render actions without a contextual function. One h1 per page; PageHeader previews use h2.
 
@@ -109,4 +109,12 @@ The hub sidebar identity is Clara Case / Product Finance. Navigation labels stay
 
 ## Proposed workspace composition
 
-Prototype and Solution consume the public DS API and share its tokens. The workspace has sidebar, header, PageHeader, working content and separate test controls. Payment review groups recipient, amount and source; company approval and bank authorization remain distinct. Prototype bank screens and receipts retain simulation labels. `npm test` verifies state-machine invariants; it does not replace contextual usability checks.
+Prototype and Solution consume the public DS API and share its tokens. The workspace has sidebar, header, PageHeader, working content and separate test controls. Payment review groups recipient, amount and source; company approval and bank authorization remain distinct. Simulation context belongs in the case documentation and test controls, rather than the product screens. `npm test` verifies state-machine invariants; it does not replace contextual usability checks.
+
+Heading weights are registry tokens (`--weight-h1/h2/h3`), currently 700. Body remains 400 and UI text 500; page-specific styles must not flatten that hierarchy.
+
+## Workspace navigation and page context
+
+The proposed workspace has one page header containing title and related actions. Do not add a company/context bar above it or repeat company metadata in the sidebar. Sidebar supports expanded labels or an icon rail, preserving accessible names, selected state and tooltips. Collapse controls use the shared Button and explicit expanded state. Mobile navigation remains a Sheet with labels.
+
+Sidebar navigation aligns icons and labels to the left. The collapse control floats over the sidebar boundary, outside navigation flow, with a 16 px icon in a 32 px DS icon button. Tooltip triggers may override data-slot; navigation layout must target the semantic button element.

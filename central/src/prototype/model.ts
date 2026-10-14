@@ -18,7 +18,7 @@ export function reducer(s:State,a:Action):State{
  case 'CANCEL_CONNECTION':return s.stage==='bank-connect'?{...s,stage:'connect',error:'Account connection was not completed. You can try again.'}:s
  case 'CONNECTED':return s.stage==='bank-connect'?record(s,a,'Account connected','Bank-authorized representative',{stage:'entry',connected:true},'Payment-specific authorization is still required.'):s
  case 'FIELD':if(s.stage!=='entry'||!a.field)return s;return {...s,[a.field]:a.value??'',recipient:a.field==='key'?'':s.recipient,approved:false,error:''}
- case 'LOOKUP':if(s.stage!=='entry')return s;return s.key===demoKey?{...s,recipient:'Example Supplier Ltd.',error:''}:{...s,recipient:'',error:'Use the example Pix key shown below to test beneficiary validation.'}
+ case 'LOOKUP':if(s.stage!=='entry')return s;return s.key===demoKey?{...s,recipient:'Example Supplier Ltd.',error:''}:{...s,recipient:'',error:'Recipient not found. Check the Pix key and try again.'}
  case 'REVIEW':if(s.stage!=='entry')return s;return s.connected&&s.recipient&&amountCents(s.amount)?{...s,stage:'review',error:''}:{...s,error:'Confirm the beneficiary and enter a valid BRL amount before reviewing.'}
  case 'EDIT':if(!['review','approval','authorize','failed'].includes(s.stage)||s.funded)return s;return {...s,stage:'entry',approved:false,error:''}
  case 'REQUEST':return s.stage==='review'?record(s,a,'Payment request submitted','Nágela · requester',{stage:'approval'},'Company approval pending; no money has moved.'):s

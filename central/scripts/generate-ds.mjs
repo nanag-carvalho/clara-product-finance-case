@@ -10,7 +10,7 @@ const defaultFont = ds.fonts.find(font=>font.id===ds.defaultFont)
 const fontFaces = ds.fonts.flatMap(font=>font.files.map((file,index)=>`@font-face{font-family:'${font.cssFamily}';font-style:normal;font-display:swap;font-weight:${Array.isArray(font.weights)?font.weights[index]:font.weights};src:url('${file}') format('woff2')}`)).join('\n')
 const rootValues = [
   `--font-sans:${defaultFont.family};`,
-  ...Object.entries(ds.typography).flatMap(([name,type])=>[`--text-${name}:${type.size}px;`,`--leading-${name}:${type.lineHeight}px;`]),
+  ...Object.entries(ds.typography).flatMap(([name,type])=>[`--text-${name}:${type.size}px;`,`--leading-${name}:${type.lineHeight}px;`,`--weight-${name}:${type.weight};`]),
   ...Object.entries(ds.controlSizes).map(([name,value])=>`--control-${name}:${value}px;`),
   ...ds.spacing.map(value=>`--space-${value}:${value}px;`),
   ...Object.entries(ds.elevation).map(([name,value])=>`--shadow-${name}:${value};`),
