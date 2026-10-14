@@ -446,9 +446,10 @@ export function JourneyEntry() {
         </a>
       </Button>
       <p className="story-caption">
-        Simulated Open Finance journey. Provider support, business-account
-        eligibility and signatory permissions remain implementation
-        dependencies.
+        The official JSR 2.2.0 pilot includes PJ and desktop. I would enable
+        this route only for verified provider/bank combinations; otherwise, a
+        supported bank-authorization handoff would return to the same saved
+        payment. The prototype demonstrates the JSR route.
       </p>
     </div>
   )

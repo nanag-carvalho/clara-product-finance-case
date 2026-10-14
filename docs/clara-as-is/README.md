@@ -404,21 +404,22 @@ My direct work was setting the direction, comparing alternatives and inspecting 
 
 ### Retrospective time estimate and its basis
 
-The work spans October 13–14, 2026. These are approximate **elapsed phase windows** reconstructed from commit milestones and the conversation, not tracked active hours. Research, design, coding and review overlap; a batch commit does not reveal how much time each activity took.
+I reconstructed the work from timestamped requests and review comments in the October 13–14 conversation, cross-checking commits as delivery milestones. The estimates below describe the predominant activity in each working window. Design, implementation and review continued together; these are retrospective allocations, not a stopwatch record of active labor.
 
-| Recorded phase | Approximate window | Basis and limitation |
-| --- | --- | --- |
-| Initial foundation | October 13 evening; duration unknown | First commit at 20:38 (`3eca7ad3`) already contains the hub and DS; preparation predates it. |
-| Research, framing and flow refinement | About 2 hours on October 14 | 09:38–11:47, `f9246f27` to `b1922326`; includes design iteration. |
-| Prototype, DS and story iteration | About 6 hours | 11:47–18:06, ending at `ad4b171c`; mixed work recorded in a batch delivery, not six isolated hours of coding. |
-| Final review, fixes and release | About 40 minutes | 18:06–18:43, through `9d3325eb`; verification also occurred earlier. |
-| Presentation and subsequent refinements | Continued afterward | Separate ongoing work; excluded from the windows above. |
+| Activity | Estimate | Recorded anchors, São Paulo time | What the estimate includes |
+| --- | --- | --- | --- |
+| Research, problem framing and flow exploration | About 3 hours | Oct 13: 17:06–17:28 and 20:10–20:40; Oct 14: 09:24–11:51 | Brief/demo analysis, public references, hypotheses, scope and low-fidelity exploration; some interface review overlaps. |
+| DS foundation and initial styling | About 3 hours | Oct 13: 17:28–20:10; Oct 14: 08:50–09:24 | Public primitives, type/spacing/radii, API and contract, catalog and initial navigation. |
+| High-fidelity payment and interaction iteration | About 3.5–4 hours | Oct 14: 11:51–15:28 | Wizard, source preparation, review/recovery, branded entry, banner and icon changes. |
+| Code review, mobile fixes and automated verification | About 1.5–2 hours | Oct 14: 15:28–17:06 | Code/UX audits, queue composition and end-to-end coverage; checks also occurred in other phases. |
+| Showcase and hub narrative refinement | About 1.5 hours | Oct 14: 17:06–18:34 | Story structure, visual composition, decision evidence, AI notes and supporting hub detail. |
+| Private presentation, script and rehearsal controls | About 45 minutes before later refinements | Oct 14: 18:34–19:17 | Audience/presenter views, English script, timing and image readability; subsequent revisions are additional. |
 
-Commit times use São Paulo time (UTC−03:00). The overnight gap is not counted as continuous work. These windows do not establish total active effort or time saved by AI.
+The anchors are specific requests in the conversation: begin the brief analysis, build the shared foundation, move to the final prototype, audit and test interactions, create a separate showcase, and create the private presentation. Rounded estimates avoid false minute-level precision. Overnight inactivity is excluded. The conversation establishes what was being worked on and when; it does not measure personal active hours, background agent time or AI savings. Later revisions after the cutoff are outside this table.
 
 ### Evidence and limits
 
-The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The retrospective windows above provide a qualified estimate; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
+The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The activity estimates above have timestamped anchors; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
 
 ## Desk research: three relevant references
 
@@ -721,7 +722,17 @@ For accessibility I will check keyboard access, visible focus, labels, textual e
 
 Open Finance has journeys with bank redirection and a separate framework for payment initiation without redirection. The latter separates account linking from transactions; the initial linking confirmation takes place at the account-holding institution. Relevant sources are [BCB Resolution 406](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&tipo=Resolu%C3%A7%C3%A3o+BCB) and [BCB Instruction 760](https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=760&tipo=Instru%C3%A7%C3%A3o+Normativa+BCB). Their indexed summaries support this distinction; the full normative text, current applicability and PJ integration remain verification tasks.
 
-I choose the no-redirection direction because the brief asks for continuity and the manager pays suppliers repeatedly. The prototype uses two shared wizards: prepare the account and device, then create and authorize the Pix. This is a conditional proposal: the public material I consulted includes restricted PF/mobile rollout, which does not establish availability for the PJ/desktop scenario. Verify the provider, supported accounts, signatories, device mechanism and current rollout before committing to implementation. [Open Finance Brasil: JSR pilot](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/1449754670).
+I chose JSR because repeat supplier payments benefit from preparing an account once and authorizing subsequent payments in the initiator. The official JSR 2.2.0 pilot explicitly includes **PJ and desktop**, with participating initiators and restricted production tests. This establishes a relevant supported specification and pilot scope; it does not establish that Clara or the customer's two banks currently offer the combination. [Open Finance Brasil: JSR 2.2.0 pilot](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/1449754670), reviewed October 14, 2026.
+
+The current UX guide describes both redirected and JSR payment journeys, and account/device linking for JSR. I use these as the basis for two authorization routes under the same saved payment. [Payments, UX guide v25](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/2172424005), [Account linking, UX guide v25](https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/2172440864).
+
+| Capability verified for this account | Design decision | What stays consistent |
+| --- | --- | --- |
+| Provider and bank support PJ/desktop JSR, with an eligible signatory and valid link | Use the linked-device authorization shown in the prototype | Company approval, payment identity, review and outcome tracking |
+| Redirected payment initiation is supported but JSR is not enabled | Explain the bank handoff, authorize there, then return to the saved payment | No manual top-up; retain supplier, amount, request and company decision |
+| Neither route is verified for this bank/account | Do not offer it as an available source; explain eligibility and let the person choose another supported source | Preserve the request without silently downgrading or claiming success |
+
+The JSR path is interactive; the redirected fallback is a documented launch alternative, not an additional implemented scenario. Before release, I would agree a capability matrix with the authorized initiator and bank partners covering PJ/desktop, signatory roles, linking, limits, expiration and the applicable authorization route. I would test a first and repeat payment, bank return, expired consent and uncertain result for the chosen combination. This is an explicit release gate rather than an assumption that all banks behave alike.
 
 ## Two-day delivery plan
 

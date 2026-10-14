@@ -440,46 +440,58 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 </a> records hierarchy, spacing, component states, accessibility behavior and reuse constraints. The registry and <code>ds:check</code> make parts of that contract executable. There is no project <code>CLAUDE.md</code> or <code>AGENTS.md</code> in the reviewed repository; the recorded conversation, contract and checks are the relevant evidence. A personal voice skill was used for presentation editing, not as a source of financial requirements.</p>
 <p>My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.</p>
 <h3>Retrospective time estimate and its basis</h3>
-<p>The work spans October 13–14, 2026. These are approximate <strong>elapsed phase windows</strong> reconstructed from commit milestones and the conversation, not tracked active hours. Research, design, coding and review overlap; a batch commit does not reveal how much time each activity took.</p>
+<p>I reconstructed the work from timestamped requests and review comments in the October 13–14 conversation, cross-checking commits as delivery milestones. The estimates below describe the predominant activity in each working window. Design, implementation and review continued together; these are retrospective allocations, not a stopwatch record of active labor.</p>
 <table>
 <thead>
 <tr>
-<th>Recorded phase</th>
-<th>Approximate window</th>
-<th>Basis and limitation</th>
+<th>Activity</th>
+<th>Estimate</th>
+<th>Recorded anchors, São Paulo time</th>
+<th>What the estimate includes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Initial foundation</td>
-<td>October 13 evening; duration unknown</td>
-<td>First commit at 20:38 (<code>3eca7ad3</code>) already contains the hub and DS; preparation predates it.</td>
+<td>Research, problem framing and flow exploration</td>
+<td>About 3 hours</td>
+<td>Oct 13: 17:06–17:28 and 20:10–20:40; Oct 14: 09:24–11:51</td>
+<td>Brief/demo analysis, public references, hypotheses, scope and low-fidelity exploration; some interface review overlaps.</td>
 </tr>
 <tr>
-<td>Research, framing and flow refinement</td>
-<td>About 2 hours on October 14</td>
-<td>09:38–11:47, <code>f9246f27</code> to <code>b1922326</code>; includes design iteration.</td>
+<td>DS foundation and initial styling</td>
+<td>About 3 hours</td>
+<td>Oct 13: 17:28–20:10; Oct 14: 08:50–09:24</td>
+<td>Public primitives, type/spacing/radii, API and contract, catalog and initial navigation.</td>
 </tr>
 <tr>
-<td>Prototype, DS and story iteration</td>
-<td>About 6 hours</td>
-<td>11:47–18:06, ending at <code>ad4b171c</code>; mixed work recorded in a batch delivery, not six isolated hours of coding.</td>
+<td>High-fidelity payment and interaction iteration</td>
+<td>About 3.5–4 hours</td>
+<td>Oct 14: 11:51–15:28</td>
+<td>Wizard, source preparation, review/recovery, branded entry, banner and icon changes.</td>
 </tr>
 <tr>
-<td>Final review, fixes and release</td>
-<td>About 40 minutes</td>
-<td>18:06–18:43, through <code>9d3325eb</code>; verification also occurred earlier.</td>
+<td>Code review, mobile fixes and automated verification</td>
+<td>About 1.5–2 hours</td>
+<td>Oct 14: 15:28–17:06</td>
+<td>Code/UX audits, queue composition and end-to-end coverage; checks also occurred in other phases.</td>
 </tr>
 <tr>
-<td>Presentation and subsequent refinements</td>
-<td>Continued afterward</td>
-<td>Separate ongoing work; excluded from the windows above.</td>
+<td>Showcase and hub narrative refinement</td>
+<td>About 1.5 hours</td>
+<td>Oct 14: 17:06–18:34</td>
+<td>Story structure, visual composition, decision evidence, AI notes and supporting hub detail.</td>
+</tr>
+<tr>
+<td>Private presentation, script and rehearsal controls</td>
+<td>About 45 minutes before later refinements</td>
+<td>Oct 14: 18:34–19:17</td>
+<td>Audience/presenter views, English script, timing and image readability; subsequent revisions are additional.</td>
 </tr>
 </tbody>
 </table>
-<p>Commit times use São Paulo time (UTC−03:00). The overnight gap is not counted as continuous work. These windows do not establish total active effort or time saved by AI.</p>
+<p>The anchors are specific requests in the conversation: begin the brief analysis, build the shared foundation, move to the final prototype, audit and test interactions, create a separate showcase, and create the private presentation. Rounded estimates avoid false minute-level precision. Overnight inactivity is excluded. The conversation establishes what was being worked on and when; it does not measure personal active hours, background agent time or AI savings. Later revisions after the cutoff are outside this table.</p>
 <h3>Evidence and limits</h3>
-<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The retrospective windows above provide a qualified estimate; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
+<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The activity estimates above have timestamped anchors; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
 <h2 id="desk-research-three-relevant-references">Desk research: three relevant references</h2>
 <p>I limited this desk research to three references: Conta Simples as a closer Brazilian expense-management alternative, Cora as an adjacent Brazilian business-account product, and Ramp as an international accounts-payable benchmark. They are not equivalent competitors in every market. I consulted public material on October 13, 2026; I did not test their authenticated products or compare completion rates.</p>
 <table>
@@ -874,14 +886,44 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <p>Before adoption, I would compare the proposal with existing patterns in other markets, test longer translated labels and local formats, and agree on variants and ownership with the DS team. I would contribute documentation and regression checks alongside the component, then pilot it in a second flow before expanding its use. The current case demonstrates local reuse across three surfaces; cross-market validation remains next work.</p>
 <h2 id="brazil-constraints-and-feasible-scope">Brazil constraints and feasible scope</h2>
 <p>I am designing for Brazilian business accounts and Pix. Open Finance involves consent, authentication at the account-holding institution and confirmation of the operation. A connected account does not by itself authorize every future payment. I propose payment initiation without redirection after account and device linking. First use confirms the link at the bank; subsequent eligible payments are authorized in Clara with the device security mechanism. Company approval remains a separate decision. <a href="https://bcb.gov.br/estabilidadefinanceira/cliente-open-finance?modalAberto=credito-personalizado">Central Bank: Open Finance customer journey</a>, <a href="https://www.bcb.gov.br/detalhenoticia/568/noticia">Central Bank: payment initiation</a>.</p>
-<p>Before a production implementation, the authorized initiator or partner, participating banks, PJ account eligibility, authorized representatives, bank approval layers, limits and current journey specifications would need confirmation. I document these as implementation dependencies. Bank selection should reflect verified eligibility, not imply that every bank or business account is supported. I have not established Clara's authorization or partner setup for this feature. The normative pages for Resolution 406 and Instruction 760 did not expose their full text in the research tool; their current applicability remains a verification task rather than a settled design claim.</p>
-<p>For privacy, the LGPD's purpose, necessity, transparency and security principles inform minimizing data in the interface and prototype. Open Finance payment consent and the legal basis for other personal-data processing are separate considerations. Personal data can appear even in a business-account journey; a legal review must define lawful basis, retention, roles and notices before production. This case uses fictional data and stores no real credentials. <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm">LGPD, especially Articles 6, 7 and 46</a>.</p>
+<p>Before a production implementation, the authorized initiator or partner, participating banks, PJ account eligibility, authorized representatives, bank approval layers, limits and current journey specifications would need confirmation. I document these as implementation dependencies. Bank selection should reflect verified eligibility, not imply that every bank or business account is supported. I have not established Clara&#x27;s authorization or partner setup for this feature. The normative pages for Resolution 406 and Instruction 760 did not expose their full text in the research tool; their current applicability remains a verification task rather than a settled design claim.</p>
+<p>For privacy, the LGPD&#x27;s purpose, necessity, transparency and security principles inform minimizing data in the interface and prototype. Open Finance payment consent and the legal basis for other personal-data processing are separate considerations. Personal data can appear even in a business-account journey; a legal review must define lawful basis, retention, roles and notices before production. This case uses fictional data and stores no real credentials. <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm">LGPD, especially Articles 6, 7 and 46</a>.</p>
 <p>For accessibility I will check keyboard access, visible focus, labels, textual errors and status messages. A 32 px visual control can remain compact while respecting applicable target-size and spacing requirements; dense icon actions need particular review. WCAG 2.2 guides these checks. <a href="https://www.w3.org/WAI/WCAG22/quickref/">WCAG 2.2 quick reference</a>.</p>
-<p><strong>In scope:</strong> one supplier, BRL, one Pix payment, two fictional source choices with one account connected in the task, first connection, payment-specific authorization, existing company approvals, result tracking and one main recovery scenario. Bank options use fictional data; production options require verified eligibility.</p>
-<p><strong>Out of scope:</strong> batch execution, recurring or automatic Pix, FX, a full bank-management module, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.</p>
-<h3 id="account-preparation-and-payment-initiation">Account preparation and payment initiation</h3>
+<p>
+<strong>In scope:</strong> one supplier, BRL, one Pix payment, two fictional source choices with one account connected in the task, first connection, payment-specific authorization, existing company approvals, result tracking and one main recovery scenario. Bank options use fictional data; production options require verified eligibility.</p>
+<p>
+<strong>Out of scope:</strong> batch execution, recurring or automatic Pix, FX, a full bank-management module, real integrations and a complete compliance implementation. These can be discussed as dependencies or future opportunities.</p>
+<h3>Account preparation and payment initiation</h3>
 <p>Open Finance has journeys with bank redirection and a separate framework for payment initiation without redirection. The latter separates account linking from transactions; the initial linking confirmation takes place at the account-holding institution. Relevant sources are <a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=406&amp;tipo=Resolu%C3%A7%C3%A3o+BCB">BCB Resolution 406</a> and <a href="https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=760&amp;tipo=Instru%C3%A7%C3%A3o+Normativa+BCB">BCB Instruction 760</a>. Their indexed summaries support this distinction; the full normative text, current applicability and PJ integration remain verification tasks.</p>
-<p>I choose the no-redirection direction because the brief asks for continuity and the manager pays suppliers repeatedly. The prototype uses two shared wizards: prepare the account and device, then create and authorize the Pix. This is a conditional proposal: the public material I consulted includes restricted PF/mobile rollout, which does not establish availability for the PJ/desktop scenario. Verify the provider, supported accounts, signatories, device mechanism and current rollout before committing to implementation. <a href="https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/1449754670">Open Finance Brasil: JSR pilot</a>.</p>
+<p>I chose JSR because repeat supplier payments benefit from preparing an account once and authorizing subsequent payments in the initiator. The official JSR 2.2.0 pilot explicitly includes <strong>PJ and desktop</strong>, with participating initiators and restricted production tests. This establishes a relevant supported specification and pilot scope; it does not establish that Clara or the customer&#x27;s two banks currently offer the combination. <a href="https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/1449754670">Open Finance Brasil: JSR 2.2.0 pilot</a>, reviewed October 14, 2026.</p>
+<p>The current UX guide describes both redirected and JSR payment journeys, and account/device linking for JSR. I use these as the basis for two authorization routes under the same saved payment. <a href="https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/2172424005">Payments, UX guide v25</a>, <a href="https://openfinancebrasil.atlassian.net/wiki/spaces/OF/pages/2172440864">Account linking, UX guide v25</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Capability verified for this account</th>
+<th>Design decision</th>
+<th>What stays consistent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Provider and bank support PJ/desktop JSR, with an eligible signatory and valid link</td>
+<td>Use the linked-device authorization shown in the prototype</td>
+<td>Company approval, payment identity, review and outcome tracking</td>
+</tr>
+<tr>
+<td>Redirected payment initiation is supported but JSR is not enabled</td>
+<td>Explain the bank handoff, authorize there, then return to the saved payment</td>
+<td>No manual top-up; retain supplier, amount, request and company decision</td>
+</tr>
+<tr>
+<td>Neither route is verified for this bank/account</td>
+<td>Do not offer it as an available source; explain eligibility and let the person choose another supported source</td>
+<td>Preserve the request without silently downgrading or claiming success</td>
+</tr>
+</tbody>
+</table>
+<p>The JSR path is interactive; the redirected fallback is a documented launch alternative, not an additional implemented scenario. Before release, I would agree a capability matrix with the authorized initiator and bank partners covering PJ/desktop, signatory roles, linking, limits, expiration and the applicable authorization route. I would test a first and repeat payment, bank return, expired consent and uncertain result for the chosen combination. This is an explicit release gate rather than an assumption that all banks behave alike.</p>
 <h2 id="two-day-delivery-plan">Two-day delivery plan</h2>
 <table>
 <thead>
