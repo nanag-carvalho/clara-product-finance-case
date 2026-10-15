@@ -1786,3 +1786,113 @@
     padding-inline: 6px;
   }
 }
+
+/* A bounded comparison: preparation effort, with assumptions beside the result. */
+.preparation-time {
+  margin-block: 16px 24px;
+}
+.preparation-routes,
+.preparation-controls,
+.preparation-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-block: 24px;
+}
+.preparation-routes > div {
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+}
+.showcase-shell .preparation-routes p,
+.showcase-shell .preparation-assumptions p,
+.showcase-shell .preparation-evidence {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.preparation-controls label,
+.preparation-inputs label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.preparation-controls select,
+.preparation-inputs input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  background: var(--surface, white);
+  color: var(--slate-900);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font: inherit;
+}
+.preparation-controls .preparation-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  align-self: end;
+  min-height: 44px;
+}
+.preparation-checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+}
+.preparation-results {
+  padding-block: 24px;
+  border-block: 1px solid var(--border);
+}
+.preparation-bar-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 76px;
+  gap: 16px;
+  align-items: center;
+  margin-block: 12px;
+  font-size: 14px;
+}
+.preparation-track {
+  height: 20px;
+  background: var(--slate-200);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.preparation-track > div {
+  height: 100%;
+  background: var(--slate-500);
+}
+.preparation-bar-row:nth-child(2) .preparation-track > div {
+  background: var(--primary);
+}
+.showcase-shell .preparation-difference {
+  display: grid;
+  gap: 4px;
+  margin: 20px 0 0;
+  font-size: 16px;
+}
+.preparation-difference span {
+  font-size: 14px;
+}
+.preparation-assumptions {
+  padding-block: 20px;
+}
+.preparation-assumptions summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding-block: 8px;
+}
+.preparation-evidence a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 650px) {
+  .preparation-routes,
+  .preparation-controls,
+  .preparation-inputs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .preparation-bar-row {
+    gap: 8px;
+    grid-template-columns: 44px minmax(0, 1fr) 68px;
+  }
+}

@@ -12,6 +12,7 @@ import {
   TabsTrigger,
 } from '@/design-system'
 import ResearchMarkdown from './ResearchMarkdown'
+import PreparationTime from './PreparationTime'
 
 type ImageHandler = (file: string, alt: string) => void
 
@@ -82,11 +83,12 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
       <div className="showcase-visual-comparison">
         <figure>
           <figcaption>
-            <Badge variant="outline">Observed demo</Badge>
-            <h3>The starting point</h3>
+            <Badge variant="outline">Before · observed demo</Badge>
+            <h3>A separate funding task before the payment</h3>
             <p>
-              The observed screen established the structure and density I needed
-              to work with.
+              The brief describes a bank top-up before paying in Clara. This
+              observed screen is my visual reference; it does not show that bank
+              detour.
             </p>
           </figcaption>
           <ResearchMarkdown
@@ -96,7 +98,7 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
         </figure>
         <figure>
           <figcaption>
-            <Badge variant="outline">My proposal</Badge>
+            <Badge variant="outline">After · my proposal</Badge>
             <h3>Source + status + next action</h3>
             <p>
               The proposal brings the funding source and the next action into
@@ -369,13 +371,14 @@ export function EvaluationGuide() {
           </Button>
         </aside>
       </div>
+      <PreparationTime />
       <div className="showcase-check-summary">
         <h4>
           I checked behavior in code; the next step is evaluating it with
           people.
         </h4>
         <p>
-          <strong>40 domain and registry tests</strong> check rules and
+          <strong>41 domain and registry tests</strong> check rules and
           contracts. <strong>16 browser test cases</strong> exercise the
           interface on desktop and mobile, including entry, approval,
           authorization and recovery.

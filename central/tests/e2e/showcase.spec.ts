@@ -44,6 +44,14 @@ test('reduced motion presents the story immediately without entrance animations'
     rendered: image.clientWidth / image.clientHeight,
   }))
   expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
+  const model = page.getByRole('region', {
+    name: 'Remove the funding detour. Test the effort saved.',
+  })
+  await expect(model).toContainText('1m 50s less active time')
+  await model.getByRole('combobox').selectOption('5')
+  await expect(model).toContainText('0m 14s less active time')
+  await model.getByLabel('Include first connection').check()
+  await expect(model).toContainText('1m 46s more active time')
   await page.getByRole('link', { name: 'Experience', exact: true }).click()
   await expect(page.locator('#story-experience')).toBeInViewport()
   expect(
