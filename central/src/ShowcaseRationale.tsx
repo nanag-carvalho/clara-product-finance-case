@@ -25,22 +25,45 @@ export function BusinessRationale() {
     >
       <p className="eyebrow">02 · BUSINESS OPPORTUNITY</p>
       <div className="showcase-chapter-heading">
-        <h2>Give customers a reason to keep paying through Clara.</h2>
+        <h2>Keep the payment work in Clara, wherever the funds are.</h2>
         <p>
-          Open Finance was the route proposed in the brief. I focused on what
-          would make it useful in the existing operation: paying from another
-          bank while keeping the request, company review and payment history
-          together in Clara.
+          I would let the team choose its funding account while keeping the
+          supplier request, company decisions and outcome together. The
+          opportunity is convenience with control: a payment should not depend
+          on funding Clara first when the intended source is another bank.
         </p>
       </div>
+      <div className="showcase-business-fit">
+        <div>
+          <h3>When funds stay at another bank</h3>
+          <p>
+            The route could remove a funding dependency and the coordination
+            around that transfer. Required approvals and bank authorization
+            still apply.
+          </p>
+        </div>
+        <div>
+          <h3>When Clara already fits the routine</h3>
+          <p>
+            Prefunding or batch payments may already work well. I kept the
+            Clara-balance option; a new connection has to earn its place in the
+            team’s routine.
+          </p>
+        </div>
+      </div>
       <p className="showcase-editorial-note">
-        Removing the top-up could reduce preparation for the finance team and
-        make Clara useful for payments that would otherwise happen elsewhere.
-        That is the adoption opportunity I would evaluate alongside task effort.
-        I kept the scope to one supplier Pix; the exception scenarios explore
-        that same job. Bulk creation and real bank integration remain outside
-        this prototype.
+        First connection adds setup. I would judge its value through correct
+        completion and voluntary reuse, with time as a supporting measure. This
+        case explores one supplier Pix; production integration and batch
+        creation stay outside the prototype.
       </p>
+      <a
+        className="showcase-detail-link"
+        href="/#/approach?section=solution-value"
+        target="clara-case-hub"
+      >
+        Read the customer fit and business trade-offs <ArrowUpRight size={16} />
+      </a>
     </section>
   )
 }
@@ -317,9 +340,74 @@ export function SharedSystemProof() {
   )
 }
 
+function ValueEvaluation() {
+  return (
+    <section
+      className="showcase-value-evaluation"
+      aria-labelledby="value-evaluation-title"
+    >
+      <p className="eyebrow">WHAT WOULD MAKE THIS USEFUL?</p>
+      <h3 id="value-evaluation-title">
+        Does this route help the team complete its work?
+      </h3>
+      <dl className="showcase-value-measures">
+        <div className="showcase-value-primary">
+          <dt>Primary outcome</dt>
+          <dd>
+            <strong>Correct completion through Clara</strong>
+            <p>
+              Eligible payment intents reach a confirmed result with the
+              intended source and required decisions. Record the intent before
+              route choice and compare with the existing routine.
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Usefulness signals</dt>
+          <dd>
+            <strong>Voluntary choice and repeat use</strong>
+            <p>
+              Does the team choose this route again when another eligible
+              payment is due? Learn why it prefers direct funding, prefunding or
+              its bank.
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Secondary diagnostics</dt>
+          <dd>
+            <strong>Funding dependency, coordination and time</strong>
+            <p>
+              Observe blocked requests, handoffs, re-entry and active work.
+              Separate first connection from repeat use and shared top-ups.
+            </p>
+          </dd>
+        </div>
+        <div>
+          <dt>Guardrails</dt>
+          <dd>
+            <strong>Keep authority and traceability intact</strong>
+            <p>
+              Check wrong-source payments, unauthorized execution, duplicates
+              and missing approval evidence, alongside signatory burden and
+              service reliability.
+            </p>
+          </dd>
+        </div>
+      </dl>
+      <p className="showcase-value-next">
+        No pilot outcomes are measured here. I would discuss customer fit with
+        finance and treasury users, feasibility with engineering and risk, and
+        incremental usage and service costs with product and finance.
+      </p>
+    </section>
+  )
+}
+
 export function EvaluationGuide() {
   return (
     <div className="showcase-evaluation">
+      <ValueEvaluation />
       <div className="showcase-coverage-panel showcase-panel showcase-panel-dark">
         <div className="showcase-coverage-heading">
           <span>{scenarioOptions.length}</span>
@@ -371,7 +459,6 @@ export function EvaluationGuide() {
           </Button>
         </aside>
       </div>
-      <PreparationTime />
       <div className="showcase-check-summary">
         <h4>
           I checked behavior in code; the next step is evaluating it with
@@ -389,19 +476,28 @@ export function EvaluationGuide() {
         </p>
       </div>
       <p>
-        In participant sessions, I would observe whether people choose the right
-        source (H1), identify the next actor (H2), recover without duplicates
-        (H3) and review the right details (H4). I would measure active handling
-        time for a correctly completed payment, recording passive waiting
-        separately, to assess whether the new route actually reduces effort.
+        Participant sessions would test source choice (H1), the next actor (H2),
+        recovery (H3) and review accuracy (H4). I would also observe
+        funding-related blocking, handoffs and active effort across the people
+        involved. The pilot then asks whether the route is chosen again for real
+        payment needs.
       </p>
       <a
         className="showcase-detail-link"
-        href="/#/process"
+        href="/#/approach?section=solution-validation"
         target="clara-case-hub"
       >
-        See coverage, tasks and evaluation measures <ArrowUpRight size={16} />
+        See metric definitions, baseline and pilot decisions{' '}
+        <ArrowUpRight size={16} />
       </a>
+      <details className="showcase-time-appendix">
+        <summary>Inspect the preparation-time assumptions</summary>
+        <p className="showcase-time-context">
+          Time is one secondary diagnostic. This model isolates preparation; it
+          cannot estimate convenience, adoption or overall product value.
+        </p>
+        <PreparationTime />
+      </details>
       <details className="story-boundaries">
         <summary>Run the checks with the source checkout</summary>
         <pre className="showcase-code">

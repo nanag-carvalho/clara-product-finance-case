@@ -44,6 +44,14 @@ test('reduced motion presents the story immediately without entrance animations'
     rendered: image.clientWidth / image.clientHeight,
   }))
   expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
+  await expect(
+    page.getByRole('heading', {
+      name: 'Does this route help the team complete its work?',
+    }),
+  ).toBeAttached()
+  await page
+    .getByText('Inspect the preparation-time assumptions', { exact: true })
+    .click()
   const model = page.getByRole('region', {
     name: 'What could removing the top-up save?',
   })
@@ -98,6 +106,11 @@ test('reduced motion presents the story immediately without entrance animations'
       exact: true,
     }),
   ).toBeInViewport()
+  await baselineHub
+    .getByText('Supporting analysis: illustrative preparation-time model', {
+      exact: true,
+    })
+    .click()
   await expect(
     baselineHub.getByRole('heading', {
       name: 'Before and after: establishing a time baseline',

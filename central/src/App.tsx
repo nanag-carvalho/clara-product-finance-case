@@ -194,6 +194,8 @@ export default function App() {
       const scrollToSection = () => {
         const target = document.getElementById(id)
         if (!target) return false
+        const disclosure = target.closest('details')
+        if (disclosure) disclosure.open = true
         target.scrollIntoView({ block: 'start' })
         observer?.disconnect()
         clearTimeout(timeout)
@@ -413,6 +415,7 @@ export default function App() {
           ? 'desk-research'
           : [
                 'My direction',
+                'Value and evaluation strategy',
                 'Proposed flow',
                 'Hypotheses and validation',
               ].includes(s.title)
@@ -446,13 +449,18 @@ export default function App() {
                             ].includes(s.title)
                           ? 'sources'
                           : 'as-is') as Route,
-      sectionId: [
-        'My direction',
-        'Proposed flow',
-        'Hypotheses and validation',
-      ].includes(s.title)
-        ? 'solution-prototype'
-        : s.id,
+      sectionId:
+        s.title === 'Value and evaluation strategy'
+          ? 'solution-value'
+          : [
+                'My direction',
+                'Proposed flow',
+                'Hypotheses and validation',
+              ].includes(s.title)
+            ? s.title === 'Hypotheses and validation'
+              ? 'solution-validation'
+              : 'solution-entry'
+            : s.id,
     })),
     ...screens.map((s) => ({
       title: s.title,
@@ -1044,20 +1052,25 @@ export default function App() {
                     <aside className="reader-toc" aria-label="On this page">
                       <p className="eyebrow">ON THIS PAGE</p>
                       {[
+                        ['Value and customer fit', 'solution-value'],
                         ['Payment entry', 'solution-entry'],
                         ['First connection', 'solution-connection'],
                         ['Operational overview', 'solution-overview'],
                         ['Payment queue · before and after', 'solution-volume'],
                         ['Progress and history', 'solution-tracking'],
                         ['Correction and recovery', 'solution-recovery'],
-                        ['Validation and time baseline', 'solution-validation'],
+                        ['Evaluation and measures', 'solution-validation'],
+                        ['Supporting time model', 'solution-time-model'],
                       ].map(([label, id]) => (
                         <a
                           key={id}
                           href={`#${id}`}
                           onClick={(event) => {
                             event.preventDefault()
-                            document.getElementById(id)?.scrollIntoView({
+                            const target = document.getElementById(id)
+                            const disclosure = target?.closest('details')
+                            if (disclosure) disclosure.open = true
+                            target?.scrollIntoView({
                               behavior: 'smooth',
                               block: 'start',
                             })

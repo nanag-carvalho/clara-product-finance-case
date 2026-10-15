@@ -2032,3 +2032,91 @@
   padding: 12px;
   background: white;
 }
+
+/* Value is introduced with customer fit; modeled seconds stay in supporting evidence. */
+.showcase-business-fit {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  border-block: 1px solid #ffffff33;
+  padding-block: 24px;
+  margin-block: 24px;
+}
+.showcase-shell .showcase-business-fit h3 {
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+.showcase-shell .showcase-business-fit p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+}
+.showcase-shell .showcase-value-evaluation > h3 {
+  font-size: clamp(24px, 2.5vw, 32px);
+  line-height: 1.25;
+  margin: 12px 0 24px;
+}
+.showcase-value-measures {
+  margin: 0;
+}
+.showcase-value-measures > div {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 24px;
+  padding-block: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.showcase-value-measures dt {
+  font-size: 13px;
+  color: var(--slate-600);
+}
+.showcase-value-measures dd {
+  margin: 0;
+}
+.showcase-value-measures dd > strong {
+  display: block;
+  font-size: 17px;
+}
+.showcase-shell .showcase-value-measures p {
+  margin: 8px 0 0;
+  font-size: 15px;
+  line-height: 1.65;
+}
+.showcase-value-measures .showcase-value-primary {
+  border-top: 2px solid var(--primary);
+}
+.showcase-value-primary dd > strong {
+  color: var(--primary);
+  font-size: 21px;
+}
+.showcase-shell .showcase-value-next {
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 24px 0 32px;
+}
+.showcase-time-appendix {
+  margin-block: 24px;
+  padding-block: 20px;
+  border-block: 1px solid var(--border);
+}
+.showcase-time-appendix > summary {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 650;
+  padding-block: 8px;
+}
+.showcase-shell .showcase-time-context {
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 12px 0 24px;
+}
+@media (max-width: 650px) {
+  .showcase-business-fit {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .showcase-value-measures > div {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

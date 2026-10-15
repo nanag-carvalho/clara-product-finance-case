@@ -16,7 +16,7 @@ I used the brief's preference for a smaller, well-resolved scope to focus on **o
 
 | Brief criterion | My response | Evidence to inspect |
 | --- | --- | --- |
-| Product thinking and metric | Reduce funding preparation while preserving authority and traceability; measure active handling time for correctly completed tasks | My direction; Hypotheses and validation |
+| Product thinking and metric | Complete and trace eligible supplier payments through Clara with the intended funding source; evaluate completion, repeat choice and preserved controls. Time is secondary. | My direction; Hypotheses and validation |
 | Brazilian context | Separate Pix from payment initiation, explain consent and bank return, distinguish limits, funds and uncertain outcomes | Brazil constraints and feasible scope; prototype connection and recovery scenarios |
 | High fidelity and alternatives | Connect a bank, prepare/review a payment, obtain approval and authorization, then recover; explain the rejected interaction alternatives | Proposed flow; Design and engineering contributions; interactive prototype |
 | System thinking across markets | Reuse public primitives, contribute task patterns with a documented API, keep Pix-specific rules outside shared components | A design system that AI can use; live catalog; DS contract |
@@ -402,6 +402,10 @@ Codex assisted with research organization, implementation, refactoring and verif
 
 My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.
 
+### Challenge what the numbers claim
+
+AI helped build a preparation-time model, but the percentage became too prominent in the story. I challenged that framing: convenience also depends on where the company keeps funds, whether requests wait for a top-up, who coordinates it and whether prefunding already works well. I directed a review of the customer and Open Finance context, then asked for completion and voluntary reuse to lead the evaluation, with time as a secondary diagnostic and financial controls as guardrails. The model remains supporting analysis; no time, adoption or business improvement has been measured.
+
 ### Estimated effort across the available two days
 
 I estimate the distribution of the case effort across the two days available as follows. I grouped the main activities from the iteration sequence and rounded their relative share; design, implementation and review overlapped. The percentages describe effort allocation, not measured AI savings.
@@ -595,6 +599,51 @@ The brief asks me to initiate a Pix from Clara using the balance held at another
 
 > **My decision:** bring the source into the payment task while preserving company control. I implemented this as a source popover, a guided payment flow and a saved request with progress and history. The following decisions explain the structure; the prototype makes it inspectable.
 
+## Value and evaluation strategy
+
+### The decision I am testing
+
+I would let the finance team use Clara’s payment workflow without first moving funds into its Clara account. The intended value is **convenience with control**: choose where to pay from while keeping the supplier request, company decisions and outcome understandable in Clara. A first connection can take effort and still become useful across later payments; the team must have a reason to use it again.
+
+Open Finance payment initiation supports starting a payment through a different institution from the one holding the account. That is the capability behind the proposal. It does not establish a time saving, waive bank authorization or imply access to every account balance. [Banco Central: participant roles](https://www.bcb.gov.br/meubc/faqs/p/funcoes-das-instituicoes-participantes-do-open-finance), [Banco Central: using Open Finance](https://www.bcb.gov.br/estabilidadefinanceira/cliente-open-finance).
+
+### Where convenience could become value
+
+| Customer routine | Potential value of the proposed route | What could outweigh it |
+| --- | --- | --- |
+| Funds stay at another bank, while the team organizes supplier work in Clara. | Use the intended source without a separate transfer into Clara; keep request, review and outcome together. | Connection, per-payment authorization or provider failures could add coordination. |
+| A request cannot proceed until someone funds Clara. | Remove that internal funding dependency when an eligible external account has funds. | Company approval, bank signatory permissions, bank limits and insufficient funds remain real dependencies. |
+| Several people prepare, approve and release payments. | Keep source and next actor explicit in the saved request; preserve context across handoffs and bank return. | It may still require the same people to act. Fewer approvers or sign-offs are not assumed. |
+| Clara is already funded for a weekly run, or the team uses batch payments. | An optional external source may cover an exception. | Existing prefunding and batch routines may be more convenient; individual bank authorization can be costly at volume. |
+
+Clara documents batch Pix and benefits associated with its account balance. Funding Clara can therefore be a deliberate treasury or operating choice. I retained the Clara-balance option rather than treating every top-up as waste. Paying directly at the bank is also an alternative to investigate, including how the team records and reconciles that payment afterwards. Sources: [Clara batch Pix](https://ajuda.clara.com/hc/pt-br/articles/45470603860371), [Clara funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651).
+
+These are hypotheses about the brief’s two-bank, multi-actor routine. I have not observed an actual funding delay, coordination cost or customer preference. Keeping funds at a chosen bank is a choice benefit; higher yield, lower fees, improved liquidity and fewer errors are not established outcomes.
+
+### What would tell me it is useful
+
+**Primary outcome — correctly completed supplier-payment intents through Clara.** In a pilot, divide eligible intents reaching confirmed settlement with the intended recipient, amount and source by all eligible intents recorded **before funding-route choice**, within a completion window agreed from the team’s approval cycle. Count one intent across retries; retain abandonment and unresolved outcomes in the denominator. Include both Clara-balance and external-bank routes so switching an existing successful payment to the new route is not mistaken for incremental value. Record limits, refusal and provider failure separately from UX errors.
+
+Establish the baseline in the existing routine, including top-up or prefunded Clara use, then compare equivalent companies, payment needs and approval policies. Where feasible use a concurrent comparison group; a before/after pilot alone cannot establish causality. This instrumented population excludes payment needs never recorded in Clara, which require customer research or linked operational records. No baseline, target or uplift has been measured here.
+
+If the existing routine already completes payments reliably, a higher completion rate may have little room to improve. I would preserve that outcome and look for voluntary reuse with less funding dependency or coordination. The route can offer customer value without increasing transaction count; its incremental business value must be assessed separately. A higher share on the new route alone does not establish either benefit.
+
+**Usefulness signals — choice and repeat use.** Observe why eligible teams choose each route. After a first completed external-bank payment, measure voluntary reuse within a proposed 28-day window among companies with another eligible payment need. A connection or a first trial is activation, not proof of sustained value. Investigate teams that return to prefunding, abandon setup or choose the bank directly.
+
+**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. The illustrative preparation-time model isolates one part of this work; its percentage is not a product-value estimate.
+
+**Guardrails — preserve financial control.** Check wrong source/recipient/amount, unauthorized execution, duplicate payment, lost approval evidence and unresolved outcomes. Also track signatory burden, support contacts and recovery reliability. In formative review, any critical control failure blocks consolidation. Pilot thresholds must be agreed with operational and risk owners before rollout.
+
+### Who needs to decide, and with what evidence
+
+| Discussion | People to involve | Decision evidence |
+| --- | --- | --- |
+| Does this fit the actual routine? | Customer finance manager, treasury, approver and bank signatory; product, design and research. | Where funds are held, prefunding policy, who acts, recurring payment needs, reasons to choose or reject each route. |
+| Can the route be offered safely and reliably? | Engineering, payment provider, payment operations and risk/compliance. | PJ/account eligibility, consent, authorization, limits, status recovery and traceable payment records. |
+| Does it create sustainable value for Clara? | Product/analytics, finance/treasury and commercial leadership. | Incremental completed work and voluntary reuse against provider, support and reconciliation costs; effects on existing account usage. No revenue or balance benefit is assumed. |
+
+I would proceed with a focused eligible cohort if completion and voluntary reuse support the hypothesis while controls and service economics remain acceptable. If setup is completed but teams still prefer their existing routine, I would revisit the offer or segment before expanding the flow. The case keeps a small scope: one supplier Pix and its recovery states.
+
 ## Proposed flow
 
 New payment first offers Clara balance or the proposed business-bank source. The implemented external-bank route starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Eligible payment authorization uses the linked device within Clara; first-time linking includes bank confirmation.
@@ -642,7 +691,7 @@ For this interview case, I use the following questions to inspect simulated scen
 
 ### Before and after: establishing a time baseline
 
-My job-level measure is **active handling time to complete a correct supplier payment**, including funding preparation. Approval waiting, network/settlement waiting and interruptions are recorded separately. First use and repeat use need separate results; a shorter preparation task does not establish a faster completed payment.
+**Supporting analysis, not the success metric.** The primary outcome is correct completion through Clara; voluntary repeat choice helps assess usefulness. Active handling time is a secondary diagnostic. This model isolates preparation and cannot estimate convenience, adoption, total payment effort or business value. Approval waiting, network/settlement waiting and interruptions are recorded separately.
 
 For an initial comparison, I isolate **request preparation**: from starting the funding task to submitting a correct request for company review. In the brief’s current route, that includes the bank top-up and return to Clara. In my proposal, it includes source choice and, for a new user, connection and consent. The supplier, amount, approval policy and detail-entry effort are held equal.
 
@@ -672,11 +721,13 @@ These are sensitivity examples, not a forecast interval, a measured reduction or
 
 ### What determines the next iteration
 
-**Experience measure:** active handling time for an equivalent, correctly completed task, with passive waiting recorded separately. Record errors, help and unnecessary navigation alongside completion; include failed and abandoned tasks in the findings.
+**Primary outcome:** correct payment completion through Clara, using the intended source and preserving required decisions and traceable results. In participant sessions, inspect task correctness and recovery; in a pilot, use the intent-level completion definition in Value and evaluation strategy.
+
+**Usefulness and effort:** voluntary route choice and repeat use test whether convenience matters in the routine. Active time, funding-related blocking, handoffs and re-entry are secondary diagnostics; passive waiting is recorded separately. Include failed and abandoned tasks in the findings.
 
 **Critical issues:** wrong source, missed payment details, approval mistaken for settlement, an unsafe repeat submission or an inaccessible essential action require revision before consolidating the flow.
 
-**Later business check:** in a pilot, track unique eligible payment intents reaching confirmed settlement divided by eligible intents started, within a defined window. Retries remain the same intent; segment first and repeat use. A baseline is needed before setting an uplift target.
+**Pilot decision:** evaluate intent-level completion, voluntary reuse, financial-control guardrails and service economics together. Establish the current-routine baseline and agree the completion window before setting targets; no modeled time saving is a release criterion on its own.
 
 The interactive prototype is the single implementation used for exploration and presentation. After source-route selection, it starts with payment details and uses the shared DS wizard. The scenario walkthrough exposes source comprehension, review and recovery for discussion. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
 
@@ -790,7 +841,7 @@ My working scenario is a supplier payment with funds at another bank. I add a co
 
 I will refine this provisional map with observations from the finance manager: their role, task, words and the design decision each finding changes.
 
-For Clara, the candidate value is easier completion of eligible supplier operations in Accounts Payable. The current evidence supports investigating effort reduction; adoption, repeat use and completion uplift require customer and production evidence. Safe authorization, correct source and no duplicate payment remain guardrails.
+For Clara, the candidate value is completing and tracking supplier work when the customer’s funds are elsewhere. Convenience, reduced funding dependency and retained context are hypotheses about that routine. Correct completion is the primary outcome; voluntary reuse and secondary effort measures test usefulness. Safe authorization, correct source and no duplicate payment remain guardrails. Adoption and incremental value require customer and production evidence.
 
 ## Jobs to be done and decision traceability
 
@@ -894,7 +945,7 @@ The prototype contains **12 named scenarios**, connected to **4 experience hypot
 | Confirmed service failure | Recover when no transfer completed | Use the explicit retry route | H3 · recovery completion without unnecessary recreation |
 | Unknown payment result | Avoid paying twice while awaiting confirmation | Check the existing request before another attempt | H2/H3 · duplicate attempts and state comprehension |
 
-Across tasks, I would measure **active handling time for a correctly completed task**, record passive waiting separately and note errors, unnecessary switching and lost context. The brief motivates reducing preparation effort; these scenarios make that hypothesis testable, but do not establish a measured reduction.
+Across tasks, I would first assess **correct completion with the intended source, required approvals and traceable outcome**. Voluntary route choice and reuse test convenience in the actual routine. Active time, funding-related blocking, coordination and lost context are secondary diagnostics; passive waiting is recorded separately. These scenarios support evaluation, not a measured improvement.
 
 ### Automated coverage and participant evaluation
 
@@ -922,4 +973,4 @@ Open **Scenarios** in the prototype. Each example opens the relevant request and
 
 ### What remains a hypothesis
 
-H1 concerns choosing the funding source in context; active handling time is the primary experience measure across the task. H2 concerns understanding responsibility and the next decision; H3 concerns recovery; H4 concerns review clarity. No user outcomes are measured. Automatic approval and multiple approval layers are recognized policy cases but are not simulated in the current prototype. New payment preserves the existing Clara-balance route alongside the proposed external-bank source. A unified Pix field recognizes keys and static Copia e Cola; QR scanning is a labeled camera simulation with the same decoded-code validation path. Recipient resolution remains fictional. Alternatives and unmeasured effort should be explained candidly in the walkthrough.
+H1 concerns choosing the funding source in context. Correct completion is the primary outcome; repeat choice tests usefulness, and active handling time is a secondary diagnostic. H2 concerns understanding responsibility and the next decision; H3 concerns recovery; H4 concerns review clarity. No user outcomes are measured. Automatic approval and multiple approval layers are recognized policy cases but are not simulated in the current prototype. New payment preserves the existing Clara-balance route alongside the proposed external-bank source. A unified Pix field recognizes keys and static Copia e Cola; QR scanning is a labeled camera simulation with the same decoded-code validation path. Recipient resolution remains fictional. Alternatives and unmeasured effort should be explained candidly in the walkthrough.

@@ -51,8 +51,15 @@ const validationBody =
 const baselineStart = validationBody.indexOf(
   '### Before and after: establishing a time baseline',
 )
-const taskCriteria = validationBody.slice(0, baselineStart)
-const baselineBody = validationBody.slice(baselineStart)
+const iterationStart = validationBody.indexOf(
+  '### What determines the next iteration',
+)
+const taskCriteria =
+  validationBody.slice(0, baselineStart) + validationBody.slice(iterationStart)
+const baselineBody = validationBody.slice(baselineStart, iterationStart)
+const valueBody =
+  research.find((entry) => entry.title === 'Value and evaluation strategy')
+    ?.body ?? ''
 
 export default function Solution({
   onImage,
@@ -61,6 +68,10 @@ export default function Solution({
 }) {
   return (
     <Stack gap={24}>
+      <section id="solution-value" className="solution-screen prose">
+        <h2>Value and evaluation strategy</h2>
+        <ResearchMarkdown body={valueBody} onImage={onImage} />
+      </section>
       <section id="solution-entry" className="solution-screen">
         <h2 className="type-h2">
           Bring the source into the existing payment task
@@ -142,10 +153,12 @@ export default function Solution({
       ))}
       <section id="solution-validation" className="solution-screen prose">
         <h2>Validation and time baseline</h2>
-        <ResearchMarkdown body={baselineBody} onImage={onImage} />
-        <details className="solution-boundaries">
-          <summary>Hypotheses and task criteria</summary>
-          <ResearchMarkdown body={taskCriteria} onImage={onImage} />
+        <ResearchMarkdown body={taskCriteria} onImage={onImage} />
+        <details id="solution-time-model" className="solution-boundaries">
+          <summary>
+            Supporting analysis: illustrative preparation-time model
+          </summary>
+          <ResearchMarkdown body={baselineBody} onImage={onImage} />
         </details>
       </section>
       <details className="solution-boundaries">
