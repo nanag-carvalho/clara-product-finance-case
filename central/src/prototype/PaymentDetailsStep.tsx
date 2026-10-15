@@ -57,7 +57,7 @@ export function PaymentDetailsStep({
           actionLayout="responsive"
           trailing={
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               loading={findingRecipient}
               loadingLabel="Checking Pix"
