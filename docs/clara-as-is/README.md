@@ -706,7 +706,7 @@ For an initial comparison, I isolate **request preparation**: from starting the 
 | Choose the funding source | 10 seconds per request | Example for two available banks; measure comprehension and accuracy. |
 | First connection and consent | 120 additional seconds | Example setup cost, including active bank interaction; not a provider SLA or a measured connection duration. |
 
-The formula is **before = details/review + top-up effort ÷ requests funded**; **after = details/review + source choice + first-connection effort when applicable**. The showcase compares repeat use, shared top-ups and first connection, and lets the evaluator edit the assumed active seconds. The result, per-step totals and percentage change update together; these remain simulated estimates.
+The formula is **before = details/review + top-up effort ÷ requests funded**; **after = details/review + source choice + first-connection effort when applicable**. The showcase first compares the work involved in a new top-up, a shared top-up, first connection and an already funded Clara balance. Its optional time panel lets the evaluator edit the assumed active seconds and inspect both sums. The totals update together; they remain simulated preparation estimates, not a quantified convenience or business benefit.
 
 | Situation | Before · modeled preparation | After · modeled preparation | Interpretation |
 | --- | --- | --- | --- |

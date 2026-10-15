@@ -50,15 +50,16 @@ test('reduced motion presents the story immediately without entrance animations'
     }),
   ).toBeAttached()
   await page
-    .getByText('Inspect the preparation-time assumptions', { exact: true })
+    .getByText('Compare funding routines and time assumptions', { exact: true })
     .click()
   const model = page.getByRole('region', {
-    name: 'What could removing the top-up save?',
+    name: 'What changes for this team?',
   })
-  await expect(model).toContainText('1m 50s less active time')
+  await expect(model).toContainText('One funding dependency is removed.')
   await model
-    .getByText('3. Change the time assumptions', { exact: true })
+    .getByText('Explore the assumed preparation time', { exact: true })
     .click()
+  await expect(model).toContainText('1m 50s less active time')
   await model
     .getByRole('spinbutton', {
       name: 'Bank access, top-up and return',
@@ -84,36 +85,57 @@ test('reduced motion presents the story immediately without entrance animations'
   await model.getByRole('combobox').click()
   await page
     .getByRole('option', {
-      name: 'Repeat use · 5 payments per top-up',
+      name: 'One top-up funds 5 payments',
       exact: true,
     })
     .click()
   await expect(model).toContainText('14s less active time')
   await model.getByRole('combobox').click()
   await page
-    .getByRole('option', { name: 'First use · connect a bank', exact: true })
+    .getByRole('option', {
+      name: 'The bank needs a first connection',
+      exact: true,
+    })
     .click()
   await expect(model).toContainText('10s more active time')
-  await expect(model).toContainText('Connect the bank')
+  await expect(model).toContainText('Connect the bank, then choose the source')
+  await model.getByRole('combobox').click()
+  await page
+    .getByRole('option', {
+      name: 'Clara already has enough funds',
+      exact: true,
+    })
+    .click()
+  await expect(model).toContainText(
+    'There is no funding dependency to remove for this request.',
+  )
+  await expect(
+    model.getByRole('spinbutton', {
+      name: 'Bank access, top-up and return',
+      exact: true,
+    }),
+  ).toBeDisabled()
+  await expect(
+    model.getByRole('spinbutton', {
+      name: 'First bank connection',
+      exact: true,
+    }),
+  ).toBeDisabled()
+  await expect(model).toContainText('10s more active time')
   const hubOpened = page.context().waitForEvent('page')
   await model
-    .getByRole('link', { name: 'Baseline, sources and study plan' })
+    .getByRole('link', { name: 'Customer fit, measures and validation plan' })
     .click()
   const baselineHub = await hubOpened
   await expect(
     baselineHub.getByRole('heading', {
-      name: 'Validation and time baseline',
+      name: 'Value and evaluation strategy',
       exact: true,
     }),
   ).toBeInViewport()
-  await baselineHub
-    .getByText('Supporting analysis: illustrative preparation-time model', {
-      exact: true,
-    })
-    .click()
   await expect(
     baselineHub.getByRole('heading', {
-      name: 'Before and after: establishing a time baseline',
+      name: 'What would tell me it is useful',
       exact: true,
     }),
   ).toBeAttached()

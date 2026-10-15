@@ -491,10 +491,11 @@ export function EvaluationGuide() {
         <ArrowUpRight size={16} />
       </a>
       <details className="showcase-time-appendix">
-        <summary>Inspect the preparation-time assumptions</summary>
+        <summary>Compare funding routines and time assumptions</summary>
         <p className="showcase-time-context">
-          Time is one secondary diagnostic. This model isolates preparation; it
-          cannot estimate convenience, adoption or overall product value.
+          Compare the work in each routine first. The optional time model is a
+          secondary sensitivity check; it does not estimate adoption or business
+          value.
         </p>
         <PreparationTime />
       </details>
