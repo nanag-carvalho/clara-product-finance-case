@@ -44,6 +44,20 @@ test('reduced motion presents the story immediately without entrance animations'
     rendered: image.clientWidth / image.clientHeight,
   }))
   expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
+  // Compare the source and proposal as captured, without stretching either image.
+  for (const image of await page
+    .locator('.showcase-visual-comparison img')
+    .all()) {
+    await image.scrollIntoViewIfNeeded()
+    await image.evaluate((element: HTMLImageElement) => element.decode())
+    const dimensions = await image.evaluate((element: HTMLImageElement) => ({
+      natural: element.naturalWidth / element.naturalHeight,
+      rendered: element.clientWidth / element.clientHeight,
+    }))
+    expect(Math.abs(dimensions.natural - dimensions.rendered)).toBeLessThan(
+      0.02,
+    )
+  }
   await expect(
     page.getByRole('heading', {
       name: 'Would removing the funding step help?',

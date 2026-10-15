@@ -737,6 +737,10 @@ svg {
   margin: auto;
   display: block;
 }
+/* Screenshots retain their captured proportions at every evidence size. */
+.doc-image img[src^='/proposal/'] {
+  max-height: none;
+}
 .doc-image > span {
   font-size: var(--text-caption);
   display: flex;

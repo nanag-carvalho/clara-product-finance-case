@@ -251,7 +251,7 @@ export default function CaseStory({
                     One less transfer before the supplier gets paid.
                   </h3>
                   <div className="showcase-effort-comparison">
-                    <div>
+                    <div className="showcase-panel showcase-panel-dark">
                       <span>Money movements</span>
                       <strong>2 Pix → 1 Pix</strong>
                       <p>
@@ -259,7 +259,7 @@ export default function CaseStory({
                         supplier directly.
                       </p>
                     </div>
-                    <div>
+                    <div className="showcase-panel showcase-panel-dark">
                       <span>Illustrative funding effort</span>
                       <strong>2m → 15s</strong>
                       <p>

@@ -4,8 +4,8 @@ export const caseImageDimensions: Record<
   { width: number; height: number }
 > = {
   '/research/assets/06-pagamentos.png': { width: 1676, height: 1030 },
-  '/proposal/overview.png': { width: 1061, height: 827 },
-  '/proposal/payments.png': { width: 1061, height: 827 },
-  '/proposal/request.png': { width: 1280, height: 720 },
-  '/proposal/recovery.png': { width: 1280, height: 720 },
+  '/proposal/overview.png': { width: 1440, height: 900 },
+  '/proposal/payments.png': { width: 1440, height: 900 },
+  '/proposal/request.png': { width: 1440, height: 900 },
+  '/proposal/recovery.png': { width: 1440, height: 900 },
 }
