@@ -20,7 +20,7 @@ I used the brief's preference for a smaller, well-resolved scope to focus on **o
 | Brazilian context | Separate Pix from payment initiation, explain consent and bank return, distinguish limits, funds and uncertain outcomes | Brazil constraints and feasible scope; prototype connection and recovery scenarios |
 | High fidelity and alternatives | Connect a bank, prepare/review a payment, obtain approval and authorization, then recover; explain the rejected interaction alternatives | Proposed flow; Design and engineering contributions; interactive prototype |
 | System thinking across markets | Reuse public primitives, contribute task patterns with a documented API, keep Pix-specific rules outside shared components | A design system that AI can use; live catalog; DS contract |
-| AI and speed | Identify tools, concrete instructions, constraints, errors and human review; reconstruct phase windows with their limits | AI work log; repository history |
+| AI and speed | Identify tools, concrete instructions, constraints, errors and human review; estimate the share of effort by activity | AI work log; repository history |
 
 I had no internal Clara data or design system. The implementation uses public Radix primitives and a local case-specific foundation, with fictional data and explicit service assumptions. My contribution is the framing, design direction, rendered review and decisions carried into assisted implementation. No independent manual authorship of all code or production integration is claimed.
 
@@ -402,24 +402,22 @@ Codex assisted with research organization, implementation, refactoring and verif
 
 My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.
 
-### Retrospective time estimate and its basis
+### Estimated effort across the available two days
 
-I reconstructed the work from timestamped requests and review comments in the October 13–14 conversation, cross-checking commits as delivery milestones. The estimates below describe the predominant activity in each working window. Design, implementation and review continued together; these are retrospective allocations, not a stopwatch record of active labor.
+I estimate the distribution of the case effort across the two days available as follows. I grouped the main activities from the iteration sequence and rounded their relative share; design, implementation and review overlapped. The percentages describe effort allocation, not measured AI savings.
 
-| Activity | Estimate | Recorded anchors, São Paulo time | What the estimate includes |
-| --- | --- | --- | --- |
-| Research, problem framing and flow exploration | About 3 hours | Oct 13: 17:06–17:28 and 20:10–20:40; Oct 14: 09:24–11:51 | Brief/demo analysis, public references, hypotheses, scope and low-fidelity exploration; some interface review overlaps. |
-| DS foundation and initial styling | About 3 hours | Oct 13: 17:28–20:10; Oct 14: 08:50–09:24 | Public primitives, type/spacing/radii, API and contract, catalog and initial navigation. |
-| High-fidelity payment and interaction iteration | About 3.5–4 hours | Oct 14: 11:51–15:28 | Wizard, source preparation, review/recovery, branded entry, banner and icon changes. |
-| Code review, mobile fixes and automated verification | About 1.5–2 hours | Oct 14: 15:28–17:06 | Code/UX audits, queue composition and end-to-end coverage; checks also occurred in other phases. |
-| Showcase and hub narrative refinement | About 1.5 hours | Oct 14: 17:06–18:34 | Story structure, visual composition, decision evidence, AI notes and supporting hub detail. |
-| Private presentation, script and rehearsal controls | About 45 minutes before later refinements | Oct 14: 18:34–19:17 | Audience/presenter views, English script, timing and image readability; subsequent revisions are additional. |
-
-The anchors are specific requests in the conversation: begin the brief analysis, build the shared foundation, move to the final prototype, audit and test interactions, create a separate showcase, and create the private presentation. Rounded estimates avoid false minute-level precision. Overnight inactivity is excluded. The conversation establishes what was being worked on and when; it does not measure personal active hours, background agent time or AI savings. Later revisions after the cutoff are outside this table.
+| Activity | Estimated share | Focus |
+| --- | --- | --- |
+| Research and problem framing | 20% | Brief, observed product, references, hypotheses and scope. |
+| Design system and foundations | 20% | Public primitives, typography, spacing, component API and reusable patterns. |
+| Payment flow and implementation | 30% | Connection, review, approval, authorization, recovery and interaction craft. |
+| Review and automated verification | 15% | Heuristic review, mobile corrections, code checks and interaction tests. |
+| Narrative and presentation | 15% | Hub, visual showcase, decision evidence and presentation preparation. |
+| **Total** | **100%** | **A retrospective estimate for the available case window.** |
 
 ### Evidence and limits
 
-The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The activity estimates above have timestamped anchors; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
+The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The effort allocation above is a retrospective estimate; AI time savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.
 
 ## Desk research: three relevant references
 
@@ -886,7 +884,7 @@ The proposed Overview and Payments sit under Accounts payable. Connected banks s
 | Supplier payment | Recipient fixture, amount, source, review, company decision and device confirmation | No real Pix execution; dynamic charge resolution remains |
 | Failure and recovery | Rejection/correction, canceled confirmation, expired link, balance/limit/service failure and unknown result | Responses are simulated |
 | Reused components and DS contribution | Shared UI API, Wizard, flow states, Brand loading and compact upload | Accessibility conformance is not established |
-| AI use | Tools, instructions, corrections and retrospective phase windows are recorded | Active effort and AI time savings were not measured |
+| AI use | Tools, instructions, corrections and estimated effort shares are recorded | Active effort and AI time savings were not measured |
 
 ### How to explore
 

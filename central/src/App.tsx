@@ -1016,7 +1016,7 @@ export default function App() {
                         ['Payment entry', 'solution-entry'],
                         ['First connection', 'solution-connection'],
                         ['Operational overview', 'solution-overview'],
-                        ['Payment queue', 'solution-volume'],
+                        ['Payment queue · before and after', 'solution-volume'],
                         ['Progress and history', 'solution-tracking'],
                         ['Correction and recovery', 'solution-recovery'],
                       ].map(([label, id]) => (

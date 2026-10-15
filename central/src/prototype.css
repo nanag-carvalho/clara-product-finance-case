@@ -1941,7 +1941,7 @@
   display: grid;
   padding: var(--space-8);
   overflow: hidden;
-  grid-template-columns: minmax(0, 1fr) 56px;
+  grid-template-columns: minmax(0, 1fr) 64px;
   gap: var(--space-8);
   flex-direction: column;
   column-gap: var(--space-4);
@@ -1995,12 +1995,12 @@
   align-self: center;
   order: initial;
   min-width: 0;
-  width: 56px;
+  width: 64px;
   justify-content: flex-start;
 }
 .proto-sidebar-promo .proto-new-payment-art {
-  width: 56px;
-  height: 48px;
+  width: 64px;
+  height: 50px;
 }
 .proto-new-payment-art {
   position: relative;
@@ -2012,9 +2012,8 @@
 }
 .proto-payment-art-brand {
   position: absolute;
-  left: 50%;
-  top: var(--space-8);
-  transform: translateX(-50%);
+  right: 2px;
+  top: 0;
 }
 .proto-payment-art-brand .clara-brand-asset {
   width: 20px;
@@ -2025,8 +2024,7 @@
   filter: invert(1);
 }
 .proto-sidebar-promo .proto-new-payment-art > svg {
-  opacity: 0.85;
-  transform: translateY(var(--space-4));
+  opacity: 1;
 }
 .proto-sidebar-promo .banner-content {
   display: contents;
@@ -2066,11 +2064,11 @@
   top: 0;
 }
 .proto-sidebar-promo .proto-payment-art-brand .clara-brand-asset {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
 }
 .proto-sidebar-promo .proto-payment-art-brand img {
-  height: 24px;
+  height: 18px;
 }
 body:has(.proto-promo-loading) [data-slot='dialog-overlay'] {
   background: color-mix(in srgb, var(--background) 35%, transparent);

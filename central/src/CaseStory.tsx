@@ -77,9 +77,7 @@ export default function CaseStory({
     <article className="case-story">
       <header className="story-hero">
         <div className="showcase-hero-copy">
-          <p className="eyebrow">
-            NÁGELA CARVALHO · PRODUCT FINANCE · DESIGN ENGINEERING
-          </p>
+          <p className="eyebrow">NÁGELA CARVALHO · DESIGN ENGINEER</p>
           <h1>
             Pay suppliers in Clara.
             <br />
@@ -370,7 +368,7 @@ export default function CaseStory({
                 Codex helped implement my direction; the DS contract and
                 regression checks made parts of it repeatable. I caught visual
                 and mobile problems after tests passed. The hub records the
-                prompts, review and retrospective time windows.
+                prompts, review and estimated effort allocation.
               </AIProcessNote>
             </div>
             <div className="showcase-act-content">

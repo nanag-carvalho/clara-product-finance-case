@@ -17,7 +17,7 @@ const screens = [
     id: 'solution-volume',
     image: 'payments',
     scenario: 'ready',
-    title: 'Work with a payment queue',
+    title: 'Compare the payment workspace',
     hypothesis: 'H4 · Review clarity',
     description:
       'I kept source and status in each row, with contextual filters and bulk review for repeated work. On mobile, the same records become readable lists.',
@@ -107,6 +107,23 @@ export default function Solution({
             </Badge>
           </div>
           <p className="type-ui">{screen.description}</p>
+          {screen.id === 'solution-volume' && (
+            <div className="solution-before">
+              <Badge variant="outline">Before · observed Clara demo</Badge>
+              <p className="type-ui">
+                The existing payment queue was my starting point. I kept the
+                familiar workspace while bringing funding source and the next
+                action into the proposed flow.
+              </p>
+              <ResearchMarkdown
+                body="![Before: payment queue captured from the Clara demo](assets/06-pagamentos.png)"
+                onImage={onImage}
+              />
+            </div>
+          )}
+          {screen.id === 'solution-volume' && (
+            <Badge variant="outline">After · my proposal</Badge>
+          )}
           <ResearchMarkdown
             body={`![${screen.alt}](/proposal/${screen.image}.png)`}
             onImage={onImage}

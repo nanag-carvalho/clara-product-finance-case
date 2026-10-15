@@ -85,25 +85,32 @@ export default function ResearchMarkdown({
             </Pressable>
           )
         },
-        a: ({ href, children }) =>
-          href?.startsWith('http') ? (
-            <a href={href} target="_blank" rel="noreferrer">
-              {children}
-              <ArrowSquareOut size={11} />
-            </a>
-          ) : (
+        a: ({ href, children }) => {
+          const reconstruction = href?.includes('reconstrucoes')
+          const external = /^https?:\/\//.test(href ?? '')
+          const url = reconstruction
+            ? '#/screens'
+            : href?.startsWith('/') || href?.startsWith('#') || external
+              ? href
+              : `/research/${href ?? ''}`
+          const target = url?.startsWith('/prototype.html')
+            ? 'clara-case-prototype'
+            : url?.startsWith('/design-system.html')
+              ? 'clara-case-design-system'
+              : url?.startsWith('#')
+                ? undefined
+                : '_blank'
+          return (
             <a
-              href={
-                href?.includes('reconstrucoes')
-                  ? '#/screens'
-                  : `/research/${href}`
-              }
-              target={href?.includes('reconstrucoes') ? undefined : '_blank'}
-              rel="noreferrer"
+              href={url}
+              target={target}
+              rel={target === '_blank' ? 'noreferrer' : undefined}
             >
               {children}
+              {external && <ArrowSquareOut size={11} />}
             </a>
-          ),
+          )
+        },
         table: ({ children }) => (
           <div className="research-table-block">
             <p className="research-table-hint">

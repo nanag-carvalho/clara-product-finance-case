@@ -52,7 +52,7 @@ code{font-size:13px;background:#edf2f8;padding:2px 5px}.meta{font-size:13px;colo
 </tr>
 <tr>
 <td>AI and speed</td>
-<td>Identify tools, concrete instructions, constraints, errors and human review; reconstruct phase windows with their limits</td>
+<td>Identify tools, concrete instructions, constraints, errors and human review; estimate the share of effort by activity</td>
 <td>AI work log; repository history</td>
 </tr>
 </tbody>
@@ -439,59 +439,57 @@ Sources: <a href="reconstrucoes.html">Reconstruction gallery</a>, <a href="https
 <code>DS_CONTRACT.md</code>
 </a> records hierarchy, spacing, component states, accessibility behavior and reuse constraints. The registry and <code>ds:check</code> make parts of that contract executable. There is no project <code>CLAUDE.md</code> or <code>AGENTS.md</code> in the reviewed repository; the recorded conversation, contract and checks are the relevant evidence. A personal voice skill was used for presentation editing, not as a source of financial requirements.</p>
 <p>My direct work was setting the direction, comparing alternatives and inspecting the actual output, including mobile navigation, contrast, image proportions and transitions. Code changes were AI-assisted. The record does not establish a separate manual Figma or coding pass, so I do not attribute one to myself.</p>
-<h3>Retrospective time estimate and its basis</h3>
-<p>I reconstructed the work from timestamped requests and review comments in the October 13–14 conversation, cross-checking commits as delivery milestones. The estimates below describe the predominant activity in each working window. Design, implementation and review continued together; these are retrospective allocations, not a stopwatch record of active labor.</p>
+<h3>Estimated effort across the available two days</h3>
+<p>I estimate the distribution of the case effort across the two days available as follows. I grouped the main activities from the iteration sequence and rounded their relative share; design, implementation and review overlapped. The percentages describe effort allocation, not measured AI savings.</p>
 <table>
 <thead>
 <tr>
 <th>Activity</th>
-<th>Estimate</th>
-<th>Recorded anchors, São Paulo time</th>
-<th>What the estimate includes</th>
+<th>Estimated share</th>
+<th>Focus</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Research, problem framing and flow exploration</td>
-<td>About 3 hours</td>
-<td>Oct 13: 17:06–17:28 and 20:10–20:40; Oct 14: 09:24–11:51</td>
-<td>Brief/demo analysis, public references, hypotheses, scope and low-fidelity exploration; some interface review overlaps.</td>
+<td>Research and problem framing</td>
+<td>20%</td>
+<td>Brief, observed product, references, hypotheses and scope.</td>
 </tr>
 <tr>
-<td>DS foundation and initial styling</td>
-<td>About 3 hours</td>
-<td>Oct 13: 17:28–20:10; Oct 14: 08:50–09:24</td>
-<td>Public primitives, type/spacing/radii, API and contract, catalog and initial navigation.</td>
+<td>Design system and foundations</td>
+<td>20%</td>
+<td>Public primitives, typography, spacing, component API and reusable patterns.</td>
 </tr>
 <tr>
-<td>High-fidelity payment and interaction iteration</td>
-<td>About 3.5–4 hours</td>
-<td>Oct 14: 11:51–15:28</td>
-<td>Wizard, source preparation, review/recovery, branded entry, banner and icon changes.</td>
+<td>Payment flow and implementation</td>
+<td>30%</td>
+<td>Connection, review, approval, authorization, recovery and interaction craft.</td>
 </tr>
 <tr>
-<td>Code review, mobile fixes and automated verification</td>
-<td>About 1.5–2 hours</td>
-<td>Oct 14: 15:28–17:06</td>
-<td>Code/UX audits, queue composition and end-to-end coverage; checks also occurred in other phases.</td>
+<td>Review and automated verification</td>
+<td>15%</td>
+<td>Heuristic review, mobile corrections, code checks and interaction tests.</td>
 </tr>
 <tr>
-<td>Showcase and hub narrative refinement</td>
-<td>About 1.5 hours</td>
-<td>Oct 14: 17:06–18:34</td>
-<td>Story structure, visual composition, decision evidence, AI notes and supporting hub detail.</td>
+<td>Narrative and presentation</td>
+<td>15%</td>
+<td>Hub, visual showcase, decision evidence and presentation preparation.</td>
 </tr>
 <tr>
-<td>Private presentation, script and rehearsal controls</td>
-<td>About 45 minutes before later refinements</td>
-<td>Oct 14: 18:34–19:17</td>
-<td>Audience/presenter views, English script, timing and image readability; subsequent revisions are additional.</td>
+<td>
+<strong>Total</strong>
+</td>
+<td>
+<strong>100%</strong>
+</td>
+<td>
+<strong>A retrospective estimate for the available case window.</strong>
+</td>
 </tr>
 </tbody>
 </table>
-<p>The anchors are specific requests in the conversation: begin the brief analysis, build the shared foundation, move to the final prototype, audit and test interactions, create a separate showcase, and create the private presentation. Rounded estimates avoid false minute-level precision. Overnight inactivity is excluded. The conversation establishes what was being worked on and when; it does not measure personal active hours, background agent time or AI savings. Later revisions after the cutoff are outside this table.</p>
 <h3>Evidence and limits</h3>
-<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The activity estimates above have timestamped anchors; active time and AI savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
+<p>The prototype, DS catalog and repository tests are the implementation evidence. Browser comments and this log record my interventions. The effort allocation above is a retrospective estimate; AI time savings were not measured. No user interviews, usability outcomes or business impact are claimed. The financial services, bank responses and camera interactions remain simulated.</p>
 <h2 id="desk-research-three-relevant-references">Desk research: three relevant references</h2>
 <p>I limited this desk research to three references: Conta Simples as a closer Brazilian expense-management alternative, Cora as an adjacent Brazilian business-account product, and Ramp as an international accounts-payable benchmark. They are not equivalent competitors in every market. I consulted public material on October 13, 2026; I did not test their authenticated products or compare completion rates.</p>
 <table>

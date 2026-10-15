@@ -192,5 +192,24 @@ test('case links open first connection and the scenario explorer in the prototyp
       exact: true,
     }),
   ).toBeVisible()
+  await page.goto('/#/process')
+  const explorerLink = page.getByRole('link', {
+    name: 'Open the scenario explorer',
+    exact: true,
+  })
+  await expect(explorerLink).toHaveAttribute(
+    'href',
+    '/prototype.html?explore=scenarios',
+  )
+  const openPages = context.pages().length
+  await explorerLink.click()
+  await expect(
+    prototype.getByRole('heading', {
+      name: 'Explore the prototype',
+      exact: true,
+    }),
+  ).toBeVisible()
+  await expect(page).toHaveURL(/#\/process$/)
+  expect(context.pages()).toHaveLength(openPages)
   await prototype.close()
 })
