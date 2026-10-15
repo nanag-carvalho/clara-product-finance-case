@@ -316,23 +316,53 @@ export function SharedSystemProof() {
         <h3>Make the pattern carry the design decision.</h3>
         <div className="showcase-reasoning-grid">
           <div>
-            <h3>Wizard</h3>
-            <p>One focused task, with mobile actions kept reachable.</p>
+            <h3>
+              <a
+                href="/design-system.html#/components/wizard"
+                target="clara-case-design-system"
+              >
+                Wizard <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            </h3>
+            <p>
+              Controlled steps and reachable actions; the payment model owns
+              validation.
+            </p>
           </div>
           <div>
-            <h3>InputGroup</h3>
-            <p>An explicit action that moves below the field on mobile.</p>
+            <h3>
+              <a
+                href="/design-system.html#/components/input-group"
+                target="clara-case-design-system"
+              >
+                InputGroup <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            </h3>
+            <p>
+              A responsive field-action API moves the action below the input on
+              mobile.
+            </p>
           </div>
           <div>
-            <h3>ReviewSummary</h3>
-            <p>Recipient and amount emphasis, with room for long Pix keys.</p>
+            <h3>
+              <a
+                href="/design-system.html#/components/review-summary"
+                target="clara-case-design-system"
+              >
+                ReviewSummary <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+            </h3>
+            <p>
+              Emphasis and mobile stacking keep amounts and long Pix keys
+              readable.
+            </p>
           </div>
         </div>
         <p>
-          To contribute these patterns across markets, I would keep sequence,
-          field actions and review hierarchy shared, while leaving Pix formats
-          and bank rules in the Brazilian payment layer. The next step would be
-          a DS review with localized examples and interaction checks.
+          I would propose these APIs with states, keyboard checks and translated
+          examples, then pilot them in another market before wider adoption.
+          Payment formats and bank rules stay local; shared UI never decides who
+          may move money.
         </p>
       </div>
     </div>
@@ -402,10 +432,10 @@ function ValueEvaluation() {
         </div>
       </dl>
       <p className="showcase-value-next">
-        No customer outcome or time saving has been measured. I would discuss
-        customer fit with finance and treasury users, feasibility with
-        engineering and risk, and incremental usage and service costs with
-        product and finance.
+        I would pause on a critical control failure, revise the offer if teams
+        still prefer prefunding, and expand only with verified account support,
+        useful repeat use and acceptable service costs. These are proposed
+        decision criteria; no customer outcome or time saving has been measured.
       </p>
     </section>
   )
@@ -572,24 +602,24 @@ export function IterationChoices() {
           <span>ENTRY</span>
           <h3>Separate choice modal → anchored popover</h3>
           <p>
-            I moved the source choice to New payment to keep it near the
-            initiating action.
+            I accepted less explanation space for this short choice, then kept
+            account details in the payment flow where they can be reviewed.
           </p>
         </div>
         <div>
           <span>MOBILE</span>
           <h3>Compressed table → readable payment rows</h3>
           <p>
-            I changed the composition while keeping the same filters, ordering
-            and selection rules.
+            Rows lose side-by-side comparison, but give each payment a reading
+            order. Filters, sorting and selected IDs stay shared with desktop.
           </p>
         </div>
         <div>
           <span>RECOVERY</span>
           <h3>Abrupt form return → explained correction</h3>
           <p>
-            I preserved the request and made the transition back to editing
-            intentional.
+            I kept the saved details, but a correction needs a fresh review.
+            Preserving work must not preserve an approval for changed data.
           </p>
         </div>
       </div>

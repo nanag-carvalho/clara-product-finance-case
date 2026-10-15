@@ -664,7 +664,7 @@ If the existing routine already completes payments reliably, a higher completion
 | Can the route be offered safely and reliably? | Engineering, payment provider, payment operations and risk/compliance. | PJ/account eligibility, consent, authorization, limits, status recovery and traceable payment records. |
 | Does it create sustainable value for Clara? | Product/analytics, finance/treasury and commercial leadership. | Incremental completed work and voluntary reuse against provider, support and reconciliation costs; effects on existing account usage. No revenue or balance benefit is assumed. |
 
-I would proceed with a focused eligible cohort if completion and voluntary reuse support the hypothesis while controls and service economics remain acceptable. If setup is completed but teams still prefer their existing routine, I would revisit the offer or segment before expanding the flow. The case keeps a small scope: one supplier Pix and its recovery states.
+For a focused pilot, I would pause on any critical control failure, including unauthorized execution, a duplicate or lost approval evidence. If teams connect successfully but still prefer prefunding, I would revisit the offer or customer segment rather than treating activation as success. Wider rollout requires verified account support, correct completion, useful repeat use and acceptable service economics. I would agree the cohort, observation window and quantitative thresholds with finance users, product, engineering and risk before the pilot; the case does not invent those thresholds. The scope remains one supplier Pix and its recovery states.
 
 ## Proposed flow
 
@@ -775,7 +775,7 @@ I created an executable design foundation so AI-assisted implementation can reus
 
 The hub, prototype, showcase and component catalog import the same local source through `@/design-system`. This is a shared code API, not a remotely hosted design-system service. The registry generates the artifacts used by tooling; the payment lifecycle remains domain code outside the visual components.
 
-To inspect reuse, open the catalog's Button examples, compare its variants with the live showcase example, then inspect the code and contract. For behavior, explore the prototype scenarios. Automated checks cover specified rules and interactions; visual review still determines whether the composition communicates the right hierarchy.
+To inspect reuse, compare the live Button with its catalog variants, then follow the case patterns: [Wizard](/design-system.html#/components/wizard) exposes controlled steps and actions; [InputGroup](/design-system.html#/components/input-group) exposes responsive field actions; [ReviewSummary](/design-system.html#/components/review-summary) exposes emphasis and mobile stacking. The payment model keeps validation and authorization outside those APIs. These are implemented local contracts; automated checks cover specified behavior, while visual review still judges the composition.
 
 ### Contributing patterns across markets
 
@@ -869,13 +869,13 @@ I kept the opportunity defined by the brief: initiate a supplier Pix in Clara us
 
 ### Decisions that changed the interface
 
-| Decision | Alternative considered | Why I changed it |
+| Decision | Alternative considered | Trade-off and what I would check |
 | --- | --- | --- |
-| Source choice anchored to New payment | A separate choice modal | The popover keeps this short decision close to the action that started it. |
-| One Pix field with explicit actions | Asking the person to classify each key | Recognize the input format, keep paste and simulated scan intentional, and show recipient details before review. |
-| Readable payment rows on mobile | A compressed desktop table | Preserve filters and selection behavior while giving the information enough room. |
-| Saved request with progress and history | Treating approval as completion | Show who acts next and distinguish company approval from payment authorization. |
-| Correction preserves the request | Restarting the task | Keep valid details, expose the reason and obtain a fresh review after changes. |
+| Source choice anchored to New payment | A separate choice modal | Less room for explanation in exchange for proximity. Keep account details in the flow; check whether the intended source is recognized before commitment. |
+| One Pix field with explicit actions | Asking the person to classify each key | Less classification work, but format detection does not establish recipient identity. Check lookup and review accuracy; keep scan and paste intentional. |
+| Readable payment rows on mobile | A compressed desktop table | Less side-by-side comparison in exchange for readable records. Keep filters, ordering and selected IDs shared; check that changing layout does not change the selected payments. |
+| Saved request with progress and history | Treating approval as completion | More visible stages in exchange for explicit responsibility. Check whether the person distinguishes company approval from payment authorization and knows who acts next. |
+| Correction preserves the request | Restarting the task | Reuse valid details, but invalidate the previous approval when the payment changes. Check correction, fresh review and duplicate prevention separately. |
 
 ### The design reasoning behind my interventions
 
@@ -904,7 +904,7 @@ The component layer should preserve those decisions across the hub, prototype an
 
 I requested a shared DS API and clean English code so the implementation could express reusable decisions. Wizard, InputGroup and ReviewSummary organize the task; brand feedback, upload and state compositions support it. React and TypeScript implement simulated state transitions. Payment lifecycle rules and queue selectors are separate from the UI; desktop and mobile share selection behavior.
 
-AI assisted with implementation and checks. My contribution includes framing, visual and interaction direction, reviewing the actual result, and deciding which corrections should become shared patterns. The work log below records specific interventions rather than attributing all generated code to manual implementation.
+AI assisted with implementation and checks. My contribution includes framing, visual and interaction direction, reviewing the actual result, and deciding which corrections should become shared patterns. The AI work log records specific interventions rather than attributing all generated code to manual implementation.
 
 ### How to inspect the implementation
 
