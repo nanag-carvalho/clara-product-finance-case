@@ -657,7 +657,7 @@ For an initial comparison, I isolate **request preparation**: from starting the 
 | Choose the funding source | 10 seconds per request | Example for two available banks; measure comprehension and accuracy. |
 | First connection and consent | 120 additional seconds | Example setup cost, including active bank interaction; not a provider SLA or a measured connection duration. |
 
-The formula is **before = details/review + top-up effort ÷ requests funded**; **after = details/review + source choice + first-connection effort when applicable**. The showcase compares repeat use, shared top-ups and first connection, and exposes the working inputs for inspection.
+The formula is **before = details/review + top-up effort ÷ requests funded**; **after = details/review + source choice + first-connection effort when applicable**. The showcase compares repeat use, shared top-ups and first connection, and lets the evaluator edit the assumed active seconds. The result, per-step totals and percentage change update together; these remain simulated estimates.
 
 | Situation | Before · modeled preparation | After · modeled preparation | Interpretation |
 | --- | --- | --- | --- |

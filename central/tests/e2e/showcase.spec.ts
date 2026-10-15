@@ -48,6 +48,31 @@ test('reduced motion presents the story immediately without entrance animations'
     name: 'What could removing the top-up save?',
   })
   await expect(model).toContainText('1m 50s less active time')
+  await model
+    .getByText('3. Change the time assumptions', { exact: true })
+    .click()
+  await model
+    .getByRole('spinbutton', {
+      name: 'Bank access, top-up and return',
+      exact: true,
+    })
+    .fill('180')
+  await expect(model).toContainText('2m 50s less active time')
+  await model
+    .getByRole('spinbutton', {
+      name: 'Bank access, top-up and return',
+      exact: true,
+    })
+    .fill('0')
+  await expect(model).toContainText('10s more active time')
+  await model
+    .getByRole('spinbutton', { name: 'Choose the source account', exact: true })
+    .fill('0')
+  await expect(model).toContainText('Same active time')
+  await model
+    .getByRole('button', { name: 'Reset assumptions', exact: true })
+    .click()
+  await expect(model).toContainText('1m 50s less active time')
   await model.getByRole('combobox').click()
   await page
     .getByRole('option', {

@@ -5,6 +5,8 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
+  Input,
+  Button,
 } from '@/design-system'
 import {
   defaultTimeAssumptions,
@@ -52,19 +54,77 @@ const situations = [
   },
 ]
 
+const assumptionFields = [
+  {
+    key: 'topUpSeconds',
+    label: 'Bank access, top-up and return',
+    note: 'Per top-up, shared across the selected number of requests.',
+  },
+  {
+    key: 'commonSeconds',
+    label: 'Prepare and review the request',
+    note: 'The same effort is applied to both routes.',
+  },
+  {
+    key: 'sourceSeconds',
+    label: 'Choose the source account',
+    note: 'Per request in the proposed route.',
+  },
+  {
+    key: 'connectionSeconds',
+    label: 'First bank connection',
+    note: 'Added only when first use is selected.',
+  },
+] as const
+
 export default function PreparationTime() {
   const [situationId, setSituationId] = useState('repeat')
+  const [assumptions, setAssumptions] = useState({ ...defaultTimeAssumptions })
   const situation =
     situations.find((item) => item.id === situationId) ?? situations[0]
   const { payments, first } = situation
-  const assumptions = defaultTimeAssumptions
   const result = estimatePreparationTime(assumptions, payments, first)
   const fundingShare = assumptions.topUpSeconds / payments
+  const percentage =
+    result.before > 0
+      ? Math.round((Math.abs(result.saved) / result.before) * 100)
+      : null
+  const saving = result.saved > 0
+  const equal = result.saved === 0
   const explanation = first
-    ? 'Connection adds setup to the proposed route. In this example, first use takes longer even though the separate top-up is removed.'
+    ? 'First use includes connection and consent. That setup is added once; it is excluded from repeat-use estimates.'
     : payments === 1
-      ? 'The model replaces 2 minutes of bank access, top-up and return with 10 seconds of source choice. Preparing and reviewing the request takes the same time.'
-      : `Only ${duration(fundingShare)} of the shared top-up is attributed to each request. Replacing that with 10 seconds of source choice leaves a much smaller difference.`
+      ? 'The separate top-up is replaced by source choice. Preparing and reviewing the request stays the same.'
+      : `The existing route already shares top-up effort across ${payments} requests. Only ${duration(fundingShare)} is attributed to each one, so the potential saving is smaller.`
+  const rows = [
+    {
+      label: 'Prepare and review',
+      before: assumptions.commonSeconds,
+      after: assumptions.commonSeconds,
+    },
+    {
+      label:
+        payments === 1
+          ? 'Top up Clara and return'
+          : `Top-up effort ÷ ${payments} requests`,
+      before: fundingShare,
+      after: null,
+    },
+    {
+      label: 'Choose the source',
+      before: null,
+      after: assumptions.sourceSeconds,
+    },
+    ...(first
+      ? [
+          {
+            label: 'Connect the bank',
+            before: null,
+            after: assumptions.connectionSeconds,
+          },
+        ]
+      : []),
+  ]
   return (
     <section
       className="preparation-time showcase-panel showcase-panel-soft"
@@ -76,15 +136,15 @@ export default function PreparationTime() {
           What could removing the top-up save?
         </h3>
         <p>
-          The change: pay from the bank account without sending a separate Pix
-          to fund Clara first.
+          Pay from the bank account without sending a separate Pix to fund Clara
+          first.
         </p>
         <span className="preparation-model-label">
-          Illustrative simulation · not measured
+          Simulation · assumed timings, not measured results
         </span>
       </header>
       <div className="preparation-situation">
-        <label htmlFor="time-situation">Compare a situation</label>
+        <label htmlFor="time-situation">1. Choose the routine to compare</label>
         <Select value={situationId} onValueChange={setSituationId}>
           <SelectTrigger id="time-situation">
             <SelectValue />
@@ -103,100 +163,128 @@ export default function PreparationTime() {
         aria-live="polite"
         aria-atomic="true"
       >
-        <p className="preparation-context">{situation.context}</p>
-        <div className="preparation-paths">
-          <div className="preparation-path">
-            <p className="preparation-path-label">BEFORE · FUND CLARA FIRST</p>
-            <strong className="preparation-total">
-              {duration(result.before)}
+        <div
+          className="preparation-result"
+          data-outcome={equal ? 'equal' : saving ? 'saving' : 'overhead'}
+        >
+          <div>
+            <p className="preparation-result-label">
+              {equal
+                ? 'NO ESTIMATED TIME DIFFERENCE'
+                : saving
+                  ? 'ESTIMATED PREPARATION SAVED'
+                  : first
+                    ? 'ESTIMATED FIRST-USE OVERHEAD'
+                    : 'ESTIMATED EXTRA PREPARATION'}
+            </p>
+            <strong>
+              {equal
+                ? 'Same active time'
+                : `${duration(Math.abs(result.saved))} ${saving ? 'less' : 'more'} active time`}
             </strong>
-            <span className="preparation-total-label">
-              Active preparation per request
+            <span>
+              per request · {duration(result.before)} before →{' '}
+              {duration(result.after)} proposed
             </span>
-            <ol>
-              <li>
-                <span>
-                  {payments === 1
-                    ? 'Top up Clara and return'
-                    : `Share one top-up across ${payments} requests`}
-                </span>
-                <strong>{duration(fundingShare)}</strong>
-              </li>
-              <li>
-                <span>Prepare and review</span>
-                <strong>{duration(assumptions.commonSeconds)}</strong>
-              </li>
-            </ol>
           </div>
-          <div className="preparation-path preparation-path-proposed">
-            <p className="preparation-path-label">AFTER · PAY FROM YOUR BANK</p>
-            <strong className="preparation-total">
-              {duration(result.after)}
-            </strong>
-            <span className="preparation-total-label">
-              Active preparation per request
+          {percentage !== null && !equal && (
+            <span className="preparation-percent">
+              {percentage}% {saving ? 'less' : 'more'}
+              <small>in this model</small>
             </span>
-            <ol>
-              {first && (
-                <li>
-                  <span>Connect the bank</span>
-                  <strong>{duration(assumptions.connectionSeconds)}</strong>
-                </li>
-              )}
-              <li>
-                <span>Prepare and review</span>
-                <strong>{duration(assumptions.commonSeconds)}</strong>
-              </li>
-              <li>
-                <span>Choose the source</span>
-                <strong>{duration(assumptions.sourceSeconds)}</strong>
-              </li>
-            </ol>
-          </div>
+          )}
         </div>
-        <div className="preparation-outcome">
-          <strong>
-            {duration(Math.abs(result.saved))}{' '}
-            {result.saved >= 0 ? 'less' : 'more'} active time per request
-          </strong>
-          <p>{explanation}</p>
+        <p className="preparation-explanation">{explanation}</p>
+        <div className="preparation-breakdown">
+          <h4>2. See where the difference comes from</h4>
+          <table>
+            <caption className="sr-only">
+              Estimated active seconds per request, using the same preparation
+              effort in both routes
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Active work</th>
+                <th scope="col">
+                  Before<small>Fund Clara first</small>
+                </th>
+                <th scope="col">
+                  Proposed<small>Use your bank</small>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={row.label}>
+                  <th scope="row">{row.label}</th>
+                  <td>{row.before === null ? '—' : duration(row.before)}</td>
+                  <td>{row.after === null ? '—' : duration(row.after)}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row">Total per request</th>
+                <td>{duration(result.before)}</td>
+                <td>{duration(result.after)}</td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
-      <p className="preparation-scope">
-        This compares preparation up to submitting a correct request for company
-        review. Approval and payment authorization still follow.
-      </p>
       <details className="preparation-assumptions">
-        <summary>Assumptions and sources</summary>
+        <summary>3. Change the time assumptions</summary>
         <p>
-          These are analyst-selected inputs, not observed timings. I hold detail
-          entry and review equal to isolate the funding change. One top-up may
-          fund several requests; the model shares its effort across them.
+          Enter assumed active seconds. The estimate updates immediately;
+          preparing and reviewing stays equal in both routes.
         </p>
-        <dl className="preparation-input-summary">
-          <div>
-            <dt>Prepare and review</dt>
-            <dd>90s in both routes</dd>
-          </div>
-          <div>
-            <dt>Top up and return</dt>
-            <dd>120s per funding operation</dd>
-          </div>
-          <div>
-            <dt>Choose a source</dt>
-            <dd>10s per request</dd>
-          </div>
-          <div>
-            <dt>First connection</dt>
-            <dd>120s once, when needed</dd>
-          </div>
-        </dl>
+        <div className="preparation-editable-inputs">
+          {assumptionFields.map((field) => (
+            <label key={field.key}>
+              <span>{field.label}</span>
+              <div className="preparation-seconds">
+                <Input
+                  aria-label={field.label}
+                  type="number"
+                  disabled={field.key === 'connectionSeconds' && !first}
+                  min="0"
+                  max="3600"
+                  step="1"
+                  value={assumptions[field.key]}
+                  onChange={(event) =>
+                    setAssumptions((previous) => ({
+                      ...previous,
+                      [field.key]: Math.min(
+                        3600,
+                        Math.max(0, Number(event.target.value)),
+                      ),
+                    }))
+                  }
+                />
+                <span aria-hidden="true">seconds</span>
+              </div>
+              <small>{field.note}</small>
+            </label>
+          ))}
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setAssumptions({ ...defaultTimeAssumptions })}
+        >
+          Reset assumptions
+        </Button>
+      </details>
+      <p className="preparation-scope">
+        Scope of this simulation: preparation up to submitting a correct request
+        for company review. Company approval, payment authorization and passive
+        waiting are excluded from this simulation.
+      </p>
+      <details className="preparation-sources">
+        <summary>Sources and calculation</summary>
         <p>
-          Before = details/review + top-up ÷ payments. After = details/review +
-          source choice + first connection, when selected. Company approval,
-          payment authorization and passive waiting are outside this preparation
-          model; a full-task study must measure them separately, including bank
-          redirection.
+          Before = preparation + top-up effort ÷ requests funded. Proposed =
+          preparation + source choice + first connection when selected.
         </p>
         <p className="preparation-evidence">
           Clara’s{' '}
