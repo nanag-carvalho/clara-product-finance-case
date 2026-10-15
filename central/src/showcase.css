@@ -1787,103 +1787,10 @@
   }
 }
 
-/* A bounded comparison: preparation effort, with assumptions beside the result. */
+/* Explain the work behind the estimate before asking the reader to compare it. */
 .preparation-time {
   margin-block: 16px 24px;
 }
-.preparation-controls,
-.preparation-inputs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  margin-block: 24px;
-}
-.showcase-shell .preparation-assumptions p,
-.showcase-shell .preparation-evidence {
-  font-size: 14px;
-  line-height: 1.65;
-}
-.preparation-controls label,
-.preparation-inputs label {
-  display: grid;
-  gap: 8px;
-  font-size: 14px;
-}
-.preparation-inputs input {
-  width: 100%;
-  min-height: 44px;
-  border: 1px solid var(--border);
-  background: var(--surface, white);
-  color: var(--slate-900);
-  border-radius: 8px;
-  padding: 8px 12px;
-  font: inherit;
-}
-.preparation-controls .preparation-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  align-self: end;
-  min-height: 44px;
-}
-.preparation-results {
-  padding-block: 28px;
-  border-bottom: 1px solid var(--border);
-}
-.preparation-bar-row {
-  display: grid;
-  grid-template-columns: 190px minmax(0, 1fr) 85px;
-  gap: 16px;
-  align-items: center;
-  margin-block: 12px;
-  font-size: 14px;
-}
-.preparation-track {
-  height: 20px;
-  background: var(--slate-200);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.preparation-track > div {
-  height: 100%;
-  background: var(--slate-500);
-}
-.preparation-bar-row:nth-child(2) .preparation-track > div {
-  background: var(--primary);
-}
-.showcase-shell .preparation-difference {
-  display: grid;
-  gap: 4px;
-  margin: 20px 0 0;
-  font-size: 16px;
-}
-.preparation-difference span {
-  font-size: 14px;
-}
-.preparation-assumptions {
-  padding-block: 20px;
-}
-.preparation-assumptions summary {
-  cursor: pointer;
-  font-weight: 600;
-  padding-block: 8px;
-}
-.preparation-evidence a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-@media (max-width: 650px) {
-  .preparation-controls,
-  .preparation-inputs {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .preparation-bar-row {
-    gap: 8px;
-    grid-template-columns: 44px minmax(0, 1fr) 68px;
-  }
-}
-
 .showcase-shell .preparation-heading h3 {
   font-size: clamp(22px, 2.2vw, 28px);
   line-height: 1.25;
@@ -1893,7 +1800,7 @@
   font-size: 16px;
   line-height: 1.6;
   margin: 0;
-  max-width: 600px;
+  max-width: 620px;
 }
 .preparation-model-label {
   display: inline-block;
@@ -1901,71 +1808,144 @@
   color: var(--slate-600);
   margin-top: 16px;
 }
-.preparation-route-label {
+.preparation-situation {
   display: grid;
-  gap: 5px;
+  gap: 8px;
+  margin-top: 28px;
+  max-width: 440px;
+  font-size: 14px;
 }
-.preparation-route-label small {
-  font-size: 12px;
+.preparation-situation [data-slot='select-trigger'] {
+  width: 100%;
+}
+.showcase-shell .preparation-context {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 16px 0 20px;
   color: var(--slate-600);
 }
-.preparation-bar-row > strong {
-  font-size: 22px;
-  text-align: right;
+.preparation-paths {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.preparation-path {
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.preparation-path-proposed {
+  background: var(--blue-50, #eff4fb);
+  border-color: var(--primary);
+}
+.showcase-shell .preparation-path-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin: 0 0 12px;
+  color: var(--slate-600);
+}
+.preparation-total {
+  display: block;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.preparation-path-proposed .preparation-total {
+  color: var(--primary);
+}
+.preparation-total-label {
+  display: block;
+  font-size: 12px;
+  color: var(--slate-600);
+  margin-top: 6px;
+}
+.preparation-path ol {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  counter-reset: preparation-step;
+}
+.preparation-path li {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-block: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.preparation-path li span {
+  flex: 1;
+}
+.preparation-path li strong {
   white-space: nowrap;
 }
-.showcase-shell .preparation-difference {
-  margin-top: 28px;
+.preparation-outcome {
+  margin-top: 24px;
 }
-.showcase-shell .preparation-difference > strong {
+.preparation-outcome > strong {
   font-size: 18px;
   color: var(--primary);
 }
-.showcase-shell .preparation-scenario h4 {
-  font-size: 14px;
-  margin: 24px 0 12px;
+.showcase-shell .preparation-outcome p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 8px 0 0;
 }
-.preparation-scenario .preparation-controls {
-  margin: 0;
-  gap: 24px;
+.showcase-shell .preparation-scope {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--slate-600);
+  margin: 20px 0;
 }
 .preparation-assumptions {
-  margin-top: 24px;
   padding-block: 12px;
   border-top: 1px solid var(--border);
+}
+.preparation-assumptions summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  padding-block: 8px;
+}
+.showcase-shell .preparation-assumptions p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.preparation-input-summary {
+  display: grid;
+  gap: 10px;
+  font-size: 13px;
+}
+.preparation-input-summary > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.preparation-input-summary dd {
+  margin: 0;
+}
+.preparation-evidence a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .preparation-time > .showcase-detail-link {
   margin-top: 12px;
   font-size: 14px;
 }
 @media (max-width: 650px) {
-  .preparation-bar-row {
-    grid-template-columns: minmax(0, 1fr) 85px;
-    gap: 10px;
-    margin-block: 20px;
+  .preparation-paths {
+    grid-template-columns: 1fr;
   }
-  .preparation-route-label {
-    grid-column: 1;
+  .preparation-path {
+    padding: 20px;
   }
-  .preparation-bar-row > strong {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .preparation-track {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    height: 14px;
-  }
-  .preparation-scenario .preparation-controls {
-    gap: 12px;
-  }
-}
-
-.preparation-controls [data-slot='select-trigger'] {
-  width: 100%;
-}
-@media (max-width: 650px) {
-  .preparation-controls [data-slot='select-trigger'] {
+  .preparation-situation [data-slot='select-trigger'] {
     min-height: 44px;
+  }
+  .preparation-situation [data-slot='select-value'] {
+    font-size: 12px;
   }
 }

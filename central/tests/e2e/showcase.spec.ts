@@ -49,10 +49,19 @@ test('reduced motion presents the story immediately without entrance animations'
   })
   await expect(model).toContainText('1m 50s less active time')
   await model.getByRole('combobox').click()
-  await page.getByRole('option', { name: '5 payments', exact: true }).click()
-  await expect(model).toContainText('0m 14s less active time')
-  await model.getByLabel('Include first connection').check()
-  await expect(model).toContainText('1m 46s more active time')
+  await page
+    .getByRole('option', {
+      name: 'Repeat use · 5 payments per top-up',
+      exact: true,
+    })
+    .click()
+  await expect(model).toContainText('14s less active time')
+  await model.getByRole('combobox').click()
+  await page
+    .getByRole('option', { name: 'First use · connect a bank', exact: true })
+    .click()
+  await expect(model).toContainText('10s more active time')
+  await expect(model).toContainText('Connect the bank')
   const hubOpened = page.context().waitForEvent('page')
   await model
     .getByRole('link', { name: 'Baseline, sources and study plan' })

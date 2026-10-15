@@ -5,28 +5,66 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-  Checkbox,
 } from '@/design-system'
 import {
   defaultTimeAssumptions,
   estimatePreparationTime,
 } from './payment-time-model'
 
-const duration = (seconds: number) =>
-  `${Math.floor(Math.round(seconds) / 60)}m ${String(Math.round(seconds) % 60).padStart(2, '0')}s`
-const assumptionLabels = {
-  commonSeconds: 'Enter details and review · seconds',
-  topUpSeconds: 'Bank access, top-up and return · seconds',
-  sourceSeconds: 'Choose the source · seconds',
-  connectionSeconds: 'First connection and consent · seconds',
+const duration = (seconds: number) => {
+  const rounded = Math.round(seconds)
+  return rounded < 60
+    ? `${rounded}s`
+    : `${Math.floor(rounded / 60)}m ${String(rounded % 60).padStart(2, '0')}s`
 }
+const situations = [
+  {
+    id: 'repeat',
+    label: 'Repeat use · 1 payment per top-up',
+    payments: 1,
+    first: false,
+    context:
+      'Your bank is already connected. In the existing route, this request needs its own top-up.',
+  },
+  {
+    id: 'shared-five',
+    label: 'Repeat use · 5 payments per top-up',
+    payments: 5,
+    first: false,
+    context:
+      'Your bank is already connected. One top-up funds five requests, so its effort is shared across them.',
+  },
+  {
+    id: 'shared-ten',
+    label: 'Repeat use · 10 payments per top-up',
+    payments: 10,
+    first: false,
+    context:
+      'Your bank is already connected. One top-up funds ten requests, leaving little funding effort per request.',
+  },
+  {
+    id: 'first',
+    label: 'First use · connect a bank',
+    payments: 1,
+    first: true,
+    context:
+      'The proposal needs a first bank connection. The existing route needs one top-up for this request.',
+  },
+]
 
 export default function PreparationTime() {
-  const [assumptions, setAssumptions] = useState(defaultTimeAssumptions)
-  const [payments, setPayments] = useState(1)
-  const [first, setFirst] = useState(false)
+  const [situationId, setSituationId] = useState('repeat')
+  const situation =
+    situations.find((item) => item.id === situationId) ?? situations[0]
+  const { payments, first } = situation
+  const assumptions = defaultTimeAssumptions
   const result = estimatePreparationTime(assumptions, payments, first)
-  const longest = Math.max(result.before, result.after, 1)
+  const fundingShare = assumptions.topUpSeconds / payments
+  const explanation = first
+    ? 'Connection adds setup to the proposed route. In this example, first use takes longer even though the separate top-up is removed.'
+    : payments === 1
+      ? 'The model replaces 2 minutes of bank access, top-up and return with 10 seconds of source choice. Preparing and reviewing the request takes the same time.'
+      : `Only ${duration(fundingShare)} of the shared top-up is attributed to each request. Replacing that with 10 seconds of source choice leaves a much smaller difference.`
   return (
     <section
       className="preparation-time showcase-panel showcase-panel-soft"
@@ -38,79 +76,96 @@ export default function PreparationTime() {
           What could removing the top-up save?
         </h3>
         <p>
-          From starting the funding task to submitting a correct request for
-          company review.
+          The change: pay from the bank account without sending a separate Pix
+          to fund Clara first.
         </p>
         <span className="preparation-model-label">
           Illustrative simulation · not measured
         </span>
       </header>
+      <div className="preparation-situation">
+        <label htmlFor="time-situation">Compare a situation</label>
+        <Select value={situationId} onValueChange={setSituationId}>
+          <SelectTrigger id="time-situation">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {situations.map((item) => (
+              <SelectItem key={item.id} value={item.id}>
+                {item.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div
-        className="preparation-results"
+        className="preparation-comparison"
         aria-live="polite"
         aria-atomic="true"
       >
-        {(
-          [
-            ['Before', result.before],
-            ['After', result.after],
-          ] as const
-        ).map(([label, seconds]) => (
-          <div className="preparation-bar-row" key={label}>
-            <span className="preparation-route-label">
-              <strong>{label}</strong>
-              <small>
-                {label === 'Before'
-                  ? 'Fund Clara, then prepare'
-                  : 'Choose bank in the request'}
-              </small>
+        <p className="preparation-context">{situation.context}</p>
+        <div className="preparation-paths">
+          <div className="preparation-path">
+            <p className="preparation-path-label">BEFORE · FUND CLARA FIRST</p>
+            <strong className="preparation-total">
+              {duration(result.before)}
+            </strong>
+            <span className="preparation-total-label">
+              Active preparation per request
             </span>
-            <div className="preparation-track">
-              <div style={{ width: `${(seconds / longest) * 100}%` }} />
-            </div>
-            <strong>{duration(seconds)}</strong>
+            <ol>
+              <li>
+                <span>
+                  {payments === 1
+                    ? 'Top up Clara and return'
+                    : `Share one top-up across ${payments} requests`}
+                </span>
+                <strong>{duration(fundingShare)}</strong>
+              </li>
+              <li>
+                <span>Prepare and review</span>
+                <strong>{duration(assumptions.commonSeconds)}</strong>
+              </li>
+            </ol>
           </div>
-        ))}
-        <p className="preparation-difference">
+          <div className="preparation-path preparation-path-proposed">
+            <p className="preparation-path-label">AFTER · PAY FROM YOUR BANK</p>
+            <strong className="preparation-total">
+              {duration(result.after)}
+            </strong>
+            <span className="preparation-total-label">
+              Active preparation per request
+            </span>
+            <ol>
+              {first && (
+                <li>
+                  <span>Connect the bank</span>
+                  <strong>{duration(assumptions.connectionSeconds)}</strong>
+                </li>
+              )}
+              <li>
+                <span>Prepare and review</span>
+                <strong>{duration(assumptions.commonSeconds)}</strong>
+              </li>
+              <li>
+                <span>Choose the source</span>
+                <strong>{duration(assumptions.sourceSeconds)}</strong>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div className="preparation-outcome">
           <strong>
             {duration(Math.abs(result.saved))}{' '}
             {result.saved >= 0 ? 'less' : 'more'} active time per request
           </strong>
-          <span>
-            In this model ·{' '}
-            {first ? 'first connection included' : 'account already connected'}
-          </span>
-        </p>
-      </div>
-      <div className="preparation-scenario">
-        <h4>Change the situation</h4>{' '}
-        <div className="preparation-controls">
-          <label>
-            Payments covered by one top-up
-            <Select
-              value={String(payments)}
-              onValueChange={(value) => setPayments(Number(value))}
-            >
-              <SelectTrigger aria-label="Payments covered by one top-up">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 payment</SelectItem>
-                <SelectItem value="5">5 payments</SelectItem>
-                <SelectItem value="10">10 payments</SelectItem>
-              </SelectContent>
-            </Select>
-          </label>
-          <label className="preparation-checkbox">
-            <Checkbox
-              checked={first}
-              onCheckedChange={(value) => setFirst(value === true)}
-              aria-label="Include first connection"
-            />{' '}
-            Include first connection
-          </label>
+          <p>{explanation}</p>
         </div>
       </div>
+      <p className="preparation-scope">
+        This compares preparation up to submitting a correct request for company
+        review. Approval and payment authorization still follow.
+      </p>
       <details className="preparation-assumptions">
         <summary>Assumptions and sources</summary>
         <p>
@@ -118,29 +173,24 @@ export default function PreparationTime() {
           entry and review equal to isolate the funding change. One top-up may
           fund several requests; the model shares its effort across them.
         </p>
-        <div className="preparation-inputs">
-          {Object.entries(assumptionLabels).map(([key, label]) => (
-            <label key={key}>
-              {label}
-              <input
-                type="number"
-                min="0"
-                max="3600"
-                step="5"
-                value={assumptions[key as keyof typeof assumptions]}
-                onChange={(event) =>
-                  setAssumptions((previous) => ({
-                    ...previous,
-                    [key]: Math.min(
-                      3600,
-                      Math.max(0, Number(event.target.value)),
-                    ),
-                  }))
-                }
-              />
-            </label>
-          ))}
-        </div>
+        <dl className="preparation-input-summary">
+          <div>
+            <dt>Prepare and review</dt>
+            <dd>90s in both routes</dd>
+          </div>
+          <div>
+            <dt>Top up and return</dt>
+            <dd>120s per funding operation</dd>
+          </div>
+          <div>
+            <dt>Choose a source</dt>
+            <dd>10s per request</dd>
+          </div>
+          <div>
+            <dt>First connection</dt>
+            <dd>120s once, when needed</dd>
+          </div>
+        </dl>
         <p>
           Before = details/review + top-up ÷ payments. After = details/review +
           source choice + first connection, when selected. Company approval,
