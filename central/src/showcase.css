@@ -1791,7 +1791,6 @@
 .preparation-time {
   margin-block: 16px 24px;
 }
-.preparation-routes,
 .preparation-controls,
 .preparation-inputs {
   display: grid;
@@ -1799,11 +1798,6 @@
   gap: 24px;
   margin-block: 24px;
 }
-.preparation-routes > div {
-  padding-left: 16px;
-  border-left: 2px solid var(--border);
-}
-.showcase-shell .preparation-routes p,
 .showcase-shell .preparation-assumptions p,
 .showcase-shell .preparation-evidence {
   font-size: 14px;
@@ -1839,12 +1833,12 @@
   accent-color: var(--primary);
 }
 .preparation-results {
-  padding-block: 24px;
-  border-block: 1px solid var(--border);
+  padding-block: 28px;
+  border-bottom: 1px solid var(--border);
 }
 .preparation-bar-row {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) 76px;
+  grid-template-columns: 190px minmax(0, 1fr) 85px;
   gap: 16px;
   align-items: center;
   margin-block: 12px;
@@ -1885,7 +1879,6 @@
   text-underline-offset: 3px;
 }
 @media (max-width: 650px) {
-  .preparation-routes,
   .preparation-controls,
   .preparation-inputs {
     grid-template-columns: 1fr;
@@ -1894,5 +1887,82 @@
   .preparation-bar-row {
     gap: 8px;
     grid-template-columns: 44px minmax(0, 1fr) 68px;
+  }
+}
+
+.showcase-shell .preparation-heading h3 {
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.25;
+  margin: 8px 0 12px;
+}
+.showcase-shell .preparation-heading > p:not(.eyebrow) {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 600px;
+}
+.preparation-model-label {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--slate-600);
+  margin-top: 16px;
+}
+.preparation-route-label {
+  display: grid;
+  gap: 5px;
+}
+.preparation-route-label small {
+  font-size: 12px;
+  color: var(--slate-600);
+}
+.preparation-bar-row > strong {
+  font-size: 22px;
+  text-align: right;
+  white-space: nowrap;
+}
+.showcase-shell .preparation-difference {
+  margin-top: 28px;
+}
+.showcase-shell .preparation-difference > strong {
+  font-size: 18px;
+  color: var(--primary);
+}
+.showcase-shell .preparation-scenario h4 {
+  font-size: 14px;
+  margin: 24px 0 12px;
+}
+.preparation-scenario .preparation-controls {
+  margin: 0;
+  gap: 24px;
+}
+.preparation-assumptions {
+  margin-top: 24px;
+  padding-block: 12px;
+  border-top: 1px solid var(--border);
+}
+.preparation-time > .showcase-detail-link {
+  margin-top: 12px;
+  font-size: 14px;
+}
+@media (max-width: 650px) {
+  .preparation-bar-row {
+    grid-template-columns: minmax(0, 1fr) 85px;
+    gap: 10px;
+    margin-block: 20px;
+  }
+  .preparation-route-label {
+    grid-column: 1;
+  }
+  .preparation-bar-row > strong {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .preparation-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 14px;
+  }
+  .preparation-scenario .preparation-controls {
+    gap: 12px;
   }
 }

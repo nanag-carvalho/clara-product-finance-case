@@ -24,46 +24,19 @@ export default function PreparationTime() {
       className="preparation-time showcase-panel showcase-panel-soft"
       aria-labelledby="preparation-time-title"
     >
-      <p className="eyebrow">TIME HYPOTHESIS · ILLUSTRATIVE MODEL</p>
-      <h3 id="preparation-time-title">
-        Remove the funding detour. Test the effort saved.
-      </h3>
-      <p>
-        I would first compare preparation: from starting the funding task to
-        submitting a correct request for company review. The same supplier,
-        amount and approval policy stay in place.
-      </p>
-      <div className="preparation-routes">
-        <div>
-          <strong>Before · fund Clara first</strong>
-          <p>Bank → top up Clara → return → prepare and review</p>
-        </div>
-        <div>
-          <strong>After · use the bank as the source</strong>
-          <p>Prepare → choose bank → review and submit</p>
-        </div>
-      </div>
-      <div className="preparation-controls">
-        <label>
-          Payments covered by one top-up
-          <select
-            value={payments}
-            onChange={(event) => setPayments(Number(event.target.value))}
-          >
-            <option value={1}>1 payment</option>
-            <option value={5}>5 payments</option>
-            <option value={10}>10 payments</option>
-          </select>
-        </label>
-        <label className="preparation-checkbox">
-          <input
-            type="checkbox"
-            checked={first}
-            onChange={(event) => setFirst(event.target.checked)}
-          />{' '}
-          Include first connection
-        </label>
-      </div>
+      <header className="preparation-heading">
+        <p className="eyebrow">PREPARATION TIME</p>
+        <h3 id="preparation-time-title">
+          What could removing the top-up save?
+        </h3>
+        <p>
+          From starting the funding task to submitting a correct request for
+          company review.
+        </p>
+        <span className="preparation-model-label">
+          Illustrative simulation · not measured
+        </span>
+      </header>
       <div
         className="preparation-results"
         aria-live="polite"
@@ -76,7 +49,14 @@ export default function PreparationTime() {
           ] as const
         ).map(([label, seconds]) => (
           <div className="preparation-bar-row" key={label}>
-            <span>{label}</span>
+            <span className="preparation-route-label">
+              <strong>{label}</strong>
+              <small>
+                {label === 'Before'
+                  ? 'Fund Clara, then prepare'
+                  : 'Choose bank in the request'}
+              </small>
+            </span>
             <div className="preparation-track">
               <div style={{ width: `${(seconds / longest) * 100}%` }} />
             </div>
@@ -94,8 +74,32 @@ export default function PreparationTime() {
           </span>
         </p>
       </div>
+      <div className="preparation-scenario">
+        <h4>Change the situation</h4>{' '}
+        <div className="preparation-controls">
+          <label>
+            Payments covered by one top-up
+            <select
+              value={payments}
+              onChange={(event) => setPayments(Number(event.target.value))}
+            >
+              <option value={1}>1 payment</option>
+              <option value={5}>5 payments</option>
+              <option value={10}>10 payments</option>
+            </select>
+          </label>
+          <label className="preparation-checkbox">
+            <input
+              type="checkbox"
+              checked={first}
+              onChange={(event) => setFirst(event.target.checked)}
+            />{' '}
+            Include first connection
+          </label>
+        </div>
+      </div>
       <details className="preparation-assumptions">
-        <summary>Edit the assumptions behind these numbers</summary>
+        <summary>Assumptions and sources</summary>
         <p>
           These are analyst-selected inputs, not observed timings. I hold detail
           entry and review equal to isolate the funding change. One top-up may
@@ -131,33 +135,33 @@ export default function PreparationTime() {
           model; a full-task study must measure them separately, including bank
           redirection.
         </p>
+        <p className="preparation-evidence">
+          Clara’s{' '}
+          <a
+            href="https://ajuda.clara.com/hc/pt-br/articles/28754949605651"
+            target="_blank"
+            rel="noreferrer"
+          >
+            funding guide
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://ajuda.clara.com/hc/pt-br/articles/31709462299155"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Pix guide
+          </a>{' '}
+          support the steps, not their duration. I found no comparable measured
+          baseline in these sources.
+        </p>
       </details>
-      <p className="preparation-evidence">
-        Clara’s{' '}
-        <a
-          href="https://ajuda.clara.com/hc/pt-br/articles/28754949605651"
-          target="_blank"
-          rel="noreferrer"
-        >
-          funding guide
-        </a>{' '}
-        and{' '}
-        <a
-          href="https://ajuda.clara.com/hc/pt-br/articles/31709462299155"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Pix guide
-        </a>{' '}
-        support the steps, not their duration. I found no comparable measured
-        baseline in these sources.
-      </p>
       <a
         className="showcase-detail-link"
-        href="/#/approach"
+        href="/#/approach?section=solution-validation"
         target="clara-case-hub"
       >
-        Read the baseline and study plan in the hub ↗
+        Baseline, sources and study plan ↗
       </a>
     </section>
   )

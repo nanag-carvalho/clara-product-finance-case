@@ -1,4 +1,5 @@
 import ResearchMarkdown from './ResearchMarkdown'
+import research from './data/research.json'
 import { ArrowUpRight } from '@phosphor-icons/react'
 import { Badge, Button, Stack } from '@/design-system'
 
@@ -44,6 +45,15 @@ const screens = [
     alt: 'Rejected request showing its reason, retained details, history and Correct request action',
   },
 ]
+const validationBody =
+  research.find((entry) => entry.title === 'Hypotheses and validation')?.body ??
+  ''
+const baselineStart = validationBody.indexOf(
+  '### Before and after: establishing a time baseline',
+)
+const taskCriteria = validationBody.slice(0, baselineStart)
+const baselineBody = validationBody.slice(baselineStart)
+
 export default function Solution({
   onImage,
 }: {
@@ -130,6 +140,14 @@ export default function Solution({
           />
         </section>
       ))}
+      <section id="solution-validation" className="solution-screen prose">
+        <h2>Validation and time baseline</h2>
+        <ResearchMarkdown body={baselineBody} onImage={onImage} />
+        <details className="solution-boundaries">
+          <summary>Hypotheses and task criteria</summary>
+          <ResearchMarkdown body={taskCriteria} onImage={onImage} />
+        </details>
+      </section>
       <details className="solution-boundaries">
         <summary>Scope and feasibility</summary>
         <Stack gap={16} className="solution-boundaries-content">

@@ -182,6 +182,37 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handler)
   }, [])
   useEffect(() => {
+    let observer: MutationObserver | undefined
+    let timeout: ReturnType<typeof setTimeout> | undefined
+    const navigateToSection = () => {
+      observer?.disconnect()
+      clearTimeout(timeout)
+      const id = new URLSearchParams(window.location.hash.split('?')[1]).get(
+        'section',
+      )
+      if (!id) return
+      const scrollToSection = () => {
+        const target = document.getElementById(id)
+        if (!target) return false
+        target.scrollIntoView({ block: 'start' })
+        observer?.disconnect()
+        clearTimeout(timeout)
+        return true
+      }
+      if (scrollToSection()) return
+      observer = new MutationObserver(scrollToSection)
+      observer.observe(document.body, { childList: true, subtree: true })
+      timeout = setTimeout(() => observer?.disconnect(), 5000)
+    }
+    navigateToSection()
+    window.addEventListener('hashchange', navigateToSection)
+    return () => {
+      observer?.disconnect()
+      clearTimeout(timeout)
+      window.removeEventListener('hashchange', navigateToSection)
+    }
+  }, [])
+  useEffect(() => {
     document.title = `${navItems.find((n) => n.id === route)?.label} · Clara case`
   }, [route])
   useEffect(() => {
@@ -1019,6 +1050,7 @@ export default function App() {
                         ['Payment queue · before and after', 'solution-volume'],
                         ['Progress and history', 'solution-tracking'],
                         ['Correction and recovery', 'solution-recovery'],
+                        ['Validation and time baseline', 'solution-validation'],
                       ].map(([label, id]) => (
                         <a
                           key={id}

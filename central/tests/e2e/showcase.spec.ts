@@ -45,13 +45,31 @@ test('reduced motion presents the story immediately without entrance animations'
   }))
   expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
   const model = page.getByRole('region', {
-    name: 'Remove the funding detour. Test the effort saved.',
+    name: 'What could removing the top-up save?',
   })
   await expect(model).toContainText('1m 50s less active time')
   await model.getByRole('combobox').selectOption('5')
   await expect(model).toContainText('0m 14s less active time')
   await model.getByLabel('Include first connection').check()
   await expect(model).toContainText('1m 46s more active time')
+  const hubOpened = page.context().waitForEvent('page')
+  await model
+    .getByRole('link', { name: 'Baseline, sources and study plan' })
+    .click()
+  const baselineHub = await hubOpened
+  await expect(
+    baselineHub.getByRole('heading', {
+      name: 'Validation and time baseline',
+      exact: true,
+    }),
+  ).toBeInViewport()
+  await expect(
+    baselineHub.getByRole('heading', {
+      name: 'Before and after: establishing a time baseline',
+      exact: true,
+    }),
+  ).toBeAttached()
+  await baselineHub.close()
   await page.getByRole('link', { name: 'Experience', exact: true }).click()
   await expect(page.locator('#story-experience')).toBeInViewport()
   expect(
