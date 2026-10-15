@@ -250,6 +250,12 @@ export default function CaseStory({
                   <h3 id="effort-example-title">
                     One less transfer before the supplier gets paid.
                   </h3>
+                  <p>
+                    The brief makes funding Clara a prerequisite. I used Clara’s
+                    public funding steps to isolate that extra task, then
+                    assigned a simple time budget for repeat use. The steps are
+                    documented; the seconds are assumptions to test.
+                  </p>
                   <div className="showcase-effort-comparison">
                     <div className="showcase-panel showcase-panel-dark">
                       <span>Money movements</span>
@@ -269,11 +275,13 @@ export default function CaseStory({
                     </div>
                   </div>
                   <p className="story-caption">
-                    Assumed task budget, not observed timings: 45s to access the
-                    bank + 45s to prepare and confirm the top-up + 30s to return
-                    and check Clara, versus 15s to choose a connected account.
-                    Payment preparation, approval and authorization remain; bank
-                    redirection may still be required.
+                    For one fresh top-up: 45s to access the bank + 45s to
+                    prepare and confirm the top-up + 30s to return and check
+                    Clara, versus 15s to choose a connected account. The
+                    difference is 120 − 15 = 105 seconds, or 1m 45s. This
+                    compares funding work, not the whole payment: preparation,
+                    approval and authorization remain; bank redirection may
+                    still be required.
                   </p>
                   <a
                     href="/#/approach?section=solution-value"

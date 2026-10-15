@@ -620,11 +620,9 @@ Clara documents batch Pix and benefits associated with its account balance. Fund
 
 These are hypotheses about the brief’s two-bank, multi-actor routine. I have not observed an actual funding delay, coordination cost or customer preference. Keeping funds at a chosen bank is a choice benefit; higher yield, lower fees, improved liquidity and fewer errors are not established outcomes.
 
-### What would tell me it is useful
-
 ### Estimating the funding task before testing it
 
-For a repeat payment from an already connected bank, I used a deliberately simple task budget. The comparison holds supplier details, request preparation, company approval and payment authorization constant; it isolates the extra funding task. These are analyst-selected assumptions, not measured baseline data or times reported by Clara.
+For a repeat payment from an already connected bank, I used a deliberately simple task budget. The comparison holds supplier details, request preparation, company approval and payment authorization constant; it isolates the extra funding task. These are analyst-selected assumptions, not measured baseline data or times reported by Clara. I assigned rounded working times to opening the bank, entering and confirming a funding Pix, and returning to check Clara; source choice gets a smaller budget because it is an account selection inside an existing task. These values make the scenario testable, not statistically representative. They assume a repeat user, known account details and no interruption; the sensitivity examples below show why the conclusion depends on the routine.
 
 | Incremental active work | Current routine: fresh top-up | Proposed: connected account |
 | --- | ---: | ---: |
@@ -642,6 +640,10 @@ For a repeat payment from an already connected bank, I used a deliberately simpl
 
 This is why I kept both funding routes. The estimate explains the potential size of one avoided task; completion, voluntary reuse and financial-control checks determine whether the route actually helps this team.
 
+### What would tell me it is useful
+
+The job I framed was to pay the right supplier from the intended account, with approvals and a traceable result. That is why I chose correct completion as the primary outcome. A connection, a faster screen or a transfer to the new route would not show that the job was completed. Time explains effort; repeat use helps establish whether the route fits the routine.
+
 **Primary outcome — correctly completed supplier-payment intents through Clara.** In a pilot, divide eligible intents reaching confirmed settlement with the intended recipient, amount and source by all eligible intents recorded **before funding-route choice**, within a completion window agreed from the team’s approval cycle. Count one intent across retries; retain abandonment and unresolved outcomes in the denominator. Include both Clara-balance and external-bank routes so switching an existing successful payment to the new route is not mistaken for incremental value. Record limits, refusal and provider failure separately from UX errors.
 
 Establish the baseline in the existing routine, including top-up or prefunded Clara use, then compare equivalent companies, payment needs and approval policies. Where feasible use a concurrent comparison group; a before/after pilot alone cannot establish causality. This instrumented population excludes payment needs never recorded in Clara, which require customer research or linked operational records. No baseline, target or uplift has been measured here.
@@ -650,7 +652,7 @@ If the existing routine already completes payments reliably, a higher completion
 
 **Usefulness signals — choice and repeat use.** Observe why eligible teams choose each route. After a first completed external-bank payment, measure voluntary reuse within a proposed 28-day window among companies with another eligible payment need. A connection or a first trial is activation, not proof of sustained value. Investigate teams that return to prefunding, abandon setup or choose the bank directly.
 
-**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. The illustrative task budget below sizes a possible funding-effort reduction; it is not evidence of customer value or a measured saving.
+**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. The illustrative task budget above sizes a possible funding-effort reduction; it is not evidence of customer value or a measured saving.
 
 **Guardrails — preserve financial control.** Check wrong source/recipient/amount, unauthorized execution, duplicate payment, lost approval evidence and unresolved outcomes. Also track signatory burden, support contacts and recovery reliability. In formative review, any critical control failure blocks consolidation. Pilot thresholds must be agreed with operational and risk owners before rollout.
 
@@ -666,7 +668,7 @@ I would proceed with a focused eligible cohort if completion and voluntary reuse
 
 ## Proposed flow
 
-New payment first offers Clara balance or the proposed business-bank source. The implemented external-bank route starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Eligible payment authorization uses the linked device within Clara; first-time linking includes bank confirmation.
+New payment first offers Clara balance or the proposed business-bank source. The implemented external-bank route starts with recipient and amount, then reveals source preparation when needed. An eligible, already prepared account skips setup. Example Bank A models verified linked-device support; Example Bank B models bank authorization and return. These are fictional capabilities. Company approval, the saved payment and outcome tracking remain shared across both routes.
 
 **Read the map:** U labels identify user actions or screens; D labels identify system decisions. Solid arrows show the happy path. Side branches name the error or cancellation and where to return. Dashed boxes mark a bank-controlled boundary. Open each diagram at full size to inspect its branches. Each stage also has a concise text description.
 
@@ -680,7 +682,7 @@ New payment first offers Clara balance or the proposed business-bank source. The
 
 ![Userflow 2 · Review → company approval → device authorization in Clara → query payment status. Editing, rejection, cancellation and timeout have distinct return paths.](assets/userflow-authorize.svg)
 
-**Actions:** review and edit → save request → wait for the named company approver → authorization becomes available after approval → authorized representative confirms on the linked device → check payment status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted confirmation preserves the request; uncertain submission leads to a status check of the same payment.
+**Actions:** review and edit → save request → wait for the named company approver → authorization becomes available after approval → authorized representative confirms on the linked device or at the bank, according to verified account support → return to the saved payment and check status. Rejection returns a reason to the requester. Changed details require a fresh review and applicable approvals. An interrupted confirmation preserves the request; uncertain submission leads to a status check of the same payment.
 
 ### 3 · Confirm the outcome or recover
 

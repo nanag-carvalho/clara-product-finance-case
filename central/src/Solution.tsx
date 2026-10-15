@@ -87,11 +87,12 @@ export default function Solution({
       <section id="solution-connection" className="solution-screen">
         <h2 className="type-h2">Connect once; authorize each payment</h2>
         <p className="type-ui">
-          First use introduces account selection, permission, bank confirmation
-          and device setup before returning to the saved payment. A prepared
-          eligible account can be reused. Connection does not authorize future
-          payments: company approval and payment-specific confirmation remain
-          separate decisions.
+          First use introduces account selection, permission and bank
+          confirmation before returning to the saved payment. Example Bank A
+          models eligible account/device linking; Example Bank B uses bank
+          authorization and return. Availability depends on verified provider,
+          bank and PJ support. Neither route turns company approval into payment
+          execution: each payment still needs its own authorization.
         </p>
         <Button variant="link" asChild>
           <a

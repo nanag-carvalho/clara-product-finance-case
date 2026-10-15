@@ -348,10 +348,11 @@ function ValueEvaluation() {
       <p className="eyebrow">RETURNING TO THE ORIGINAL DECISION</p>
       <h3 id="value-evaluation-title">Would removing the funding step help?</h3>
       <p>
-        The prototype shows how the route and its recovery states work. The
-        earlier 1m 45s example only sizes a possible reduction in funding work.
-        To decide whether this belongs in the team’s routine, I would follow the
-        same payment need through a pilot.
+        I started with a funding dependency and carried that decision through
+        the payment and its recovery states. The next question is whether the
+        team can complete the job correctly and chooses this route again. The
+        earlier time budget helps explain one task I removed; a pilot would show
+        whether that makes a useful difference.
       </p>
       <dl className="showcase-value-measures">
         <div className="showcase-value-primary">
@@ -359,9 +360,10 @@ function ValueEvaluation() {
           <dd>
             <strong>Correct completion through Clara</strong>
             <p>
-              Eligible payment intents reach a confirmed result with the
-              intended source and required decisions. Record the intent before
-              route choice and compare with the existing routine.
+              The job is to pay the right supplier from the intended account,
+              with the required decisions preserved. That is why I would measure
+              confirmed, correct payments out of eligible needs recorded before
+              route choice, and compare with the existing routine.
             </p>
           </dd>
         </div>
