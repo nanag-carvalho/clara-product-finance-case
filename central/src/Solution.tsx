@@ -48,15 +48,6 @@ const screens = [
 const validationBody =
   research.find((entry) => entry.title === 'Hypotheses and validation')?.body ??
   ''
-const baselineStart = validationBody.indexOf(
-  '### Before and after: establishing a time baseline',
-)
-const iterationStart = validationBody.indexOf(
-  '### What determines the next iteration',
-)
-const taskCriteria =
-  validationBody.slice(0, baselineStart) + validationBody.slice(iterationStart)
-const baselineBody = validationBody.slice(baselineStart, iterationStart)
 const valueBody =
   research.find((entry) => entry.title === 'Value and evaluation strategy')
     ?.body ?? ''
@@ -152,14 +143,8 @@ export default function Solution({
         </section>
       ))}
       <section id="solution-validation" className="solution-screen prose">
-        <h2>Validation and time baseline</h2>
-        <ResearchMarkdown body={taskCriteria} onImage={onImage} />
-        <details id="solution-time-model" className="solution-boundaries">
-          <summary>
-            Supporting analysis: illustrative preparation-time model
-          </summary>
-          <ResearchMarkdown body={baselineBody} onImage={onImage} />
-        </details>
+        <h2>Validation and success measures</h2>
+        <ResearchMarkdown body={validationBody} onImage={onImage} />
       </section>
       <details className="solution-boundaries">
         <summary>Scope and feasibility</summary>

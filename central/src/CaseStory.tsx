@@ -211,11 +211,12 @@ export default function CaseStory({
                     around it.
                   </h2>
                   <p>
-                    I brought source selection into New payment because that is
-                    where the person is already deciding how to pay. Clara
-                    balance remains available alongside the proposed external
-                    account, which makes the new route part of the existing
-                    product.
+                    I placed source choice next to New payment so it stays close
+                    to the task. I kept Clara balance because prefunding may
+                    already fit the team’s routine, and connected an external
+                    account only when needed. That setup adds effort on first
+                    use; its value depends on whether the team chooses the route
+                    again.
                   </p>
                 </div>
                 <div className="story-comparison">
@@ -240,10 +241,11 @@ export default function CaseStory({
                   </div>
                 </div>
                 <p>
-                  This removes the separate top-up, but retains two distinct
-                  decisions: the company approves the request, then an
-                  authorized person releases the payment. First use also needs
-                  an account connection, which I explore below.
+                  The external route removes a funding prerequisite while
+                  retaining company approval and payment authorization. I would
+                  test whether the person chooses the intended source, completes
+                  the payment correctly and reuses the route when it fits
+                  another payment need.
                 </p>
               </section>
             </div>

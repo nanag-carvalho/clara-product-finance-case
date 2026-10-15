@@ -404,7 +404,7 @@ My direct work was setting the direction, comparing alternatives and inspecting 
 
 ### Challenge what the numbers claim
 
-AI helped build a preparation-time model, but the percentage became too prominent in the story. I challenged that framing: convenience also depends on where the company keeps funds, whether requests wait for a top-up, who coordinates it and whether prefunding already works well. I directed a review of the customer and Open Finance context, then asked for completion and voluntary reuse to lead the evaluation, with time as a secondary diagnostic and financial controls as guardrails. The model remains supporting analysis; no time, adoption or business improvement has been measured.
+AI helped build a preparation-time model, but the percentage became too prominent in the story. I challenged that framing: convenience also depends on where the company keeps funds, whether requests wait for a top-up, who coordinates it and whether prefunding already works well. I directed a review of the customer and Open Finance context, then asked for completion and voluntary reuse to lead the evaluation, with time as a secondary diagnostic and financial controls as guardrails. I removed the calculator and hypothetical timing outputs because they distracted from defending the decisions. The case instead states a baseline-collection plan and the evidence needed for a pilot; no time, adoption or business improvement has been measured.
 
 ### Estimated effort across the available two days
 
@@ -630,7 +630,7 @@ If the existing routine already completes payments reliably, a higher completion
 
 **Usefulness signals — choice and repeat use.** Observe why eligible teams choose each route. After a first completed external-bank payment, measure voluntary reuse within a proposed 28-day window among companies with another eligible payment need. A connection or a first trial is activation, not proof of sustained value. Investigate teams that return to prefunding, abandon setup or choose the bank directly.
 
-**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. The illustrative preparation-time model isolates one part of this work; its percentage is not a product-value estimate.
+**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. No hypothetical seconds or modeled percentage are used as evidence of value.
 
 **Guardrails — preserve financial control.** Check wrong source/recipient/amount, unauthorized execution, duplicate payment, lost approval evidence and unresolved outcomes. Also track signatory burden, support contacts and recovery reliability. In formative review, any critical control failure blocks consolidation. Pilot thresholds must be agreed with operational and risk owners before rollout.
 
@@ -689,35 +689,15 @@ For this interview case, I use the following questions to inspect simulated scen
 | **H2 · Commitment:** explicit actions clarify company approval, bank authorization and payment completion. | At approval and device authorization, ask what the action permits and who acts next. | Connection is understood as blanket permission, or approval as payment already sent. |
 | **H3 · Recovery:** retaining the request and state-valid actions supports safe resumption. | Interrupt authorization; separately show an unknown outcome. Observe the next action. | They lose context, re-enter valid data or attempt another payment while the outcome is unknown. |
 
-### Before and after: establishing a time baseline
+### Establishing an evaluation baseline
 
-**Supporting analysis, not the success metric.** The primary outcome is correct completion through Clara; voluntary repeat choice helps assess usefulness. Active handling time is a secondary diagnostic. This model isolates preparation and cannot estimate convenience, adoption, total payment effort or business value. Approval waiting, network/settlement waiting and interruptions are recorded separately.
+The brief asks which metric would tell me the proposal is working. It also asks how long the AI-assisted work took. Those are separate questions: my effort estimate is in the AI work log; payment performance needs customer evidence.
 
-For an initial comparison, I isolate **request preparation**: from starting the funding task to submitting a correct request for company review. In the brief’s current route, that includes the bank top-up and return to Clara. In my proposal, it includes source choice and, for a new user, connection and consent. The supplier, amount, approval policy and detail-entry effort are held equal.
+I would observe the current supplier-payment routine before setting an improvement target: where funds are held, whether Clara is already prefunded, how many payments a top-up supports and who prepares, approves and authorizes. Record eligible intents before route choice and follow correct completion, abandonment and unresolved outcomes within the agreed approval-cycle window. Compare equivalent needs and policies; use a concurrent pilot comparison where feasible.
 
-**Evidence for the steps, not the seconds.** Clara’s [funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651) describes funding Clara by Pix from the customer’s institution. Its [Pix guide](https://ajuda.clara.com/hc/pt-br/articles/31709462299155) describes recipient lookup, review and sending. Neither supplies a comparable task-time baseline. Clara also documents [Pix in batches](https://ajuda.clara.com/hc/pt-br/articles/45470603860371); the comparison here is individual requests, not a claim to outperform that batch workflow.
+The proposal is then evaluated through correct completion and voluntary reuse, with funding-related blocking, handoffs, re-entry and active effort as secondary diagnostics. Record first connection separately from repeat use, distinguish bank/device authorization, and record passive waiting separately. Include unsuccessful tasks and every required actor’s work.
 
-**Illustrative planning inputs · not participant data:**
-
-| Input | Working assumption | Basis / uncertainty |
-| --- | --- | --- |
-| Enter payment details and review | 90 seconds per request | Analyst-selected example, held equal in both routes to isolate funding. |
-| Access bank, top up and return | 120 seconds per top-up | Example allocation: 30 seconds access, 60 seconds top-up entry/review, 30 seconds return/reorientation. Real authentication and policy can change this. |
-| Choose the funding source | 10 seconds per request | Example for two available banks; measure comprehension and accuracy. |
-| First connection and consent | 120 additional seconds | Example setup cost, including active bank interaction; not a provider SLA or a measured connection duration. |
-
-The formula is **before = details/review + top-up effort ÷ requests funded**; **after = details/review + source choice + first-connection effort when applicable**. The showcase first compares the work involved in a new top-up, a shared top-up, first connection and an already funded Clara balance. Its optional time panel lets the evaluator edit the assumed active seconds and inspect both sums. The totals update together; they remain simulated preparation estimates, not a quantified convenience or business benefit.
-
-| Situation | Before · modeled preparation | After · modeled preparation | Interpretation |
-| --- | --- | --- | --- |
-| Connected account; one top-up per request | 3m 30s | 1m 40s | 1m 50s less active time in this example. |
-| Connected account; one top-up funds five requests | 1m 54s per request | 1m 40s per request | Only 14 seconds less; funding effort is already shared. |
-| Connected account; one top-up funds ten requests | 1m 42s per request | 1m 40s per request | Only 2 seconds less; no meaningful time advantage should be inferred. |
-| First connection; one top-up per request | 3m 30s | 3m 40s | Setup makes the proposal 10 seconds slower in this example. |
-
-These are sensitivity examples, not a forecast interval, a measured reduction or a target. A company with an already funded Clara balance has no immediate top-up detour; the model can set that input to zero. Additional provider interactions may outweigh the preparation saving. The proposal still requires payment authorization after company approval: compare supported bank redirection and eligible linked-device authorization separately in the full-task study.
-
-**How I would replace the model with a baseline:** observe finance managers doing equivalent supplier-payment tasks in the current workflow and the proposal, using the same starting balance, two-bank context, recipient and policy. Counterbalance route order; record first connection separately from repeat use and ask how many payments each top-up normally covers. Timestamp active work across all required actors, correctness, errors, recovery, assistance and waiting. Report the median and spread within each comparable condition, with incomplete tasks visible. Only then set an improvement target and compare correctly completed payments; a faster error is not a successful result.
+There is no observed time baseline or measured payment improvement in this case. Clara’s [funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651) and [Pix guide](https://ajuda.clara.com/hc/pt-br/articles/31709462299155) establish steps, not their duration. Task observations would establish the effort baseline; the current material does not support a quantified saving.
 
 ### What determines the next iteration
 
@@ -727,7 +707,7 @@ These are sensitivity examples, not a forecast interval, a measured reduction or
 
 **Critical issues:** wrong source, missed payment details, approval mistaken for settlement, an unsafe repeat submission or an inaccessible essential action require revision before consolidating the flow.
 
-**Pilot decision:** evaluate intent-level completion, voluntary reuse, financial-control guardrails and service economics together. Establish the current-routine baseline and agree the completion window before setting targets; no modeled time saving is a release criterion on its own.
+**Pilot decision:** evaluate intent-level completion, voluntary reuse, financial-control guardrails and service economics together. Establish the current-routine baseline and agree the completion window before setting targets; a faster task is not sufficient for rollout without customer fit, preserved controls and acceptable economics.
 
 The interactive prototype is the single implementation used for exploration and presentation. After source-route selection, it starts with payment details and uses the shared DS wizard. The scenario walkthrough exposes source comprehension, review and recovery for discussion. Provider eligibility and service requirements remain documented in Brief and scope; visual rules and accessibility checks are in the design system.
 
@@ -949,7 +929,7 @@ Across tasks, I would first assess **correct completion with the intended source
 
 ### Automated coverage and participant evaluation
 
-There are **41 domain/registry tests** and **16 browser test cases**. The browser suite executes applicable cases on desktop and mobile, totaling **31 runs**, with one mobile-only case skipped on desktop. It covers payment entry through approval and authorization, individual/bulk decisions, correction, unknown-result recovery, mobile filters/selection, showcase navigation, live DS controls, image inspection, destination-tab reuse and first-connection/scenario links, bank-authorization return and unavailable-source gating.
+There are **40 domain/registry tests** and **16 browser test cases**. The browser suite executes applicable cases on desktop and mobile, totaling **31 runs**, with one mobile-only case skipped on desktop. It covers payment entry through approval and authorization, individual/bulk decisions, correction, unknown-result recovery, mobile filters/selection, showcase navigation, live DS controls, image inspection, destination-tab reuse and first-connection/scenario links, bank-authorization return and unavailable-source gating.
 
 The 12 product scenarios are not 12 automated end-to-end tests: some are inspectable demo states, while the browser suite covers selected journeys and regressions. Automated checks verify expected transitions and interactions. Participant sessions would evaluate comprehension, effort and recovery in the finance user’s actual context. I would ask the finance manager to prepare and track a supplier payment, and the assigned approver to review the company decision, using the same tasks and success criteria across variants.
 

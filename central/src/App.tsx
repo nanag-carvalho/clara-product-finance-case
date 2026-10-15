@@ -187,9 +187,13 @@ export default function App() {
     const navigateToSection = () => {
       observer?.disconnect()
       clearTimeout(timeout)
-      const id = new URLSearchParams(window.location.hash.split('?')[1]).get(
-        'section',
-      )
+      const requestedId = new URLSearchParams(
+        window.location.hash.split('?')[1],
+      ).get('section')
+      const id =
+        requestedId === 'solution-time-model'
+          ? 'solution-validation'
+          : requestedId
       if (!id) return
       const scrollToSection = () => {
         const target = document.getElementById(id)
@@ -1060,7 +1064,6 @@ export default function App() {
                         ['Progress and history', 'solution-tracking'],
                         ['Correction and recovery', 'solution-recovery'],
                         ['Evaluation and measures', 'solution-validation'],
-                        ['Supporting time model', 'solution-time-model'],
                       ].map(([label, id]) => (
                         <a
                           key={id}

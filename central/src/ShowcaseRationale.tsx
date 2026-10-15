@@ -12,7 +12,6 @@ import {
   TabsTrigger,
 } from '@/design-system'
 import ResearchMarkdown from './ResearchMarkdown'
-import PreparationTime from './PreparationTime'
 
 type ImageHandler = (file: string, alt: string) => void
 
@@ -465,7 +464,7 @@ export function EvaluationGuide() {
           people.
         </h4>
         <p>
-          <strong>41 domain and registry tests</strong> check rules and
+          <strong>40 domain and registry tests</strong> check rules and
           contracts. <strong>16 browser test cases</strong> exercise the
           interface on desktop and mobile, including entry, approval,
           authorization and recovery.
@@ -490,15 +489,6 @@ export function EvaluationGuide() {
         See metric definitions, baseline and pilot decisions{' '}
         <ArrowUpRight size={16} />
       </a>
-      <details className="showcase-time-appendix">
-        <summary>Compare funding routines and time assumptions</summary>
-        <p className="showcase-time-context">
-          Compare the work in each routine first. The optional time model is a
-          secondary sensitivity check; it does not estimate adoption or business
-          value.
-        </p>
-        <PreparationTime />
-      </details>
       <details className="story-boundaries">
         <summary>Run the checks with the source checkout</summary>
         <pre className="showcase-code">
