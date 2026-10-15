@@ -345,13 +345,17 @@ function ValueEvaluation() {
       className="showcase-value-evaluation"
       aria-labelledby="value-evaluation-title"
     >
-      <p className="eyebrow">WHAT WOULD MAKE THIS USEFUL?</p>
-      <h3 id="value-evaluation-title">
-        Does this route help the team complete its work?
-      </h3>
+      <p className="eyebrow">RETURNING TO THE ORIGINAL DECISION</p>
+      <h3 id="value-evaluation-title">Would removing the funding step help?</h3>
+      <p>
+        The prototype shows how the route and its recovery states work. The
+        earlier 1m 45s example only sizes a possible reduction in funding work.
+        To decide whether this belongs in the team’s routine, I would follow the
+        same payment need through a pilot.
+      </p>
       <dl className="showcase-value-measures">
         <div className="showcase-value-primary">
-          <dt>Primary outcome</dt>
+          <dt>01 · Complete the job</dt>
           <dd>
             <strong>Correct completion through Clara</strong>
             <p>
@@ -362,7 +366,7 @@ function ValueEvaluation() {
           </dd>
         </div>
         <div>
-          <dt>Usefulness signals</dt>
+          <dt>02 · Choose it again</dt>
           <dd>
             <strong>Voluntary choice and repeat use</strong>
             <p>
@@ -373,12 +377,13 @@ function ValueEvaluation() {
           </dd>
         </div>
         <div>
-          <dt>Secondary diagnostics</dt>
+          <dt>03 · Explain the effort</dt>
           <dd>
             <strong>Funding dependency, coordination and time</strong>
             <p>
-              Observe blocked requests, handoffs, re-entry and active work.
-              Separate first connection from repeat use and shared top-ups.
+              Replace the assumed times with observed work across the people
+              involved. Check funding-related blocking and handoffs, separating
+              first connection, repeat use and shared top-ups.
             </p>
           </dd>
         </div>
@@ -395,9 +400,10 @@ function ValueEvaluation() {
         </div>
       </dl>
       <p className="showcase-value-next">
-        No pilot outcomes are measured here. I would discuss customer fit with
-        finance and treasury users, feasibility with engineering and risk, and
-        incremental usage and service costs with product and finance.
+        No customer outcome or time saving has been measured. I would discuss
+        customer fit with finance and treasury users, feasibility with
+        engineering and risk, and incremental usage and service costs with
+        product and finance.
       </p>
     </section>
   )

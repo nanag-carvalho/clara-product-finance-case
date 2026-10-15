@@ -404,7 +404,7 @@ My direct work was setting the direction, comparing alternatives and inspecting 
 
 ### Challenge what the numbers claim
 
-AI helped build a preparation-time model, but the percentage became too prominent in the story. I challenged that framing: convenience also depends on where the company keeps funds, whether requests wait for a top-up, who coordinates it and whether prefunding already works well. I directed a review of the customer and Open Finance context, then asked for completion and voluntary reuse to lead the evaluation, with time as a secondary diagnostic and financial controls as guardrails. I removed the calculator and hypothetical timing outputs because they distracted from defending the decisions. The case instead states a baseline-collection plan and the evidence needed for a pilot; no time, adoption or business improvement has been measured.
+AI helped build a preparation-time model, but the percentage became too prominent in the story. I challenged that framing: convenience also depends on where the company keeps funds, whether requests wait for a top-up, who coordinates it and whether prefunding already works well. I directed a review of the customer and Open Finance context, then asked for completion and voluntary reuse to lead the evaluation, with time as a secondary diagnostic and financial controls as guardrails. I removed the calculator because it distracted from defending the decisions. I then asked for a compact, transparent estimate beside the source-choice decision: one fresh top-up plus one supplier Pix becomes one direct supplier Pix. AI helped decompose a hypothetical task budget, while I required its assumptions, exceptions and limits to remain visible. The case states how an observed baseline would replace that estimate; no time, adoption or business improvement has been measured.
 
 ### Estimated effort across the available two days
 
@@ -622,6 +622,26 @@ These are hypotheses about the brief’s two-bank, multi-actor routine. I have n
 
 ### What would tell me it is useful
 
+### Estimating the funding task before testing it
+
+For a repeat payment from an already connected bank, I used a deliberately simple task budget. The comparison holds supplier details, request preparation, company approval and payment authorization constant; it isolates the extra funding task. These are analyst-selected assumptions, not measured baseline data or times reported by Clara.
+
+| Incremental active work | Current routine: fresh top-up | Proposed: connected account |
+| --- | ---: | ---: |
+| Access the bank for funding | 45s | — |
+| Prepare and confirm the funding Pix | 45s | — |
+| Return to Clara and check the available funds | 30s | — |
+| Choose the external source in Clara | — | 15s |
+| **Funding-related task budget** | **2m** | **15s** |
+
+**Illustrative difference: 1m 45s less active funding work per request**, from 120 − 15 seconds. This is not the total payment duration or a forecast of customer performance. The budget makes the reasoning inspectable: a separate bank visit, transfer and return are replaced by source choice. Desk research supports those steps, not their durations. Clara’s [funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651) describes the funding Pix; its [Pix guide](https://ajuda.clara.com/hc/pt-br/articles/31709462299155) describes the supplier payment.
+
+**Where the number changes.** A quicker 60-second funding task would leave 45 seconds of modeled effort avoided; a 180-second task would leave 2m 45s, holding source choice at 15 seconds. These are sensitivity examples, not a confidence interval. Cached login, saved beneficiaries, device checks and reconciliation can change either budget.
+
+**Where it does not apply.** First connection adds setup. If one top-up supports ten payments, allocating the assumed 120 seconds evenly gives 12 seconds per payment, versus the assumed 15-second source choice: this model then shows 3 seconds more, not a saving. If Clara is already funded, there is no funding task to remove. The structural count is also conditional: one fresh top-up per payment means **2 Pix movements → 1**; ten payments sharing a top-up mean **11 → 10**, and a prefunded payment remains **1 → 1**. Payment authorization may still redirect to the bank; I am not claiming that every bank visit disappears. Waiting, funding coordination, service costs and reliability need separate observation.
+
+This is why I kept both funding routes. The estimate explains the potential size of one avoided task; completion, voluntary reuse and financial-control checks determine whether the route actually helps this team.
+
 **Primary outcome — correctly completed supplier-payment intents through Clara.** In a pilot, divide eligible intents reaching confirmed settlement with the intended recipient, amount and source by all eligible intents recorded **before funding-route choice**, within a completion window agreed from the team’s approval cycle. Count one intent across retries; retain abandonment and unresolved outcomes in the denominator. Include both Clara-balance and external-bank routes so switching an existing successful payment to the new route is not mistaken for incremental value. Record limits, refusal and provider failure separately from UX errors.
 
 Establish the baseline in the existing routine, including top-up or prefunded Clara use, then compare equivalent companies, payment needs and approval policies. Where feasible use a concurrent comparison group; a before/after pilot alone cannot establish causality. This instrumented population excludes payment needs never recorded in Clara, which require customer research or linked operational records. No baseline, target or uplift has been measured here.
@@ -630,7 +650,7 @@ If the existing routine already completes payments reliably, a higher completion
 
 **Usefulness signals — choice and repeat use.** Observe why eligible teams choose each route. After a first completed external-bank payment, measure voluntary reuse within a proposed 28-day window among companies with another eligible payment need. A connection or a first trial is activation, not proof of sustained value. Investigate teams that return to prefunding, abandon setup or choose the bank directly.
 
-**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. No hypothetical seconds or modeled percentage are used as evidence of value.
+**Secondary diagnostics — effort and continuity.** Measure active work across requester, approver and authorized signatory; time blocked waiting for funding; handoffs, re-entry, status chasing and assistance. Record passive waiting separately. Segment first connection, repeat use, bank/device authorization and payments funded by one top-up. The illustrative task budget below sizes a possible funding-effort reduction; it is not evidence of customer value or a measured saving.
 
 **Guardrails — preserve financial control.** Check wrong source/recipient/amount, unauthorized execution, duplicate payment, lost approval evidence and unresolved outcomes. Also track signatory burden, support contacts and recovery reliability. In formative review, any critical control failure blocks consolidation. Pilot thresholds must be agreed with operational and risk owners before rollout.
 
@@ -697,7 +717,7 @@ I would observe the current supplier-payment routine before setting an improveme
 
 The proposal is then evaluated through correct completion and voluntary reuse, with funding-related blocking, handoffs, re-entry and active effort as secondary diagnostics. Record first connection separately from repeat use, distinguish bank/device authorization, and record passive waiting separately. Include unsuccessful tasks and every required actor’s work.
 
-There is no observed time baseline or measured payment improvement in this case. Clara’s [funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651) and [Pix guide](https://ajuda.clara.com/hc/pt-br/articles/31709462299155) establish steps, not their duration. Task observations would establish the effort baseline; the current material does not support a quantified saving.
+There is no observed time baseline or measured payment improvement in this case. Clara’s [funding guide](https://ajuda.clara.com/hc/pt-br/articles/28754949605651) and [Pix guide](https://ajuda.clara.com/hc/pt-br/articles/31709462299155) establish steps, not their duration. The task budget in Value and evaluation strategy is an illustrative estimate only. Task observations would replace its assumed timings and establish an empirical baseline; no saving has been demonstrated.
 
 ### What determines the next iteration
 

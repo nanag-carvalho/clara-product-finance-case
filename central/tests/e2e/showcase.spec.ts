@@ -46,11 +46,11 @@ test('reduced motion presents the story immediately without entrance animations'
   expect(Math.abs(ratios.natural - ratios.rendered)).toBeLessThan(0.02)
   await expect(
     page.getByRole('heading', {
-      name: 'Does this route help the team complete its work?',
+      name: 'Would removing the funding step help?',
     }),
   ).toBeAttached()
   const evaluation = page.getByRole('region', {
-    name: 'Does this route help the team complete its work?',
+    name: 'Would removing the funding step help?',
   })
   await expect(evaluation).toContainText('Correct completion through Clara')
   await expect(evaluation).toContainText('Voluntary choice and repeat use')

@@ -1858,3 +1858,51 @@
     gap: 8px;
   }
 }
+
+/* Keep the effort estimate beside the source-choice decision, with its scope visible. */
+.showcase-effort-example {
+  margin-block: 32px;
+  padding-block: 24px;
+  border-block: 1px solid var(--border, #d6dfec);
+}
+.showcase-shell .showcase-effort-example h3 {
+  font-size: 21px;
+  line-height: 1.4;
+  margin: 8px 0 24px;
+}
+.showcase-effort-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+.showcase-effort-comparison span {
+  display: block;
+  font-size: 14px;
+  color: #4a5d79;
+}
+.showcase-effort-comparison strong {
+  display: block;
+  margin-block: 6px 10px;
+  font-size: clamp(26px, 3vw, 36px);
+  color: #345b98;
+}
+.showcase-shell .showcase-effort-comparison p {
+  font-size: 16px;
+  line-height: 1.65;
+}
+.showcase-shell .showcase-effort-example .story-caption {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-block: 20px 16px;
+}
+.showcase-effort-example > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .showcase-effort-comparison {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

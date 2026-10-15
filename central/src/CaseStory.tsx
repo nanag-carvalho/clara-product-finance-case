@@ -240,12 +240,54 @@ export default function CaseStory({
                     </ol>
                   </div>
                 </div>
+                <aside
+                  className="showcase-effort-example"
+                  aria-labelledby="effort-example-title"
+                >
+                  <p className="eyebrow">
+                    ESTIMATING THE DECISION · REPEAT USE
+                  </p>
+                  <h3 id="effort-example-title">
+                    One less transfer before the supplier gets paid.
+                  </h3>
+                  <div className="showcase-effort-comparison">
+                    <div>
+                      <span>Money movements</span>
+                      <strong>2 Pix → 1 Pix</strong>
+                      <p>
+                        One fresh top-up, then one supplier payment → pay the
+                        supplier directly.
+                      </p>
+                    </div>
+                    <div>
+                      <span>Illustrative funding effort</span>
+                      <strong>2m → 15s</strong>
+                      <p>
+                        About 1m 45s less active work when a separate top-up is
+                        needed for each payment.
+                      </p>
+                    </div>
+                  </div>
+                  <p className="story-caption">
+                    Assumed task budget, not observed timings: 45s to access the
+                    bank + 45s to prepare and confirm the top-up + 30s to return
+                    and check Clara, versus 15s to choose a connected account.
+                    Payment preparation, approval and authorization remain; bank
+                    redirection may still be required.
+                  </p>
+                  <a
+                    href="/#/approach?section=solution-value"
+                    target="clara-case-hub"
+                  >
+                    Read the assumptions and limits <ArrowRight size={16} />
+                  </a>
+                </aside>
                 <p>
-                  The external route removes a funding prerequisite while
-                  retaining company approval and payment authorization. I would
-                  test whether the person chooses the intended source, completes
-                  the payment correctly and reuses the route when it fits
-                  another payment need.
+                  This makes the opportunity concrete: remove the extra funding
+                  task when it gets in the way. First connection adds work, and
+                  prefunded or shared top-ups change the comparison. That is why
+                  I kept Clara balance and would evaluate correct completion and
+                  voluntary reuse, with time as supporting evidence.
                 </p>
               </section>
             </div>
