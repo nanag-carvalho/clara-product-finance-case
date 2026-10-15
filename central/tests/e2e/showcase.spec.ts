@@ -48,7 +48,8 @@ test('reduced motion presents the story immediately without entrance animations'
     name: 'What could removing the top-up save?',
   })
   await expect(model).toContainText('1m 50s less active time')
-  await model.getByRole('combobox').selectOption('5')
+  await model.getByRole('combobox').click()
+  await page.getByRole('option', { name: '5 payments', exact: true }).click()
   await expect(model).toContainText('0m 14s less active time')
   await model.getByLabel('Include first connection').check()
   await expect(model).toContainText('1m 46s more active time')

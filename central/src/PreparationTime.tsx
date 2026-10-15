@@ -1,5 +1,13 @@
 import { useState } from 'react'
 import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+  Checkbox,
+} from '@/design-system'
+import {
   defaultTimeAssumptions,
   estimatePreparationTime,
 } from './payment-time-model'
@@ -79,20 +87,25 @@ export default function PreparationTime() {
         <div className="preparation-controls">
           <label>
             Payments covered by one top-up
-            <select
-              value={payments}
-              onChange={(event) => setPayments(Number(event.target.value))}
+            <Select
+              value={String(payments)}
+              onValueChange={(value) => setPayments(Number(value))}
             >
-              <option value={1}>1 payment</option>
-              <option value={5}>5 payments</option>
-              <option value={10}>10 payments</option>
-            </select>
+              <SelectTrigger aria-label="Payments covered by one top-up">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 payment</SelectItem>
+                <SelectItem value="5">5 payments</SelectItem>
+                <SelectItem value="10">10 payments</SelectItem>
+              </SelectContent>
+            </Select>
           </label>
           <label className="preparation-checkbox">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={first}
-              onChange={(event) => setFirst(event.target.checked)}
+              onCheckedChange={(value) => setFirst(value === true)}
+              aria-label="Include first connection"
             />{' '}
             Include first connection
           </label>
