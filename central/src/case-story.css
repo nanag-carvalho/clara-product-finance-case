@@ -52,7 +52,8 @@
 .story-chapters {
   min-width: 0;
 }
-.story-chapters section {
+/* Chapter spacing must not leak into nested evidence sections. */
+:is(.story-chapters, .showcase-act-content) > section {
   padding-block: calc(var(--space-16) * 2);
   border-bottom: 1px solid var(--border);
   scroll-margin-top: var(--space-24);

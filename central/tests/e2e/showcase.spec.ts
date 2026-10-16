@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('showcase reveals content, navigates chapters and enlarges the workspace', async ({
   page,
+  isMobile,
 }) => {
   await page.goto('/showcase.html')
   const heading = page.getByRole('heading', { level: 1 })
@@ -22,6 +23,33 @@ test('showcase reveals content, navigates chapters and enlarges the workspace', 
     'transform',
     'matrix(0, 0, 0, 1, 0, 0)',
   )
+  // Nested evidence must keep its reading width as outer desktop gutters grow.
+  for (const width of isMobile ? [390, 320] : [1280, 1600, 1920, 2560]) {
+    await page.setViewportSize({ width, height: 900 })
+    const evaluation = page.locator('.showcase-value-evaluation')
+    const intro = evaluation.locator(':scope > p:not(.eyebrow)').first()
+    await intro.scrollIntoViewIfNeeded()
+    const container = await evaluation.boundingBox()
+    expect(container).not.toBeNull()
+    for (const paragraph of [
+      intro,
+      evaluation.locator('.showcase-value-primary dd p'),
+    ]) {
+      const bounds = await paragraph.boundingBox()
+      expect(bounds).not.toBeNull()
+      expect(
+        bounds!.width,
+        `Evaluation text must remain readable at a ${width}px viewport`,
+      ).toBeGreaterThanOrEqual(Math.min(400, container!.width - 48))
+      expect(bounds!.x).toBeGreaterThanOrEqual(container!.x)
+      expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(
+        container!.x + container!.width + 1,
+      )
+    }
+    await expect(
+      page.getByRole('link', { name: 'Making it work', exact: true }),
+    ).toHaveAttribute('aria-current', 'location')
+  }
 })
 
 test('reduced motion presents the story immediately without entrance animations', async ({
@@ -150,22 +178,30 @@ test('experience screens scroll independently and open a full preview', async ({
   ).toHaveAttribute('src', '/proposal/overview.png')
 })
 
-test('showcase reuses its hub tab without replacing the presentation', async ({
+test('showcase reuses artifact tabs without replacing the presentation', async ({
   page,
   context,
 }) => {
   await page.goto('/showcase.html')
-  const hubLink = page.getByRole('link', { name: 'Case hub', exact: true })
-  const opened = context.waitForEvent('page')
-  await hubLink.click()
-  const hub = await opened
-  await hub.waitForLoadState('domcontentloaded')
-  await expect(hub).toHaveURL(/\/$/)
-  await page.bringToFront()
-  await hubLink.click()
-  await expect.poll(() => context.pages().length).toBe(2)
-  await expect(page).toHaveURL(/showcase.html$/)
-  await hub.close()
+  for (const [name, path] of [
+    ['Case hub', '/'],
+    ['Design system', '/design-system.html'],
+  ]) {
+    const link = page.locator('.showcase-header-actions').getByRole('link', {
+      name,
+      exact: true,
+    })
+    const opened = context.waitForEvent('page')
+    await link.click()
+    const artifact = await opened
+    await artifact.waitForLoadState('domcontentloaded')
+    expect(new URL(artifact.url()).pathname).toBe(path)
+    await page.bringToFront()
+    await link.click()
+    await expect.poll(() => context.pages().length).toBe(2)
+    await expect(page).toHaveURL(/showcase.html$/)
+    await artifact.close()
+  }
 })
 
 test('chapter navigation stays aligned when evidence images arrive late', async ({

@@ -45,7 +45,9 @@ function Showcase() {
   useEffect(() => {
     let frame = 0
     const sections = Array.from(
-      document.querySelectorAll<HTMLElement>('.story-chapters section'),
+      document.querySelectorAll<HTMLElement>(
+        ':is(.story-chapters, .showcase-act-content) > section',
+      ),
     )
     // Intermediate chapters belong to the same narrative group in the header.
     const navigationGroup: Record<string, string> = {
@@ -121,6 +123,20 @@ function Showcase() {
           <Button size="sm" variant="outline" asChild>
             <a href="/" target="clara-case-hub">
               Case hub <ArrowUpRight size={16} />
+            </a>
+          </Button>
+          <Button size="sm" variant="outline" asChild>
+            <a
+              href="/design-system.html"
+              target="clara-case-design-system"
+              aria-label="Design system"
+              title="Design system"
+            >
+              <span className="showcase-ds-label">Design system</span>
+              <span className="showcase-ds-short-label" aria-hidden="true">
+                DS
+              </span>
+              <ArrowUpRight size={16} />
             </a>
           </Button>
           <Button size="sm" asChild>
