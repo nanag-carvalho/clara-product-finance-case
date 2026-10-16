@@ -97,22 +97,32 @@ test('reduced motion presents the story immediately without entrance animations'
   await expect(evaluation).toContainText('Correct completion through Clara')
   await expect(evaluation).toContainText('Voluntary choice and repeat use')
   await expect(evaluation).toContainText('Guardrails')
+  await page
+    .getByText('When this estimate does not apply', { exact: true })
+    .click()
+  await expect(page.locator('.showcase-effort-example details')).toContainText(
+    '12 seconds per payment',
+  )
+  await page
+    .getByText('Evaluation method and baseline plan', { exact: true })
+    .click()
   const hubOpened = page.context().waitForEvent('page')
   await page
     .getByRole('link', {
-      name: 'Read the customer fit and business trade-offs',
+      name: 'Read the evaluation plan in the hub',
+      exact: true,
     })
     .click()
   const valueHub = await hubOpened
   await expect(
     valueHub.getByRole('heading', {
-      name: 'Value and evaluation strategy',
+      name: 'Validation and success measures',
       exact: true,
     }),
   ).toBeInViewport()
   await expect(
     valueHub.getByRole('heading', {
-      name: 'What would tell me it is useful',
+      name: 'Establishing an evaluation baseline',
       exact: true,
     }),
   ).toBeAttached()
@@ -200,6 +210,40 @@ test('showcase reuses artifact tabs without replacing the presentation', async (
     await link.click()
     await expect.poll(() => context.pages().length).toBe(2)
     await expect(page).toHaveURL(/showcase.html$/)
+    if (name === 'Case hub') {
+      await page
+        .locator('.showcase-artifact-grid')
+        .getByRole('link', {
+          name: /The current journey/,
+        })
+        .click()
+      await expect(artifact).toHaveURL(/#\/as-is$/)
+      await expect(
+        artifact.getByRole('heading', {
+          name: 'The current experience',
+          exact: true,
+        }),
+      ).toBeVisible()
+      await expect.poll(() => context.pages().length).toBe(2)
+      await page
+        .getByRole('link', {
+          name: 'Read the contribution and AI log',
+          exact: true,
+        })
+        .click()
+      await expect(artifact).toHaveURL(/#\/process\?section=ai-work-log$/)
+      await expect(
+        artifact.getByRole('heading', { name: 'AI work log', exact: true }),
+      ).toBeInViewport()
+    }
+    if (name === 'Case hub') {
+      // A fresh tab must wait for lazy documentation before positioning the log.
+      await artifact.reload()
+      await expect(artifact.locator('.content-skeleton')).toHaveCount(0)
+      await expect(
+        artifact.getByRole('heading', { name: 'AI work log', exact: true }),
+      ).toBeInViewport()
+    }
     await artifact.close()
   }
 })

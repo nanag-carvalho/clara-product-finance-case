@@ -190,14 +190,24 @@ export default function App() {
       const requestedId = new URLSearchParams(
         window.location.hash.split('?')[1],
       ).get('section')
-      const id =
-        requestedId === 'solution-time-model'
-          ? 'solution-validation'
-          : requestedId
+      const sectionAliases: Record<string, string> = {
+        'solution-time-model': 'solution-validation',
+        'ai-work-log': section('AI work log').id,
+      }
+      const id = requestedId
+        ? (sectionAliases[requestedId] ?? requestedId)
+        : null
       if (!id) return
       const scrollToSection = () => {
         const target = document.getElementById(id)
-        if (!target) return false
+        // Wait for the reader and fonts: skeletons above this heading
+        // otherwise change its position after a cold-load deep link.
+        if (
+          !target ||
+          document.querySelector('.content-skeleton') ||
+          document.fonts.status !== 'loaded'
+        )
+          return false
         const disclosure = target.closest('details')
         if (disclosure) disclosure.open = true
         target.scrollIntoView({ block: 'start' })
@@ -205,6 +215,7 @@ export default function App() {
         clearTimeout(timeout)
         return true
       }
+      void document.fonts.ready.then(scrollToSection)
       if (scrollToSection()) return
       observer = new MutationObserver(scrollToSection)
       observer.observe(document.body, { childList: true, subtree: true })

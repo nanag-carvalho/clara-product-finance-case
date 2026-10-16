@@ -56,13 +56,6 @@ export function BusinessRationale() {
         case explores one supplier Pix; production integration and batch
         creation stay outside the prototype.
       </p>
-      <a
-        className="showcase-detail-link"
-        href="/#/approach?section=solution-value"
-        target="clara-case-hub"
-      >
-        Read the customer fit and business trade-offs <ArrowUpRight size={16} />
-      </a>
     </section>
   )
 }
@@ -134,13 +127,6 @@ export function AestheticRationale({ onImage }: { onImage: ImageHandler }) {
         </figure>
       </div>
       <DesignDecisions />
-      <a
-        className="showcase-detail-link"
-        href="/#/system"
-        target="clara-case-hub"
-      >
-        Visual principles and interaction choices <ArrowUpRight size={16} />
-      </a>
     </section>
   )
 }
@@ -303,11 +289,6 @@ export function SharedSystemProof() {
             rel="noopener noreferrer"
           >
             Inspect the repository <ArrowUpRight size={16} />
-          </a>
-        </Button>
-        <Button variant="link" asChild>
-          <a href="/#/system" target="clara-case-hub">
-            Architecture and reuse <ArrowUpRight size={16} />
           </a>
         </Button>
       </div>
@@ -519,14 +500,19 @@ export function EvaluationGuide() {
         involved. The pilot then asks whether the route is chosen again for real
         payment needs.
       </p>
-      <a
-        className="showcase-detail-link"
-        href="/#/approach?section=solution-validation"
-        target="clara-case-hub"
-      >
-        See metric definitions, baseline and pilot decisions{' '}
-        <ArrowUpRight size={16} />
-      </a>
+      <details className="story-boundaries">
+        <summary>Evaluation method and baseline plan</summary>
+        <p>
+          The hub defines the payment intent, comparison conditions and pilot
+          decisions in detail.
+        </p>
+        <a
+          href="/#/approach?section=solution-validation"
+          target="clara-case-hub"
+        >
+          Read the evaluation plan in the hub <ArrowUpRight size={16} />
+        </a>
+      </details>
       <details className="story-boundaries">
         <summary>Run the checks with the source checkout</summary>
         <pre className="showcase-code">

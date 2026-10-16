@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useRef, useState } from 'react'
+import { StrictMode, useEffect, useRef, useState, type MouseEvent } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ArrowUpRight, ArrowUp } from '@phosphor-icons/react'
 import {
@@ -21,6 +21,28 @@ const chapters = [
   ['experience', 'Experience'],
   ['foundation', 'Making it work'],
 ] as const
+
+/** Reuse an artifact tab and request focus, while retaining native modified clicks. */
+function openArtifact(event: MouseEvent<HTMLDivElement>) {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  )
+    return
+  if (!(event.target instanceof Element)) return
+  const link = event.target.closest<HTMLAnchorElement>(
+    'a[target^="clara-case-"]',
+  )
+  if (!link || new URL(link.href).origin !== location.origin) return
+  const destination = window.open(link.href, link.target)
+  if (!destination) return // Let the original anchor work if popups are blocked.
+  event.preventDefault()
+  destination.focus()
+}
 
 function Showcase() {
   const shellRef = useRef<HTMLDivElement>(null)
@@ -82,7 +104,12 @@ function Showcase() {
     }
   }, [])
   return (
-    <div className="showcase-shell" id="top" ref={shellRef}>
+    <div
+      className="showcase-shell"
+      id="top"
+      ref={shellRef}
+      onClick={openArtifact}
+    >
       <a className="showcase-skip" href="#showcase-main">
         Skip to the case
       </a>
@@ -161,9 +188,6 @@ function Showcase() {
           <strong>Nágela Carvalho</strong>
           <p>Product thinking → interaction craft → working code.</p>
         </div>
-        <a href="/" target="clara-case-hub">
-          Explore the research hub <ArrowUpRight size={16} />
-        </a>
         <a href="#top">
           Back to top <ArrowUp size={16} />
         </a>

@@ -42,7 +42,13 @@ const decisions = [
 ]
 
 /** Contextual authorship notes stay beside the story, not in its reading flow. */
-function AIProcessNote({ children }: { children: React.ReactNode }) {
+function AIProcessNote({
+  children,
+  showDetails = false,
+}: {
+  children: React.ReactNode
+  showDetails?: boolean
+}) {
   return (
     <aside
       className="showcase-evaluator-guide"
@@ -50,9 +56,11 @@ function AIProcessNote({ children }: { children: React.ReactNode }) {
     >
       <strong>My use of AI</strong>
       <p>{children}</p>
-      <a href="/#/process" target="clara-case-hub">
-        Read this process in the hub <ArrowUpRight size={14} />
-      </a>
+      {showDetails && (
+        <a href="/#/process?section=ai-work-log" target="clara-case-hub">
+          Read the contribution and AI log <ArrowUpRight size={14} />
+        </a>
+      )}
     </aside>
   )
 }
@@ -196,11 +204,6 @@ export default function CaseStory({
                   primitives and a case-specific DS, with fictional data;
                   Clara’s internal data and library were not available.
                 </p>
-                <Button variant="link" asChild>
-                  <a href="/#/as-is" target="clara-case-hub">
-                    Inspect the current journey <ArrowRight size={16} />
-                  </a>
-                </Button>
               </section>
               <BusinessRationale />
               <section id="story-direction" tabIndex={-1}>
@@ -283,12 +286,17 @@ export default function CaseStory({
                     approval and authorization remain; bank redirection may
                     still be required.
                   </p>
-                  <a
-                    href="/#/approach?section=solution-value"
-                    target="clara-case-hub"
-                  >
-                    Read the assumptions and limits <ArrowRight size={16} />
-                  </a>
+                  <details className="story-boundaries">
+                    <summary>When this estimate does not apply</summary>
+                    <p>
+                      First connection adds setup. If one top-up funds ten
+                      payments, the assumed two minutes become 12 seconds per
+                      payment, versus 15 seconds for source choice: this model
+                      then shows no time advantage. If Clara is already funded,
+                      there is no funding task to remove. These conditions are
+                      why I kept both routes.
+                    </p>
+                  </details>
                 </aside>
                 <p>
                   This makes the opportunity concrete: remove the extra funding
@@ -329,12 +337,6 @@ export default function CaseStory({
                   next, resume without a duplicate and review the right details
                   together? These became H1–H4 in the prototype scenarios.
                 </p>
-                <Button variant="link" asChild>
-                  <a href="/#/discovery" target="clara-case-hub">
-                    Read the needs and supporting reasoning{' '}
-                    <ArrowRight size={16} />
-                  </a>
-                </Button>
               </section>
               <AestheticRationale onImage={onImage} />
             </div>
@@ -416,7 +418,7 @@ export default function CaseStory({
             <div className="showcase-act-label">
               <span>04 / MAKING IT WORK</span>
               <p>Shared patterns, implementation and evaluation</p>
-              <AIProcessNote>
+              <AIProcessNote showDetails>
                 Codex helped implement my direction; the DS contract and
                 regression checks made parts of it repeatable. I caught visual
                 and mobile problems after tests passed. The hub records the
@@ -462,19 +464,10 @@ export default function CaseStory({
                     In-Clara authorization depends on provider support, business
                     eligibility and signatory permissions.
                   </p>
+                  <a href="/#/sources" target="clara-case-hub">
+                    Sources and implementation gaps <ArrowUpRight size={16} />
+                  </a>
                 </details>
-                <div className="story-actions">
-                  <Button asChild>
-                    <a href="/prototype.html" target="clara-case-prototype">
-                      Try the payment journey <ArrowUpRight size={16} />
-                    </a>
-                  </Button>
-                  <Button variant="link" asChild>
-                    <a href="/#/sources" target="clara-case-hub">
-                      Sources and remaining gaps <ArrowRight size={16} />
-                    </a>
-                  </Button>
-                </div>
               </section>
             </div>
           </div>
